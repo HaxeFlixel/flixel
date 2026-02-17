@@ -806,7 +806,7 @@ class FlxSound extends FlxBasic
 	 */
 	function gotID3(e:Event):Void
 	{
-		cast (e.target, EventDispatcher).removeEventListener(Event.ID3, gotID3);
+		cast (e.target, IEventDispatcher).removeEventListener(Event.ID3, gotID3);
 		
 		if (e.target == _sound)
 		{
