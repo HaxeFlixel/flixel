@@ -162,10 +162,6 @@ class FlxSound extends FlxBasic
 	/**
 	 * Internal tracker for a Flash sound object.
 	 */
-	@:allow(flixel.system.frontEnds.SoundFrontEnd.load)
-	#if FLX_STREAM_SOUND
-	@:allow(flixel.system.frontEnds.SoundFrontEnd.loadStreamed)
-	#end
 	var _sound:Sound;
 	
 	/**
@@ -824,7 +820,6 @@ class FlxSound extends FlxBasic
 	}
 	
 	#if FLX_SOUND_SYSTEM
-	@:allow(flixel.system.frontEnds.SoundFrontEnd)
 	function onFocus():Void
 	{
 		if (_resumeOnFocus)
@@ -834,7 +829,6 @@ class FlxSound extends FlxBasic
 		}
 	}
 	
-	@:allow(flixel.system.frontEnds.SoundFrontEnd)
 	function onFocusLost():Void
 	{
 		_resumeOnFocus = !_paused;

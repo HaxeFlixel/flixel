@@ -17,6 +17,7 @@ import openfl.media.Sound;
  * Accessed via `FlxG.sound`.
  */
 @:allow(flixel.FlxG)
+@:access(flixel.sound.FlxSound)
 class SoundFrontEnd
 {
 	/**
