@@ -41,7 +41,7 @@ typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, 
 
 abstract FlxGraphicAsset(OneOfFour<FlxGraphic, BitmapData, String, Class<Dynamic>>) from FlxGraphic to FlxGraphic from BitmapData to BitmapData from String to String from Class<Dynamic> to Class<Dynamic>
 {
-	public inline function resolveBitmapData():BitmapData
+	public inline function resolveBitmapData():Null<BitmapData>
 	{
 		return FlxAssets.resolveBitmapData(cast this);
 	}
@@ -314,7 +314,7 @@ class FlxAssets
 	 * @param   graphic  input data to get BitmapData object for.
 	 * @return  BitmapData for specified Dynamic object.
 	 */
-	public static function resolveBitmapData(graphic:FlxGraphicAsset):BitmapData
+	public static function resolveBitmapData(graphic:FlxGraphicAsset):Null<BitmapData>
 	{
 		if ((graphic is FlxGraphic))
 		{

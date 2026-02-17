@@ -485,7 +485,7 @@ class AssetFrontEnd
 	 * @return  Returns whether the sound can be streamed or not.
 	 * @since   6.2.0
 	 */
-	public function canStreamSound(id:String):Bool
+	public dynamic function canStreamSound(id:String):Bool
 	{
 		#if lime_vorbis
 		// Check if file is really OGG/Vorbis
