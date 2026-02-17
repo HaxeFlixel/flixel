@@ -812,11 +812,15 @@ class FlxSound extends FlxBasic
 	/**
 	 * Internal event handler for ID3 info (i.e. fetching the song name).
 	 */
-	function gotID3(_):Void
+	function gotID3(e:Event):Void
 	{
-		name = _sound.id3.songName;
-		artist = _sound.id3.artist;
-		_sound.removeEventListener(Event.ID3, gotID3);
+		cast (e.target, EventDispatcher).removeEventListener(Event.ID3, gotID3);
+		
+		if (e.target == _sound)
+		{
+			name = _sound.id3.songName;
+			artist = _sound.id3.artist;
+		}
 	}
 	
 	#if FLX_SOUND_SYSTEM
