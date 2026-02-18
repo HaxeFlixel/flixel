@@ -41,15 +41,20 @@ typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, 
 
 abstract FlxGraphicAsset(OneOfFour<FlxGraphic, BitmapData, String, Class<Dynamic>>) from FlxGraphic to FlxGraphic from BitmapData to BitmapData from String to String from Class<Dynamic> to Class<Dynamic>
 {
-	public inline function resolveBitmapData():Null<BitmapData>
+	public inline function resolveBitmapData(?log, ?pos):Null<BitmapData>
 	{
-		return FlxAssets.resolveBitmapData(cast this);
+		return FlxAssets.resolveBitmapData(cast this, log, pos);
+	}
+	
+	public inline function assertBitmapData():BitmapData
+	{
+		return FlxAssets.assertBitmapData(cast this);
 	}
 }
 
 abstract FlxSoundAsset(OneOfFour<String, Sound, Class<Sound>, ByteArray>) from String from Sound from Class<Sound> from ByteArray
 {
-	public inline function resolveSound(allowCache = true, addExt = false):Null<Sound>
+	public inline function resolveSound(allowCache = true, addExt = false):Sound
 	{
 		return FlxAssets.resolveSound(cast this, allowCache, addExt);
 	}
@@ -314,7 +319,19 @@ class FlxAssets
 	 * @param   graphic  input data to get BitmapData object for.
 	 * @return  BitmapData for specified Dynamic object.
 	 */
-	public static function resolveBitmapData(graphic:FlxGraphicAsset):Null<BitmapData>
+	public static function assertBitmapData(graphic:FlxGraphicAsset):BitmapData
+	{
+		if (graphic == null)
+			throw 'Cannot resolve null graphic asset, expected String, FlxGraphic, Class<Bitmap> or BitmapData';
+		
+		final data = resolveBitmapData(graphic, null);
+		if (data != null)
+			return data;
+		
+		throw 'Invalid graphic asset, expected String, FlxGraphic, Class<Bitmap> or BitmapData';
+	}
+	
+	public static function resolveBitmapData(graphic:FlxGraphicAsset, ?log, ?pos):Null<BitmapData>
 	{
 		if ((graphic is FlxGraphic))
 		{
@@ -332,11 +349,14 @@ class FlxAssets
 		{
 			return FlxG.assets.getBitmapData(cast graphic);
 		}
-
+		
+		if (log != null)
+			FlxG.log.advanced('Invalid graphic asset, expected String, FlxGraphic, Class<Bitmap> or BitmapData', log, pos);
+		
 		return null;
 	}
 	
-	public static function resolveSound(sound:FlxSoundAsset, allowCache = true, addExt = false):Null<Sound>
+	public static function resolveSound(sound:FlxSoundAsset, allowCache = true, addExt = false):Sound
 	{
 		if (sound == null)
 		{
