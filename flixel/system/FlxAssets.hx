@@ -54,9 +54,14 @@ abstract FlxGraphicAsset(OneOfFour<FlxGraphic, BitmapData, String, Class<Dynamic
 
 abstract FlxSoundAsset(OneOfFour<String, Sound, Class<Sound>, ByteArray>) from String from Sound from Class<Sound> from ByteArray
 {
-	public inline function resolveSound(allowCache = true, addExt = false):Sound
+	public inline function assertSound(allowCache = true, addExt = false):Sound
 	{
-		return FlxAssets.resolveSound(cast this, allowCache, addExt);
+		return FlxAssets.assertSound(cast this, allowCache, addExt);
+	}
+	
+	public inline function resolveSound(allowCache = true, addExt = false, ?log, ?pos):Sound
+	{
+		return FlxAssets.resolveSound(cast this, allowCache, addExt, log, pos);
 	}
 }
 
@@ -356,13 +361,9 @@ class FlxAssets
 		return null;
 	}
 	
-	public static function resolveSound(sound:FlxSoundAsset, allowCache = true, addExt = false):Sound
+	public static function resolveSound(sound:FlxSoundAsset, allowCache = true, addExt = false, ?log, ?pos):Null<Sound>
 	{
-		if (sound == null)
-		{
-			throw 'Cannot resolve null sound asset, expected String, Sound, Class<Sound> or ByteArray';
-		}
-		else if ((sound is Sound))
+		if ((sound is Sound))
 		{
 			return cast sound;
 		}
@@ -385,10 +386,31 @@ class FlxAssets
 			return result;
 		}
 		
+		if (log != null)
+		{
+			if (sound == null)
+				FlxG.log.advanced('Cannot resolve null sound asset, expected String, Sound, Class<Sound> or ByteArray', log, pos);
+			else
+				FlxG.log.advanced('Invalid sound asset, expected String, Sound, Class<Sound> or ByteArray, found: $sound', log, pos);
+		}
+		
+		return null;
+	}
+	
+	public static function assertSound(sound:FlxSoundAsset, allowCache = true, addExt = false):Sound
+	{
+		if (sound == null)
+		{
+			throw 'Cannot resolve null sound asset, expected String, Sound, Class<Sound> or ByteArray';
+		}
+		
+		final data = resolveSound(sound, allowCache, addExt);
+		if (data != null)
+			return data;
+		
 		throw 'Invalid sound asset, expected String, Sound, Class<Sound> or ByteArray, found: $sound';
 	}
 	
-
 	/**
 	 * Takes Dynamic object as a input and tries to find appropriate key String for its BitmapData:
 	 * 1) if the input is BitmapData, then it will return second (optional) argument (the Key);

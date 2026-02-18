@@ -1,5 +1,8 @@
 package flixel.sound;
 
+#if flash
+class FlxSoundTest extends FlxTest {}
+#else
 import FlxAssert;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -10,16 +13,18 @@ import openfl.media.Sound;
 import openfl.media.SoundChannel;
 import openfl.media.SoundTransform;
 
+@:nullSafety(Strict)
 class FlxSoundTest extends FlxTest
 {
+	
 	static final silence1k1 = new DebugSound().loadSilence(1.0);
 	static final silence1k2 = new DebugSound().loadSilence(1.0);
 	static final silence750 = new DebugSound().loadSilence(0.75);
 	static final silence100 = new DebugSound().loadSilence(0.1);
 	
-	var sound1:FlxSound;
-	var sound2:FlxSound;
-	var group:FlxSoundGroup;
+	var sound1:FlxSound = new FlxSound();
+	var sound2:FlxSound = new FlxSound();
+	var group:FlxSoundGroup = new FlxSoundGroup();
 	
 	@Before
 	function before()
@@ -575,12 +580,14 @@ class DebugSound extends Sound
 	}
 	
 	var debugElapsed = 0.0;
-	var debugChannel:SoundChannel = null;
+	var debugStartTime = 0.0;
+	var debugChannel:Null<SoundChannel> = null;
 	override function play(startTime:Float = 0.0, loops:Int = 0, sndTransform:SoundTransform = null):SoundChannel
 	{
 		if (log) trace('play($startTime, $loops, $sndTransform');
 		
 		debugChannel = super.play(startTime, loops, sndTransform);
+		debugStartTime = startTime;
 		debugElapsed = 0.0;
 		FlxG.signals.preUpdate.add(onStep);
 		return debugChannel;
@@ -591,14 +598,19 @@ class DebugSound extends Sound
 		if (debugChannel == null)
 			return;
 		
+		#if FLX_PITCH
 		@:privateAccess
 		final source = #if (openfl < "9.3.2") debugChannel.__source #else debugChannel.__audioSource #end;
-		
 		if (source == null)
 			return;
+		final pitch = source.pitch;
+		#else
+		final pitch = 1.0;
+		#end
 		
-		debugElapsed += FlxG.elapsed * source.pitch;
-		final position = Std.int(1000 * debugElapsed) + source.offset;
+		
+		debugElapsed += FlxG.elapsed * pitch;
+		final position = Std.int(1000 * debugElapsed) + debugStartTime;
 		if (position < length)
 		{
 			debugChannel.position = position;
@@ -622,3 +634,4 @@ class DebugSound extends Sound
 		FlxG.signals.preUpdate.remove(onStep);
 	}
 }
+#end

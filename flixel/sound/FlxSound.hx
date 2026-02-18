@@ -75,7 +75,7 @@ class FlxSound extends FlxBasic
 	 * Tracker for sound complete callback. If assigned, will be called
 	 * each time when sound reaches its end.
 	 */
-	public var onComplete:Void->Void;
+	public var onComplete:Null<()->Void> = null;
 	
 	/**
 	 * Pan amount. -1 = full left, 1 = full right. Proximity based panning overrides this.
@@ -365,12 +365,12 @@ class FlxSound extends FlxBasic
 		return loadHelper(asset, true, allowCache, true).init(false, false, null);
 	}
 	
-	function loadHelper(sound:FlxSoundAsset, destroy = false, allowCache = true, addExt = false):FlxSound
+	function loadHelper(asset:FlxSoundAsset, destroy = false, allowCache = true, addExt = false):FlxSound
 	{
 		cleanup(destroy);
 		
-		_sound = sound.resolveSound(allowCache, addExt);
-		if (_sound != null)
+		final sound = asset.assertSound(allowCache, addExt);
+		if (sound != null)
 			onSoundSet();
 		
 		return this;
@@ -556,7 +556,7 @@ class FlxSound extends FlxBasic
 		return init(true, autoDestroy, onComplete);
 	}
 	
-	function init(looped:Bool, autoDestroy:Bool, onComplete:()->Void):FlxSound
+	function init(looped:Bool, autoDestroy:Bool, onComplete:Null<()->Void>):FlxSound
 	{
 		this.looped = looped;
 		this.autoDestroy = autoDestroy;
