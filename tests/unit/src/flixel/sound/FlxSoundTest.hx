@@ -13,7 +13,9 @@ import openfl.media.Sound;
 import openfl.media.SoundChannel;
 import openfl.media.SoundTransform;
 
-@:nullSafety(Strict)
+
+// null safety breaks on 4.2
+#if (haxe >= version("4.3.0")) @:nullSafety(Strict) #end
 class FlxSoundTest extends FlxTest
 {
 	
