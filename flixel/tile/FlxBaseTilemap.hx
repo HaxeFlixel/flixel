@@ -953,38 +953,139 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		loadMapHelper(tileGraphic, tileWidth, tileHeight, autoTile, startingIndex, drawIndex, collideIndex);
 		return this;
 	}
-
+	
 	/**
 	 * Load the tilemap with image data and a tile graphic.
-	 * Black pixels are flagged as 'solid' by default, non-black pixels are set as non-colliding. Black pixels must be PURE BLACK.
-	 * @param   mapGraphic      The image you want to use as a source of map data, where each pixel is a tile (or more than one tile if you change Scale's default value). Preferably black and white.
-	 * @param   invert          Load white pixels as solid instead.
-	 * @param   scale           Default is 1. Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
-	 * @param   colorMap        An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices
+	 * Black pixels are flagged as 'solid' by default, non-black pixels are set as non-colliding.
+	 * @param   mapGraphic      The image you want to use as a source of map data, where each
+	 *                          pixel is a tile or chunk of tiles.
+	 * @param   whiteIsSolid    Whether to load white pixels as solid and black and empty
+	 * @param   scale           Default is 1. `scale` of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param   colorMap        An array of color values (ignores alpha) in the
+	 *                          order they're intended to be assigned as indices
 	 * @param   tileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
 	 * @param   tileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
 	 * @param   tileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
 	 * @param   autoTile        Whether to load the map using an automatic tile placement algorithm (requires 16 tiles!).
-	 *                          Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.
+	 *                          Setting this to either `AUTO` or `ALT` will override any values you
+	 *                          put for `startingIndex`, `drawIndex`, or `collideIndex`.
 	 * @param   startingIndex   Used to sort of insert empty tiles in front of the provided graphic.
-	 *                          Default is 0, usually safest ot leave it at that.  Ignored if AutoTile is set.
+	 *                          Default is 0, usually safest ot leave it at that.  Ignored if `autoTile` is set.
 	 * @param   drawIndex       Initializes all tile objects equal to and after this index as visible.
-	 *                          Default value is 1. Ignored if AutoTile is set.
+	 *                          Default value is 1. Ignored if `autoTile` is set.
 	 * @param   collideIndex    Initializes all tile objects equal to and after this index as allowCollisions = ANY.
-	 *                          Default value is 1.  Ignored if AutoTile is set.
-	 *                          Can override and customize per-tile-type collision behavior using setTileProperties().
+	 *                          Default value is 1.  Ignored if `autoTile` is set.
+	 *                          Can override and customize per-tile-type collision behavior using `setTileProperties()`.
 	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
 	 * @since   4.1.0
 	 */
-	public function loadMapFromGraphic(mapGraphic:FlxGraphicAsset, invert = false, scale = 1, ?colorMap:Array<FlxColor>,
+	@:deprecated("loadMapFromGraphic with both bitmap and colorMap is deprecated, use a different overload of loadMapFromGraphic")
+	overload public inline extern function loadMapFromGraphic(mapGraphic:FlxGraphicAsset, whiteIsSolid:Bool, scale:Int, colorMap:Null<Array<FlxColor>>,
 			tileGraphic:FlxTilemapGraphicAsset, tileWidth = 0, tileHeight = 0, ?autoTile:FlxTilemapAutoTiling,
 			startingIndex = 0, drawIndex = 1, collideIndex = 1)
 	{
-		var mapBitmap:BitmapData = FlxAssets.resolveBitmapData(mapGraphic);
-		var mapData:String = FlxStringUtil.bitmapToCSV(mapBitmap, invert, scale, colorMap);
+		final mapData = if (colorMap == null)
+			FlxStringUtil.imageToCSV(mapGraphic, whiteIsSolid, scale);
+		else
+			FlxStringUtil.imageToCSV(mapGraphic, scale, colorMap);
+		
 		return loadMapFromCSV(mapData, tileGraphic, tileWidth, tileHeight, autoTile, startingIndex, drawIndex, collideIndex);
 	}
-
+	
+	/**
+	 * Load the tilemap with image data and a tile graphic.
+	 * Black pixels are flagged as 'solid' by default, non-black pixels are set as non-colliding.
+	 * @param   mapGraphic      The image you want to use as a source of map data, where each
+	 *                          pixel is a tile or chunk of tiles.
+	 * @param   scale           Default is 1. `scale` of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param   colorMap        An array of rb color values (ignores alpha) in the
+	 *                          order they're intended to be assigned as indices
+	 * @param   tileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
+	 * @param   tileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
+	 * @param   tileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
+	 * @param   autoTile        Whether to load the map using an automatic tile placement algorithm (requires 16 tiles!).
+	 *                          Setting this to either `AUTO` or `ALT` will override any values you
+	 *                          put for `startingIndex`, `drawIndex`, or `collideIndex`.
+	 * @param   startingIndex   Used to sort of insert empty tiles in front of the provided graphic.
+	 *                          Default is 0, usually safest ot leave it at that.  Ignored if `autoTile` is set.
+	 * @param   drawIndex       Initializes all tile objects equal to and after this index as visible.
+	 *                          Default value is 1. Ignored if `autoTile` is set.
+	 * @param   collideIndex    Initializes all tile objects equal to and after this index as allowCollisions = ANY.
+	 *                          Default value is 1.  Ignored if `autoTile` is set.
+	 *                          Can override and customize per-tile-type collision behavior using `setTileProperties()`.
+	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
+	 * @since   6.2.0
+	 */
+	overload public inline extern function loadMapFromGraphic(mapGraphic:FlxGraphicAsset, scale = 1, colorMap:Array<FlxColor>,
+			tileGraphic:FlxTilemapGraphicAsset, tileWidth = 0, tileHeight = 0, ?autoTile:FlxTilemapAutoTiling,
+			startingIndex = 0, drawIndex = 1, collideIndex = 1)
+	{
+		final mapData:String = FlxStringUtil.imageToCSV(mapGraphic, scale, colorMap);
+		return loadMapFromCSV(mapData, tileGraphic, tileWidth, tileHeight, autoTile, startingIndex, drawIndex, collideIndex);
+	}
+	
+	/**
+	 * Load the tilemap with image data and a tile graphic.
+	 * Black pixels are flagged as 'solid' by default, non-black pixels are set as non-colliding.
+	 * @param   mapGraphic      The image you want to use as a source of map data, where each
+	 *                          pixel is a tile or chunk of tiles.
+	 * @param   scale           Default is 1. `scale` of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param   colorMap        An array of rgba color values in the order they're intended to be assigned as indices
+	 * @param   tileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
+	 * @param   tileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
+	 * @param   tileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
+	 * @param   autoTile        Whether to load the map using an automatic tile placement algorithm (requires 16 tiles!).
+	 *                          Setting this to either `AUTO` or `ALT` will override any values you
+	 *                          put for `startingIndex`, `drawIndex`, or `collideIndex`.
+	 * @param   startingIndex   Used to sort of insert empty tiles in front of the provided graphic.
+	 *                          Default is 0, usually safest ot leave it at that.  Ignored if `autoTile` is set.
+	 * @param   drawIndex       Initializes all tile objects equal to and after this index as visible.
+	 *                          Default value is 1. Ignored if `autoTile` is set.
+	 * @param   collideIndex    Initializes all tile objects equal to and after this index as allowCollisions = ANY.
+	 *                          Default value is 1.  Ignored if `autoTile` is set.
+	 *                          Can override and customize per-tile-type collision behavior using `setTileProperties()`.
+	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
+	 * @since   6.2.0
+	 */
+	public function loadMap32FromGraphic(mapGraphic:FlxGraphicAsset, scale = 1, colorMap:Array<FlxColor>,
+			tileGraphic:FlxTilemapGraphicAsset, tileWidth = 0, tileHeight = 0, ?autoTile:FlxTilemapAutoTiling,
+			startingIndex = 0, drawIndex = 1, collideIndex = 1)
+	{
+		final mapData:String = FlxStringUtil.image32ToCSV(mapGraphic, scale, colorMap);
+		return loadMapFromCSV(mapData, tileGraphic, tileWidth, tileHeight, autoTile, startingIndex, drawIndex, collideIndex);
+	}
+	
+	/**
+	 * Load the tilemap with image data and a tile graphic.
+	 * Black pixels are flagged as 'solid' by default, non-black pixels are set as non-colliding.
+	 * @param   mapGraphic      The image you want to use as a source of map data, where each
+	 *                          pixel is a tile or chunk of tiles
+	 * @param   whiteIsSolid    Whether to load white pixels as solid and black and empty
+	 * @param   scale           Default is 1. `scale` of 2 means each pixel forms a 2x2 block of tiles, and so on
+	 * @param   tileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData
+	 * @param   tileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified
+	 * @param   tileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified
+	 * @param   autoTile        Whether to load the map using an automatic tile placement algorithm (requires 16 tiles!).
+	 *                          Setting this to either `AUTO` or `ALT` will override any values you
+	 *                          put for `startingIndex`, `drawIndex`, or `collideIndex`
+	 * @param   startingIndex   Used to sort of insert empty tiles in front of the provided graphic.
+	 *                          Default is 0, usually safest ot leave it at that.  Ignored if `autoTile` is set
+	 * @param   drawIndex       Initializes all tile objects equal to and after this index as visible.
+	 *                          Default value is 1. Ignored if `autoTile` is set
+	 * @param   collideIndex    Initializes all tile objects equal to and after this index as allowCollisions = ANY.
+	 *                          Default value is 1.  Ignored if `autoTile` is set.
+	 *                          Can override and customize per-tile-type collision behavior using `setTileProperties()`
+	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
+	 * @since   6.2.0
+	 */
+	overload public inline extern function loadMapFromGraphic(mapGraphic:FlxGraphicAsset, whiteIsSolid = false, scale = 1,
+			tileGraphic:FlxTilemapGraphicAsset, tileWidth = 0, tileHeight = 0, ?autoTile:FlxTilemapAutoTiling,
+			startingIndex = 0, drawIndex = 1, collideIndex = 1)
+	{
+		final mapData:String = FlxStringUtil.imageToCSV(mapGraphic, whiteIsSolid, scale);
+		return loadMapFromCSV(mapData, tileGraphic, tileWidth, tileHeight, autoTile, startingIndex, drawIndex, collideIndex);
+	}
+	
 	function loadMapHelper(tileGraphic:FlxTilemapGraphicAsset, tileWidth = 0, tileHeight = 0, ?autoTile:FlxTilemapAutoTiling,
 			startingIndex = 0, drawIndex = 1, collideIndex = 1)
 	{
