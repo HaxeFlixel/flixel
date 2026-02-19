@@ -166,7 +166,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Internal tracker for a Flash sound object.
 	 */
-	var _sound:Sound;
+	var _sound:Null<Sound> = null;
 	
 	/**
 	 * Internal tracker for a Flash sound channel object.
@@ -369,8 +369,8 @@ class FlxSound extends FlxBasic
 	{
 		cleanup(destroy);
 		
-		final sound = asset.assertSound(allowCache, addExt);
-		if (sound != null)
+		_sound = asset.resolveSound(allowCache, addExt);
+		if (_sound != null)
 			onSoundSet();
 		
 		return this;
