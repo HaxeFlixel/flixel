@@ -43,6 +43,9 @@ class FlxTextTest extends FlxTest
 
 	#if !html5
 	@Test // #1422
+	#if (openfl == version("9.5.1"))
+	@Ignore("Fails on openfl 9.5.1, see: https://github.com/openfl/openfl/issues/2839")
+	#end
 	function testBlurryLines()
 	{
 		text = new FlxText(0, 0, 120, "Text with some blur\none line without blur\nand another with blur");
