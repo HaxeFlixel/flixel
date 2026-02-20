@@ -21,6 +21,8 @@ import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
+import flixel.util.FlxNullChecker;
+import flixel.util.FlxNullUtil;
 import flixel.util.FlxSave;
 import flixel.util.typeLimit.NextState;
 import openfl.Lib;
@@ -338,6 +340,23 @@ class FlxG
 	public static var assets(default, null):AssetFrontEnd = new AssetFrontEnd();
 	
 	/**
+	 * Contains helper functions for compliance with null-safety. Methods `ought`, `assert` and
+	 * `require` will call `FlxNullUtil.onFail` when `null` is passed, which is a `dynamic`
+	 * method, allowing you to create a custom handler.
+	 * 
+	 * You may also utlize these methods through static extension, via:
+	 * ```haxe
+	 * using flixel.util.FlxNullUtil;
+	 * ```
+	 * 
+	 * Allowing all `Null<T>` types to have these nullchecking methods
+	 * 
+	 * @since 6.2.0
+	 * @see flixel.util.FlxNullUtil
+	 */
+	public static final safety = new FlxNullChecker((id, level, ?pos)->FlxNullUtil.onFail(id, level, pos));
+	
+	/**
 	 * Resizes the game within the window by reapplying the current scale mode.
 	 */
 	public static inline function resizeGame(width:Int, height:Int):Void
@@ -586,8 +605,20 @@ class FlxG
 		#if FLX_SOUND_SYSTEM
 		sound = new SoundFrontEnd();
 		#end
+		
+		FlxNullUtil.onFail = defaultOnFail;
 	}
-
+	
+	static function defaultOnFail(level:FlxNullSafetyFailLevel, logId:String, ?pos)
+	{
+		switch level
+		{
+			case OUGHT: FlxG.log.warn('Null-safety OUGHT fail: $logId is null', pos);
+			case ASSERT: FlxG.log.error('Null-safety ASSERT fail: $logId is null', pos);
+			case REQUIRE: throw 'Null-safety REQUIRE fail: $logId is null';
+		}
+	}
+	
 	static function initRenderMethod():Void
 	{
 		#if !flash
