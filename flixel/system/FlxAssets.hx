@@ -382,7 +382,6 @@ class FlxAssets
 			final bytes:ByteArray = cast sound;
 			final result = new Sound();
 			result.loadCompressedDataFromByteArray(bytes, bytes.length);
-			trace(result.id3);
 			return result;
 		}
 		
