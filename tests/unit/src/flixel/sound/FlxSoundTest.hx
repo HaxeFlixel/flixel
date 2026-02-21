@@ -11,16 +11,4 @@ class FlxSoundTest extends FlxTest
 		sound.load("assets/invalid");
 		sound.play();
 	}
-	
-	@Test
-	@Ignore("Unable to unit test sounds")
-	function testPlay()
-	{
-		var sound = new FlxSound();
-		sound.load("flxiel/sounds/flixel");
-		sound.play();
-		// step();
-		
-		Assert.isTrue(sound.playing);
-	}
 }
