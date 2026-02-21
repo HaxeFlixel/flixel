@@ -1,6 +1,8 @@
 package flixel.sound;
 
-class FlxSoundTest
+import massive.munit.Assert;
+
+class FlxSoundTest extends FlxTest
 {
 	@Test // #1511
 	function testLoadInvalidSoundPathNoCrash()
