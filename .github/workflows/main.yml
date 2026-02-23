@@ -9,19 +9,47 @@ on:
     - cron: '0 4 * * *'
 
 jobs:
-  build:
+  linux:
     strategy:
       matrix:
-        haxe-version: ["4.2.5", "4.3.7"]
-        target: [html5, hl, neko, flash, cpp]
-      fail-fast: false
-    runs-on: macos-14
+        haxe-version: ["4.3.7"]
+        target: [html5, hl, flash, cpp]
+      fail-fast: true
+    runs-on: ubuntu-latest
     steps:
     - run: sudo apt-get update
     
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
-    - uses: krdlab/setup-haxe@v1
+    - uses: krdlab/setup-haxe@v2
+      with:
+        haxe-version: ${{matrix.haxe-version}}
+    
+    - name: "Configure Haxelib"
+      run: |
+        haxelib setup /home/runner/haxe/haxelib/
+        haxelib install haxelib 4.0.3
+        haxelib dev flixel .
+    
+    - uses: HaxeFlixel/setup-flixel@master
+      with:
+        flixel-versions: dev
+        test-location: local
+        target: ${{matrix.target}}
+        run-tests: true
+  
+  macos:
+    strategy:
+      matrix:
+        haxe-version: ["4.3.7"]
+        target: [html5, hl, flash, cpp]
+      fail-fast: true
+    runs-on: macos-14
+    steps:
+    
+    - uses: actions/checkout@v4
+    
+    - uses: krdlab/setup-haxe@v2
       with:
         haxe-version: ${{matrix.haxe-version}}
     
