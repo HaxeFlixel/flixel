@@ -34,7 +34,7 @@ class SoundFrontEnd
 	 * Set this hook to get a callback whenever the volume changes.
 	 * Function should take the form myVolumeHandler(volume:Float).
 	 */
-	@:deprecated("volumeHandler is deprecated, use onVolumeChange, instead")
+	@:deprecated("volumeHandler is deprecated, use onVolumeChange, instead") // 5.9.0
 	public var volumeHandler:Float->Void;
 
 	/**
@@ -138,7 +138,7 @@ class SoundFrontEnd
 	 * @param   loop     Whether to loop this music.
 	 * @param   group    The group to manage this sound, if `null`, `defaultMusicGroup` is used.
 	 */
-	@:deprecated("playMusic(id, volume, loop, group) is deprecated, use playMusic(id, group, volume, loop), instead")
+	@:deprecated("playMusic(id, volume, loop, group) is deprecated, use playMusic(id, group, volume, loop), instead") // 6.2.0
 	overload public inline extern function playMusic(assetId, volume = 1.0, loop = true, group:Null<FlxSoundGroup>):Void
 	{
 		playMusic(assetId, group, volume, loop);
@@ -180,7 +180,7 @@ class SoundFrontEnd
 	 * @param   onLoad       Called when the sound finishes loading.  Called immediately for succesfully loaded embedded sounds.
 	 * @return  A FlxSound object.
 	 */
-	@:deprecated("FlxG.sound.load is deprecated, use either loadFromURL() or create(assetId).setup(...).play()")
+	@:deprecated("FlxG.sound.load is deprecated, use either createFromURL() or create(assetId).setup(...).play()") // 6.2.0
 	public function load(?asset, volume = 1.0, loop = false, ?group, autoDestroy = false, autoPlay = false,
 			?url, ?onComplete, ?onLoad)
 	{
@@ -414,7 +414,7 @@ class SoundFrontEnd
 	 * @param   onLoad       Called when the sound finishes loading.
 	 * @return  A FlxSound object.
 	 */
-	@:deprecated("FlxG.sound.stream() is deprecated, use FlxG.sound.loadFromURL() or playFromURL(), instead")
+	@:deprecated("FlxG.sound.stream() is deprecated, use FlxG.sound.createFromURL() or playFromURL(), instead") // 6.2.0
 	public function stream(url:String, volume = 1.0, loop = false, ?group:FlxSoundGroup, autoDestroy = true,
 			?onComplete:()->Void, ?onLoad:()->Void):FlxSound
 	{

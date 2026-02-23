@@ -480,7 +480,7 @@ class FlxSound extends FlxBasic
 	 * @param   onComplete     Called when the sound finished playing
 	 * @return  This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
-	@:deprecated("loadEmbedded() is deprecated, use load() instead.")
+	@:deprecated("loadEmbedded() is deprecated, use load() instead.") // 6.2.0
 	public function loadEmbedded(embeddedSound:FlxSoundAsset, looped = false, autoDestroy = false, ?onComplete:()->Void):FlxSound
 	{
 		if (embeddedSound == null)
@@ -500,7 +500,7 @@ class FlxSound extends FlxBasic
 	 * @param   onLoad       Called when the sound finished loading.
 	 * @return  This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
-	@:deprecated("loadStream() is deprecated, use loadFromURL() instead.")
+	@:deprecated("loadStream() is deprecated, use loadFromURL() instead.") // 6.2.0
 	public function loadStream(soundURL:String, looped = false, autoDestroy = false, ?onComplete:()->Void, ?onLoad:()->Void):FlxSound
 	{
 		return loadFromUrlHelper(soundURL, onLoad).init(looped, autoDestroy, onComplete);
@@ -515,7 +515,7 @@ class FlxSound extends FlxBasic
 	 *                       Default value is false, but `FlxG.sound.play()` and `FlxG.sound.loadFromURL()` will set it to true by default.
 	 * @return  This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
-	@:deprecated("loadByteArray() is deprecated, use load() instead.")
+	@:deprecated("loadByteArray() is deprecated, use load() instead.") // 6.2.0
 	public function loadByteArray(bytes:ByteArray, looped:Bool = false, autoDestroy = false, ?onComplete:()->Void):FlxSound
 	{
 		if (bytes == null)
