@@ -319,7 +319,7 @@ class SoundFrontEnd
 	}
 
 	/**
-	 * Plays a sound from an embedded sound. Tries to recycle a cached sound first.
+	 * Plays a sound from an embedded sound. Tries to recycle a pooled sound first.
 	 *
 	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
 	 *
@@ -341,7 +341,7 @@ class SoundFrontEnd
 	}
 	
 	/**
-	 * Plays a sound from a URL. Tries to recycle a cached sound first
+	 * Plays a sound from a URL. Tries to recycle a pooled sound first
 	 *
 	 * @param   url     A link to an external web resource
 	 * @param   group   The group to manage this sound, if `null`, `defaultSoundGroup` is used
@@ -357,7 +357,7 @@ class SoundFrontEnd
 	}
 
 	/**
-	 * Plays a sound from a URL. Tries to recycle a cached sound first
+	 * Plays a sound from a URL. Tries to recycle a pooled sound first
 	 *
 	 * @param   url          A link to an external web resource
 	 * @param   group        The group to manage this sound, if `null`, `defaultSoundGroup` is used
@@ -389,7 +389,7 @@ class SoundFrontEnd
 	}
 
 	/**
-	 * Plays a sound from a URL. Tries to recycle a cached sound first.
+	 * Plays a sound from a URL. Tries to recycle a pooled sound first.
 	 *
 	 * @param   url          A link to an external web resource.
 	 * @param   volume       How loud to play it (0 to 1).
