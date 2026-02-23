@@ -340,18 +340,6 @@ class SoundFrontEnd
 			.play();
 	}
 	
-	function attemptCache(asset:FlxSoundAsset):Null<FlxSoundAsset>
-	{
-		if ((asset is String))
-		{
-			final cachedAsset = cache(cast asset);
-			if (cachedAsset != null)
-				return cachedAsset;
-		}
-		
-		return asset;
-	}
-
 	/**
 	 * Plays a sound from a URL. Tries to recycle a cached sound first
 	 *
