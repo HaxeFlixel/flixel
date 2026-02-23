@@ -87,7 +87,7 @@ class SoundFrontEnd
 	public var defaultMusicGroup:FlxSoundGroup = new FlxSoundGroup();
 
 	/**
-	 * The group sounds in load() / loadFromURL() / play() are added to unless specified otherwise.
+	 * The default, group sounds are added to in `create` and `play` methods.
 	 */
 	public var defaultSoundGroup:FlxSoundGroup = new FlxSoundGroup();
 
@@ -197,7 +197,7 @@ class SoundFrontEnd
 			}
 			else
 			{
-				final sound = loadFromURL(url, group, onLoad);
+				final sound = createFromURL(url, group, onLoad);
 				sound.setup(volume, loop, autoDestroy, onComplete);
 				if (autoPlay)
 					sound.play();
@@ -362,7 +362,7 @@ class SoundFrontEnd
 	 * 
 	 * @since 6.2.0
 	 */
-	public function loadFromURL(url:String, ?group:FlxSoundGroup, ?onLoad:()->Void):FlxSound
+	public function createFromURL(url:String, ?group:FlxSoundGroup, ?onLoad:()->Void):FlxSound
 	{
 		return recycle(group)
 			.loadFromURL(url, onLoad);
@@ -402,7 +402,6 @@ class SoundFrontEnd
 
 	/**
 	 * Plays a sound from a URL. Tries to recycle a cached sound first.
-	 * NOTE: Just calls FlxG.sound.load() with AutoPlay == true.
 	 *
 	 * @param   url          A link to an external web resource.
 	 * @param   volume       How loud to play it (0 to 1).
