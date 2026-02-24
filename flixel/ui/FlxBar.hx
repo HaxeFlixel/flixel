@@ -1,8 +1,5 @@
 package flixel.ui;
 
-import openfl.display.BitmapData;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
@@ -15,6 +12,9 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxGradient;
 import flixel.util.FlxStringUtil;
+import openfl.display.BitmapData;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 // TODO: better handling bars with borders (don't take border into account while drawing its front).
 
@@ -890,8 +890,7 @@ class FlxBar extends FlxSprite
 					_matrix.ty = Math.floor(_matrix.ty);
 				}
 				
-				FlxG.renderer.begin(camera);
-				FlxG.renderer.drawPixels(_frontFrame, _matrix, colorTransform, blend, antialiasing, shader);
+				FlxG.renderer.drawPixels(camera.view, _frontFrame, _matrix, colorTransform, blend, antialiasing, shader);
 			}
 		}
 	}

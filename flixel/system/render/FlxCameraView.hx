@@ -1,19 +1,20 @@
 package flixel.system.render;
 
-import openfl.display.DisplayObjectContainer;
-import openfl.display.DisplayObject;
-import flixel.math.FlxRect;
-import flixel.FlxG;
 import flixel.FlxCamera;
-import flixel.util.FlxDestroyUtil;
+import flixel.FlxG;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
+import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
+import openfl.display.Graphics;
 
 /**
  * A `FlxCameraView` is a helper added to cameras, that holds some rendering-related objects
  */
 @:allow(flixel.FlxCamera)
-class FlxCameraView implements IFlxDestroyable
+abstract class FlxCameraView implements IFlxDestroyable
 {	
 	/**
 	 * Creates a `FlxCameraView` object tied to a camera, based on the target and project configuration.
@@ -101,6 +102,80 @@ class FlxCameraView implements IFlxDestroyable
 	
 	function updateScrollRect():Void {}
 	
+	//{ region ------------------------ DEBUG DRAW ------------------------
+	
+	/**
+	 * Begins debug draw on the current (or optionally specified) camera.
+	 * Any debug drawing commands will be executed on the camera.
+	 * 
+	 * @param camera Optional, the camera to draw to.
+	 */
+	abstract public function beginDrawDebug():Graphics;
+	
+	abstract public function getDebugGraphics():Graphics;
+	
+	/**
+	 * Cleans up and finalizes the debug draw.
+	 */
+	abstract public function endDrawDebug():Void;
+	
+	/**
+	 * Draws a rectangle with an outline.
+	 * 
+	 * @param   x           The x position of the rectangle.
+	 * @param   y           The y position of the rectangle.
+	 * @param   width       The width of the rectangle (in pixels).
+	 * @param   height      The height of the rectangle (in pixels).
+	 * @param   color       The color (in 0xAARRGGBB hex format) of the rectangle's outline.
+	 * @param   thickness   The thickness of the rectangle's outline.
+	 */
+	abstract public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1.0):Void;
+	
+	/**
+	 * Draws a filled rectangle.
+	 * 
+	 * @param   x           The x position of the rectangle.
+	 * @param   y           The y position of the rectangle.
+	 * @param   width       The width of the rectangle (in pixels).
+	 * @param   height      The height of the rectangle (in pixels).
+	 * @param   color       The color (in 0xAARRGGBB hex format) of the rectangle's fill.
+	 */
+	abstract public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void;
+	
+	/**
+	 * Draws a filled circle.
+	 * 
+	 * @param   x        The x position of the circle.
+	 * @param   y        The y position of the circle.
+	 * @param   radius   The radius of the circle.
+	 * @param   color    The color (in 0xAARRGGBB hex format) of the circle's fill.
+	 */
+	abstract public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void;
+	
+	/**
+	 * Draws a line.
+	 * 
+	 * @param   x1          The start x position of the line.
+	 * @param   y1          The start y position of the line.
+	 * @param   x2          The end x position of the line.
+	 * @param   y2          The end y position of the line.
+	 * @param   color       The color (in 0xAARRGGBB hex format) of the line.
+	 * @param   thickness   The thickness of the line.
+	 */
+	abstract public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void;
+	
+	//} endregion --------------------- DEBUG DRAW ------------------------
+	
+	//{ region ------------------------ HELPERS ------------------------
+	
+	/**
+	 * Fills the current render target with `color`.
+	 * 
+	 * @param   color        The color (in 0xAARRGGBB format) to fill the screen with.
+	 * @param   blendAlpha   Whether to blend the alpha value or just wipe the previous contents.
+	 */
+	abstract public function fill(color:FlxColor, blendAlpha:Bool = true):Void;
+	
 	/**
 	 * Helper method preparing debug rectangle for rendering in blit render mode
 	 * @param	rect	rectangle to prepare for rendering
@@ -152,19 +227,20 @@ class FlxCameraView implements IFlxDestroyable
 		return object;
 	}
 	
-	function get_display():DisplayObjectContainer
-	{
-		return null;
-	}
+	//} endregion --------------------- HELPERS ------------------------
+	
+	//{ region ------------------------ GETTERS ------------------------
+	
+	abstract function get_display():DisplayObjectContainer;
 	
 	function get_color():FlxColor
 	{
 		return camera.color;
 	}
 	
-	function set_color(color:FlxColor):FlxColor
+	function set_color(value:FlxColor):FlxColor
 	{
-		return color;
+		return camera.color = value;
 	}
 	
 	function get_antialiasing():Bool
@@ -172,9 +248,9 @@ class FlxCameraView implements IFlxDestroyable
 		return camera.antialiasing;
 	}
 	
-	function set_antialiasing(antialiasing:Bool):Bool
+	function set_antialiasing(value:Bool):Bool
 	{
-		return antialiasing;
+		return camera.antialiasing = value;
 	}
 	
 	function get_angle():Float
@@ -182,9 +258,9 @@ class FlxCameraView implements IFlxDestroyable
 		return camera.angle;
 	}
 	
-	function set_angle(angle:Float):Float
+	function set_angle(value:Float):Float
 	{
-		return angle;
+		return camera.angle = value;
 	}
 	
 	function get_visible():Bool
@@ -192,9 +268,9 @@ class FlxCameraView implements IFlxDestroyable
 		return camera.visible;
 	}
 	
-	function set_visible(visible:Bool):Bool
+	function set_visible(value:Bool):Bool
 	{
-		return visible;
+		return camera.visible = value;
 	}
 	
 	function get_alpha():Float
@@ -202,8 +278,10 @@ class FlxCameraView implements IFlxDestroyable
 		return camera.alpha;
 	}
 	
-	function set_alpha(alpha:Float):Float
+	function set_alpha(value:Float):Float
 	{
-		return alpha;
+		return camera.alpha = value;
 	}
+	
+	//} endregion --------------------- GETTERS ------------------------
 }

@@ -66,10 +66,7 @@ class FlxSubState extends FlxState
 		if (FlxG.renderer.method == BLITTING)
 		{
 			for (camera in getCamerasLegacy())
-			{
-				FlxG.renderer.begin(camera);
-				FlxG.renderer.fill(bgColor);
-			}
+				camera.view.fill(bgColor);
 		}
 		else // FlxG.renderer.method != BLITTING
 		{

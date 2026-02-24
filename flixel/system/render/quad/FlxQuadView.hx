@@ -191,7 +191,7 @@ class FlxQuadView extends FlxCameraView
 		return visible;
 	}
 	
-	override function get_display():DisplayObjectContainer
+	function get_display():DisplayObjectContainer
 	{
 		return flashSprite;
 	}
@@ -382,4 +382,61 @@ class FlxQuadView extends FlxCameraView
 		_headTiles = null;
 		_headTriangles = null;
 	}
+	
+	public function fill(color:FlxColor, blendAlpha:Bool = true):Void
+	{
+		targetGraphics.overrideBlendMode(null);
+		targetGraphics.beginFill(color.rgb, color.alphaFloat);
+		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
+		// which could appear while cameras fading
+		targetGraphics.drawRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2);
+		targetGraphics.endFill();
+	}
+	
+	public function beginDrawDebug()
+	{
+		debugLayer.graphics.clear();
+		return debugLayer.graphics;
+	}
+	
+	public function getDebugGraphics()
+	{
+		return debugLayer.graphics;
+	}
+	
+	public function endDrawDebug():Void {}
+	
+	#if FLX_DEBUG
+	public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1.0):Void
+	{
+		final gfx = debugLayer.graphics;
+		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
+		gfx.drawRect(x, y, width, height);
+	}
+
+	public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void
+	{
+		final gfx = debugLayer.graphics;
+		gfx.lineStyle();
+		gfx.beginFill(color.rgb, color.alphaFloat);
+		gfx.drawRect(x, y, width, height);
+		gfx.endFill();
+	}
+
+	public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void
+	{
+		final gfx = debugLayer.graphics;
+		gfx.beginFill(color.rgb, color.alphaFloat);
+		gfx.drawCircle(x, y, radius);
+		gfx.endFill();
+	}
+
+	public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void
+	{
+		final gfx = debugLayer.graphics;
+		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
+		gfx.moveTo(x1, y1);
+		gfx.lineTo(x2, y2);
+	}
+	#end
 }

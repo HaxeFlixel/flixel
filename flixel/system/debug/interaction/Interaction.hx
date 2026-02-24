@@ -14,9 +14,9 @@ import flixel.system.debug.interaction.tools.ToggleBounds;
 import flixel.system.debug.interaction.tools.Tool;
 import flixel.system.debug.interaction.tools.TrackObject;
 import flixel.system.debug.interaction.tools.Transform;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
-import flixel.util.FlxColor;
 import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
 import openfl.display.Graphics;
@@ -396,23 +396,23 @@ class Interaction extends Window
 
 	function drawItemsSelection():Void
 	{
-		final camera = FlxG.camera;
-		FlxG.renderer.beginDrawDebug(camera);
+		final view = FlxG.camera.view;
+		view.beginDrawDebug();
 
 		for (member in selectedItems)
 		{
 			if (member != null && member.scrollFactor != null && member.isOnScreen())
 			{
 				final margin = 0.5;
-				final scroll = camera.scroll;
+				final scroll = FlxG.camera.scroll;
 				// Render a white rectangle centered at the selected item
 
 				final color:FlxColor = FlxColor.fromRGBFloat(1, 1, 1, 0.75);
-				FlxG.renderer.drawDebugRect(member.x - scroll.x - margin, member.y - scroll.y - margin, member.width + margin*2, member.height + margin*2, color);
+				view.drawDebugRect(member.x - scroll.x - margin, member.y - scroll.y - margin, member.width + margin*2, member.height + margin*2, color);
 			}
 		}
 
-		FlxG.renderer.endDrawDebug();
+		view.endDrawDebug();
 	}
 
 	/**

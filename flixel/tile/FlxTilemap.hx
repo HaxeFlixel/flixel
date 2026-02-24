@@ -545,8 +545,6 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		if (FlxG.renderer.method != DRAW_TILES)
 			return;
 
-		FlxG.renderer.beginDrawDebug(camera);
-
 		var buffer:FlxTilemapBuffer = null;
 		var l:Int = FlxG.cameras.list.length;
 
@@ -597,7 +595,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 					if (color != null)
 					{
 						final colStr = color.toHexString();
-						drawDebugBoundingBoxColor(rect, color);
+						drawDebugBoundingBoxColor(camera.view.getDebugGraphics(), rect, color);
 					}
 				}
 			}

@@ -1,6 +1,5 @@
 package flixel.system.render.quad;
 
-import openfl.geom.Point;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
@@ -9,30 +8,26 @@ import flixel.graphics.tile.FlxDrawTrianglesItem;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxShader;
+import flixel.system.FlxAssets;
+import flixel.system.render.FlxRenderer;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
+import openfl.geom.Point;
 import openfl.geom.Rectangle;
+
+using flixel.util.FlxColorTransformUtil;
 #if FLX_OPENGL_AVAILABLE
 import lime.graphics.opengl.GL;
 #end
 
-using flixel.util.FlxColorTransformUtil;
 
 @:access(flixel.FlxCamera)
 @:access(flixel.system.render.quad)
-class FlxQuadRenderer extends FlxRenderer
+class FlxQuadRenderer extends FlxTypedRenderer<FlxQuadView>
 {
-	/**
-	 * Convenience shortcut for `camera.viewQuad`
-	 */
-	var view(get, never):FlxQuadView;
-	@:noCompletion inline function get_view():FlxQuadView
-		return camera.viewQuad;
-
 	var _helperMatrix:FlxMatrix = new FlxMatrix();
 
 	/**
@@ -58,7 +53,7 @@ class FlxQuadRenderer extends FlxRenderer
 		_helperMatrix = null;
 	}
 
-	override function clear():Void
+	override function clear(view:FlxQuadView):Void
 	{
 		view.clearDrawStack();
 		
@@ -69,24 +64,24 @@ class FlxQuadRenderer extends FlxRenderer
 		#end
 		
 		view.targetGraphics = view.canvas.graphics;
-		fill(camera.bgColor, camera.useBgAlphaBlending);
+		view.fill(view.camera.bgColor, view.camera.useBgAlphaBlending);
 	}
 
-	override function render():Void
+	override function render(view:FlxQuadView):Void
 	{
-		view.flashSprite.filters = camera.filtersEnabled ? camera.filters : null;
+		view.flashSprite.filters = view.camera.filtersEnabled ? view.camera.filters : null;
 		
 		var currItem:FlxDrawBaseItem<Dynamic> = view._headOfDrawStack;
 		while (currItem != null)
 		{
-			currItem.render(camera);
+			currItem.render(view.camera);
 			currItem = currItem.next;
 		}
 
-		camera.drawFX();
+		view.camera.drawFX();
 	}
 
-	override function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
+	override function drawPixels(view:FlxQuadView, ?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
 		?shader:FlxShader)
 	{
 		var isColored = (transform != null #if !html5 && transform.hasRGBMultipliers() #end);
@@ -100,7 +95,7 @@ class FlxQuadRenderer extends FlxRenderer
 		drawItem.addQuad(frame, matrix, transform);
 	}
 	
-	override function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
+	override function copyPixels(view:FlxQuadView, ?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
 			smoothing:Bool = false, ?shader:FlxShader)
 	{
 		_helperMatrix.identity();
@@ -117,9 +112,10 @@ class FlxQuadRenderer extends FlxRenderer
 		drawItem.addQuad(frame, _helperMatrix, transform);
 	}
 	
-	override function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
+	override function drawTriangles(view:FlxQuadView, graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader)
 	{
+		final camera = view.camera;
 		final cameraBounds = _bounds.set(camera.viewMarginLeft, camera.viewMarginTop, camera.viewWidth, camera.viewHeight);
 		
 		final isColored = (colors != null && colors.length != 0) || (transform != null && transform.hasRGBMultipliers());
@@ -128,48 +124,4 @@ class FlxQuadRenderer extends FlxRenderer
 		final drawItem = view.startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
 		drawItem.addTriangles(vertices, indices, uvtData, colors, position, cameraBounds, transform);
 	}
-
-	override function fill(color:FlxColor, blendAlpha:Bool = true):Void
-	{
-		view.targetGraphics.overrideBlendMode(null);
-		view.targetGraphics.beginFill(color.rgb, color.alphaFloat);
-		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
-		// which could appear while cameras fading
-		view.targetGraphics.drawRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2);
-		view.targetGraphics.endFill();
-	}
-
-    #if FLX_DEBUG
-	override function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1.0):Void
-	{
-		final gfx = view.debugLayer.graphics;
-		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
-		gfx.drawRect(x, y, width, height);
-	}
-
-	override function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void
-	{
-		final gfx = view.debugLayer.graphics;
-		gfx.lineStyle();
-		gfx.beginFill(color.rgb, color.alphaFloat);
-		gfx.drawRect(x, y, width, height);
-		gfx.endFill();
-	}
-
-	override function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void
-	{
-		final gfx = view.debugLayer.graphics;
-		gfx.beginFill(color.rgb, color.alphaFloat);
-		gfx.drawCircle(x, y, radius);
-		gfx.endFill();
-	}
-
-	override function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void
-	{
-		final gfx = view.debugLayer.graphics;
-		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
-		gfx.moveTo(x1, y1);
-		gfx.lineTo(x2, y2);
-	}
-	#end
 }

@@ -1,15 +1,15 @@
 package flixel.system.debug.interaction.tools;
 
-import openfl.display.BitmapData;
-import openfl.display.Graphics;
-import openfl.ui.Keyboard;
 import flixel.FlxBasic;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.debug.Icon;
 import flixel.system.debug.interaction.Interaction;
-import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxColor;
+import flixel.util.FlxSpriteUtil;
+import openfl.display.BitmapData;
+import openfl.display.Graphics;
+import openfl.ui.Keyboard;
 
 using flixel.util.FlxArrayUtil;
 
@@ -134,7 +134,8 @@ class Pointer extends Tool
 	
 	override public function draw():Void
 	{
-		FlxG.renderer.beginDrawDebug(FlxG.camera);
+		final view = FlxG.camera.view;
+		view.beginDrawDebug();
 		
 		switch state
 		{
@@ -145,11 +146,11 @@ class Pointer extends Tool
 				// Render the selection rectangle
 				var color:FlxColor = 0xbb0000;
 				color.alphaFloat = 0.9;
-				FlxG.renderer.drawDebugRect(FlxG.camera.scroll.x + rect.x, FlxG.camera.scroll.y + rect.y, rect.width, rect.height, color);
+				view.drawDebugRect(FlxG.camera.scroll.x + rect.x, FlxG.camera.scroll.y + rect.y, rect.width, rect.height, color);
 				rect.put();
 		}
 		
-		FlxG.renderer.endDrawDebug();
+		view.endDrawDebug();
 	}
 	
 	static function setAbsRect(rect:FlxRect, x1:Float, y1:Float, x2:Float, y2:Float)

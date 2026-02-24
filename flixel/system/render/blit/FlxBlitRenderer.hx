@@ -2,12 +2,12 @@ package flixel.system.render.blit;
 
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxShader;
+import flixel.system.FlxAssets;
+import flixel.system.render.FlxRenderer;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
@@ -22,7 +22,7 @@ import openfl.geom.Rectangle;
 
 @:access(flixel.FlxCamera)
 @:access(flixel.system.render.blit)
-class FlxBlitRenderer extends FlxRenderer
+class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 {
 	/**
 	 * Whether the camera's buffer should be locked and unlocked during render calls.
@@ -67,14 +67,6 @@ class FlxBlitRenderer extends FlxRenderer
 	 */
 	var _flashPoint:Point = new Point();
 	
-	/**
-	 * Convenience shortcut for `camera.viewBlit`
-	 */
-	var view(get, never):FlxBlitView;
-	
-	@:noCompletion inline function get_view():FlxBlitView
-		return camera.viewBlit;
-		
 	public function new()
 	{
 		super();
@@ -90,7 +82,7 @@ class FlxBlitRenderer extends FlxRenderer
 		_flashPoint = null;
 	}
 	
-	override function clear():Void
+	override function clear(view:FlxBlitView):Void
 	{
 		view.checkResize();
 		
@@ -99,13 +91,14 @@ class FlxBlitRenderer extends FlxRenderer
 			view.buffer.lock();
 		}
 		
-		fill(camera.bgColor, camera.useBgAlphaBlending);
+		final camera = view.camera;
+		view.fill(camera.bgColor, camera.useBgAlphaBlending);
 		view.screen.dirty = true;
 	}
 	
-	override function render():Void
+	override function render(view:FlxBlitView):Void
 	{
-		camera.drawFX();
+		view.camera.drawFX();
 		
 		if (useBufferLocking)
 		{
@@ -115,11 +108,12 @@ class FlxBlitRenderer extends FlxRenderer
 		view.screen.dirty = true;
 	}
 	
-	override function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
+	override function drawPixels(view:FlxBlitView, ?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
 			?shader:FlxShader):Void
 	{
 		_helperMatrix.copyFrom(matrix);
 		
+		final camera = view.camera;
 		if (view._useBlitMatrix)
 		{
 			_helperMatrix.concat(view._blitMatrix);
@@ -132,9 +126,10 @@ class FlxBlitRenderer extends FlxRenderer
 		}
 	}
 	
-	override function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
+	override function copyPixels(view:FlxBlitView, ?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
 			smoothing:Bool = false, ?shader:FlxShader)
 	{
+		final camera = view.camera;
 		if (pixels != null)
 		{
 			if (view._useBlitMatrix)
@@ -158,9 +153,10 @@ class FlxBlitRenderer extends FlxRenderer
 		}
 	}
 	
-	override function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
+	override function drawTriangles(view:FlxBlitView, graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader)
 	{
+		final camera = view.camera;
 		final cameraBounds = _bounds.set(camera.viewMarginLeft, camera.viewMarginTop, camera.viewWidth, camera.viewHeight);
 		
 		if (position == null)
@@ -234,63 +230,4 @@ class FlxBlitRenderer extends FlxRenderer
 		
 		bounds.put();
 	}
-	
-	override function fill(color:FlxColor, blendAlpha:Bool = true)
-	{
-		if (blendAlpha)
-		{
-			view._fill.fillRect(view._flashRect, color);
-			view.buffer.copyPixels(view._fill, view._flashRect, _flashPoint, null, null, blendAlpha);
-		}
-		else
-		{
-			view.buffer.fillRect(view._flashRect, color);
-		}
-	}
-	
-	override function beginDrawDebug(?camera:FlxCamera):Void
-	{
-		super.beginDrawDebug(camera);
-		
-		FlxSpriteUtil.flashGfx.clear();
-	}
-	
-	override function endDrawDebug():Void
-	{
-		view.buffer.draw(FlxSpriteUtil.flashGfxSprite);
-	}
-	
-	#if FLX_DEBUG
-	override public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1.0):Void
-	{
-		final gfx = FlxSpriteUtil.flashGfx;
-		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
-		gfx.drawRect(x, y, width, height);
-	}
-	
-	override public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void
-	{
-		final gfx = FlxSpriteUtil.flashGfx;
-		gfx.lineStyle();
-		gfx.beginFill(color.rgb, color.alphaFloat);
-		gfx.drawRect(x, y, width, height);
-		gfx.endFill();
-	}
-	
-	override public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void
-	{
-		final gfx = FlxSpriteUtil.flashGfx;
-		gfx.beginFill(color.rgb, color.alphaFloat);
-		gfx.drawCircle(x, y, radius);
-		gfx.endFill();
-	}
-	
-	override public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void
-	{
-		final gfx = FlxSpriteUtil.flashGfx;
-		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
-		gfx.moveTo(x1, y1);
-		gfx.lineTo(x2, y2);
-	}
-	#end
 }

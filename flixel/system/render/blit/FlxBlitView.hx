@@ -3,18 +3,19 @@ package flixel.system.render.blit;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
-import flixel.math.FlxRect;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.render.FlxCameraView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.DisplayObjectContainer;
+import openfl.display.Graphics;
 import openfl.display.Sprite;
-import openfl.geom.Rectangle;
 import openfl.geom.ColorTransform;
+import openfl.geom.Rectangle;
 
 class FlxBlitView extends FlxCameraView
 {
@@ -42,6 +43,13 @@ class FlxBlitView extends FlxCameraView
 	 * Used in blit render mode, where you can manipulate its pixels for achieving some visual effects.
 	 */
 	public var buffer:BitmapData;
+	
+	#if FLX_DEBUG
+	/**
+	 * Sprite for drawDebug information
+	 */
+	public var debugSprite:Sprite = new Sprite();
+	#end
 	
 	/**
 	 * Internal sprite, used for correct trimming of camera viewport.
@@ -177,6 +185,76 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
+	//{ region ------------------------ DEBUG DRAW ------------------------
+	
+	public function beginDrawDebug()
+	{
+		debugSprite.graphics.clear();
+		return debugSprite.graphics;
+	}
+	
+	public function getDebugGraphics()
+	{
+		return debugSprite.graphics;
+	}
+	
+	public function endDrawDebug():Void
+	{
+		buffer.draw(debugSprite);
+	}
+	
+	#if FLX_DEBUG
+	public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1.0):Void
+	{
+		final gfx = debugSprite.graphics;
+		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
+		gfx.drawRect(x, y, width, height);
+	}
+	
+	public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void
+	{
+		final gfx = debugSprite.graphics;
+		gfx.lineStyle();
+		gfx.beginFill(color.rgb, color.alphaFloat);
+		gfx.drawRect(x, y, width, height);
+		gfx.endFill();
+	}
+	
+	public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void
+	{
+		final gfx = debugSprite.graphics;
+		gfx.beginFill(color.rgb, color.alphaFloat);
+		gfx.drawCircle(x, y, radius);
+		gfx.endFill();
+	}
+	
+	public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void
+	{
+		final gfx = debugSprite.graphics;
+		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
+		gfx.moveTo(x1, y1);
+		gfx.lineTo(x2, y2);
+	}
+	#end
+	
+	//} endregion --------------------- DEBUG DRAW ------------------------
+	
+	//{ region ------------------------ HELPERS ------------------------
+	
+	@:haxe.warning("-WDeprecated")
+	public function fill(color:FlxColor, blendAlpha:Bool = true)
+	{
+		if (blendAlpha)
+		{
+			_fill.fillRect(_flashRect, color);
+			buffer.copyPixels(_fill, _flashRect, camera._flashPoint, null, null, blendAlpha);
+		}
+		else
+		{
+			buffer.fillRect(_flashRect, color);
+		}
+	}
+	
 	function checkResize():Void
 	{
 		if (camera.width != buffer.width || camera.height != buffer.height)
@@ -238,7 +316,11 @@ class FlxBlitView extends FlxCameraView
 		return vector;
 	}
 	
-	override function get_display():DisplayObjectContainer
+	//} endregion --------------------- HELPERS ------------------------
+	
+	//{ region ------------------------ GETTERS ------------------------
+	
+	function get_display():DisplayObjectContainer
 	{
 		return flashSprite;
 	}
@@ -279,4 +361,6 @@ class FlxBlitView extends FlxCameraView
 		flashSprite.visible = visible;
 		return visible;
 	}
+	
+	//} endregion --------------------- GETTERS ------------------------
 }

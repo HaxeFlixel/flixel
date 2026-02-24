@@ -1,12 +1,12 @@
 package flixel.system.frontEnds;
 
-import flixel.system.render.blit.FlxBlitRenderer;
-import openfl.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.system.render.blit.FlxBlitRenderer;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxSignal.FlxTypedSignal;
+import openfl.geom.Rectangle;
 
 using flixel.util.FlxArrayUtil;
 
@@ -272,10 +272,7 @@ class CameraFrontEnd
 		for (camera in list)
 		{
 			if ((camera != null) && camera.exists && camera.visible)
-			{
-				FlxG.renderer.begin(camera);
-				FlxG.renderer.clear();
-			}
+				FlxG.renderer.clear(camera.view);
 		}
 	}
 
@@ -288,10 +285,7 @@ class CameraFrontEnd
 		for (camera in list)
 		{
 			if ((camera != null) && camera.exists && camera.visible)
-			{
-				FlxG.renderer.begin(camera);
-				FlxG.renderer.render();
-			}
+				FlxG.renderer.render(camera.view);
 		}
 	}
 

@@ -11,9 +11,9 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
-import flixel.system.render.quad.FlxQuadView;
-import flixel.system.render.blit.FlxBlitView;
 import flixel.system.render.blit.FlxBlitRenderer;
+import flixel.system.render.blit.FlxBlitView;
+import flixel.system.render.quad.FlxQuadView;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -22,9 +22,9 @@ import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
-import openfl.display.DisplayObjectContainer;
 import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
 import openfl.geom.Point;
@@ -723,8 +723,7 @@ class FlxCamera extends FlxBasic
 	@:deprecated("camera.render() is deprecated, use FlxG.renderer.render() instead.")
 	function render():Void
 	{
-		FlxG.renderer.begin(this);
-		FlxG.renderer.render();
+		FlxG.renderer.render(view);
 	}
 
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
@@ -737,24 +736,21 @@ class FlxCamera extends FlxBasic
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false,
 			?shader:FlxShader):Void
 	{
-		FlxG.renderer.begin(this);
-		FlxG.renderer.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+		FlxG.renderer.drawPixels(view, frame, pixels, matrix, transform, blend, smoothing, shader);
 	}
 
 	@:deprecated("camera.copyPixels() is deprecated, use FlxG.renderer.copyPixels() instead.")
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
 			?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
-		FlxG.renderer.begin(this);
-		FlxG.renderer.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+		FlxG.renderer.copyPixels(view, frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
 	}
 
 	@:deprecated("camera.drawTriangles() is deprecated, use FlxG.renderer.drawTriangles() instead.")
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader):Void
 	{
-		FlxG.renderer.begin(this);
-		FlxG.renderer.drawTriangles(graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing, transform, shader);
+		FlxG.renderer.drawTriangles(view, graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing, transform, shader);
 	}
 
 	/**
@@ -1370,12 +1366,10 @@ class FlxCamera extends FlxBasic
 	{
 		color.alphaFloat = fxAlpha;
 
-		FlxG.renderer.begin(this);
-
 		if (viewQuad != null && graphics != null)
 			viewQuad.targetGraphics = graphics;
 
-		FlxG.renderer.fill(color, blendAlpha);
+		view.fill(color, blendAlpha);
 	}
 
 	/**
@@ -1384,14 +1378,12 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.render.FlxCameraView)
 	function drawFX():Void
 	{
-		FlxG.renderer.begin(this);
-
 		// Draw the "flash" special effect onto the buffer
 		if (_fxFlashAlpha > 0.0)
 		{
 			var color = _fxFlashColor;
 			color.alphaFloat *= _fxFlashAlpha;
-			FlxG.renderer.fill(color);
+			view.fill(color);
 		}
 		
 		// Draw the "fade" special effect onto the buffer
@@ -1399,7 +1391,7 @@ class FlxCamera extends FlxBasic
 		{
 			var color = _fxFadeColor;
 			color.alphaFloat *= _fxFadeAlpha;
-			FlxG.renderer.fill(color);
+			view.fill(color);
 		}
 	}
 

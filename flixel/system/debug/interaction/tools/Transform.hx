@@ -235,10 +235,11 @@ class Transform extends Tool
 
 		final camera = target.getDefaultCamera();
 
-		FlxG.renderer.beginDrawDebug(camera);
+		final view = camera.view;
+		view.beginDrawDebug();
 		drawSelection(camera);
 		Marker.draw(target.x + target.origin.x, target.y + target.origin.y, false, camera);
-		FlxG.renderer.endDrawDebug();
+		view.endDrawDebug();
 	}
 
 	function drawSelection(camera:FlxCamera)
@@ -248,7 +249,7 @@ class Transform extends Tool
 		var prevY = markers[3].y;
 		for (marker in markers)
 		{
-			FlxG.renderer.drawDebugLine(prevX, prevY, marker.x, marker.y, FlxColor.MAGENTA);
+			camera.view.drawDebugLine(prevX, prevY, marker.x, marker.y, FlxColor.MAGENTA);
 
 			prevX = marker.x;
 			prevY = marker.y;
@@ -300,12 +301,10 @@ private class Marker
 
 	public static function draw(screenX:Float, screenY:Float, circle:Bool, camera:FlxCamera)
 	{
-		FlxG.renderer.begin(camera);
-
 		if (circle)
-			FlxG.renderer.drawDebugFilledCircle(screenX, screenY, CIRCLE_RADIUS, FlxColor.MAGENTA);
+			camera.view.drawDebugFilledCircle(screenX, screenY, CIRCLE_RADIUS, FlxColor.MAGENTA);
 		else
-			FlxG.renderer.drawDebugFilledRect(screenX - RECT_MARGIN, screenY - RECT_MARGIN, RECT_SIZE, RECT_SIZE, FlxColor.MAGENTA);
+			camera.view.drawDebugFilledRect(screenX - RECT_MARGIN, screenY - RECT_MARGIN, RECT_SIZE, RECT_SIZE, FlxColor.MAGENTA);
 	}
 }
 
