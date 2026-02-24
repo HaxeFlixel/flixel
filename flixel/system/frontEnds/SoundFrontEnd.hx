@@ -153,7 +153,7 @@ class SoundFrontEnd
 	 * @param   group       The group to manage this sound, if `null`, `defaultMusicGroup` is used.
 	 * @param   volume      How loud the sound should be, from 0 to 1.
 	 * @param   loop        Whether to loop this music.
-	 * @param   onComplete  Called when the sound finishes playing, before it checks whether to to loop.
+	 * @param   onComplete  Called when the sound finishes playing, before it checks whether to loop.
 	 */
 	overload public inline extern function playMusic(asset:FlxSoundAsset, ?group, volume = 1.0, loop = true, ?onComplete):FlxSound
 	{
