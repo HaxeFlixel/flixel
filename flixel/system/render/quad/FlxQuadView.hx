@@ -395,7 +395,6 @@ class FlxQuadView extends FlxCameraView
 	
 	public function beginDrawDebug()
 	{
-		debugLayer.graphics.clear();
 		return debugLayer.graphics;
 	}
 	
