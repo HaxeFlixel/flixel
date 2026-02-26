@@ -5,6 +5,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.math.FlxVelocity;
 import flixel.path.FlxPath;
+import flixel.system.render.FlxCameraView;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
@@ -1302,13 +1303,14 @@ class FlxObject extends FlxBasic
 	 *
 	 * @param   Camera   Which camera to draw the debug visuals to.
 	 */
-	@:haxe.warning("-WDeprecated")
 	public function drawDebugOnCamera(camera:FlxCamera):Void
 	{
 		if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			return;
 
 		final rect = getBoundingBox(camera);
+		
+		// TODO: Remove and handle this in the view via drawDebugRect
 		if (FlxG.renderer.method != BLITTING)
 		{
 			final view = camera.getViewMarginRect();
@@ -1319,14 +1321,12 @@ class FlxObject extends FlxBasic
 		
 		if (rect.width > 0 && rect.height > 0)
 		{
-			final view = camera.view;
-			final gfx = beginDrawDebug(camera);
-			drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
-			endDrawDebug(camera);
+			drawDebugBoundingBoxTo(camera.view, rect);
 		}
 	}
 
 	// TODO: throw warning on overrides
+	@:deprecated("drawDebugBoundingBox is deprecated, use drawDebugBoundingBoxTo instead") // 6.2.0
 	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:FlxDirectionFlags, partial:Bool)
 	{
 		// Find the color to use
@@ -1334,7 +1334,14 @@ class FlxObject extends FlxBasic
 		drawDebugBoundingBoxColor(gfx, rect, color);
 	}
 	
-	// TODO: throw warning on overrides
+	@:haxe.warning("-WDeprecated")
+	function drawDebugBoundingBoxTo(view:FlxCameraView, rect:FlxRect)
+	{
+		final gfx = view.beginDrawDebug();
+		drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
+		view.endDrawDebug();
+	}
+	
 	function getDebugBoundingBoxColor(allowCollisions:FlxDirectionFlags)
 	{
 		if (debugBoundingBoxColor != null)
@@ -1351,6 +1358,7 @@ class FlxObject extends FlxBasic
 	}
 	
 	// TODO: throw warning on overrides
+	@:deprecated("beginDrawDebug(gfx) is deprecated, camera.view.drawDebugRect instead")
 	function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
 	{
 		// fill static graphics object with square shape
@@ -1358,15 +1366,13 @@ class FlxObject extends FlxBasic
 		gfx.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0);
 	}
 
-	// TODO: throw warning on overrides
-	@:deprecated("use object.beginDrawDebug(camera) is deprecated, FlxG.renderer.beginDrawDebug(camera) instead")
+	@:deprecated("beginDrawDebug(camera) is deprecated, use camera.view.beginDrawDebug() instead")
 	inline function beginDrawDebug(camera:FlxCamera):Graphics
 	{
 		return camera.view.beginDrawDebug();
 	}
 
-	// TODO: throw warning on overrides
-	@:deprecated("use object.endDrawDebug(camera) is deprecated, FlxG.renderer.endDrawDebug() instead")
+	@:deprecated("endDrawDebug(camera) is deprecated, use camera.view.endDrawDebug() instead")
 	inline function endDrawDebug(camera:FlxCamera)
 	{
 		camera.view.endDrawDebug();
