@@ -82,32 +82,6 @@ class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 		_flashPoint = null;
 	}
 	
-	override function clear(view:FlxBlitView):Void
-	{
-		view.checkResize();
-		
-		if (useBufferLocking)
-		{
-			view.buffer.lock();
-		}
-		
-		final camera = view.camera;
-		view.fill(camera.bgColor, camera.useBgAlphaBlending);
-		view.screen.dirty = true;
-	}
-	
-	override function render(view:FlxBlitView):Void
-	{
-		view.camera.drawFX();
-		
-		if (useBufferLocking)
-		{
-			view.buffer.unlock();
-		}
-		
-		view.screen.dirty = true;
-	}
-	
 	override function drawPixels(view:FlxBlitView, ?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
 			?shader:FlxShader):Void
 	{

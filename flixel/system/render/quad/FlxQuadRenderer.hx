@@ -53,34 +53,6 @@ class FlxQuadRenderer extends FlxTypedRenderer<FlxQuadView>
 		_helperMatrix = null;
 	}
 
-	override function clear(view:FlxQuadView):Void
-	{
-		view.clearDrawStack();
-		
-		view.canvas.graphics.clear();
-		#if FLX_DEBUG
-		// Clearing camera's debug sprite
-		view.debugLayer.graphics.clear();
-		#end
-		
-		view.targetGraphics = view.canvas.graphics;
-		view.fill(view.camera.bgColor, view.camera.useBgAlphaBlending);
-	}
-
-	override function render(view:FlxQuadView):Void
-	{
-		view.flashSprite.filters = view.camera.filtersEnabled ? view.camera.filters : null;
-		
-		var currItem:FlxDrawBaseItem<Dynamic> = view._headOfDrawStack;
-		while (currItem != null)
-		{
-			currItem.render(view.camera);
-			currItem = currItem.next;
-		}
-
-		view.camera.drawFX();
-	}
-
 	override function drawPixels(view:FlxQuadView, ?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
 		?shader:FlxShader)
 	{

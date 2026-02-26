@@ -101,18 +101,7 @@ class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 
 	public function destroy():Void {}
 	
-	
-    // ------------------------ RENDERING ------------------------
-
-    /**
-	 * Called before a new rendering frame, clears all previously drawn graphics.
-	 */
-    public function clear(view:TView):Void {}
-
-    /**
-	 * Flushes any remaining graphics and renders everything to the screen.
-	 */
-    public function render(view:TView):Void {}
+	//{ region ------------------------ RENDERING ------------------------
 
     /**
      * Draws `frame` or `pixels` (depends on the renderer backend) onto the current render target.
@@ -163,8 +152,8 @@ class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	 */
 	public function drawTriangles(view:TView, graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 		?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader):Void {}
-
-
+	
+	//} endregion ------------------------ RENDERING ------------------------
 }
 
 /**

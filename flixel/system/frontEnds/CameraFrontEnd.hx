@@ -272,7 +272,7 @@ class CameraFrontEnd
 		for (camera in list)
 		{
 			if ((camera != null) && camera.exists && camera.visible)
-				FlxG.renderer.clear(camera.view);
+				camera.view.clear();
 		}
 	}
 
@@ -285,7 +285,7 @@ class CameraFrontEnd
 		for (camera in list)
 		{
 			if ((camera != null) && camera.exists && camera.visible)
-				FlxG.renderer.render(camera.view);
+				camera.view.render();
 		}
 	}
 

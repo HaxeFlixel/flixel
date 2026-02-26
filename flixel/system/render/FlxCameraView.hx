@@ -169,6 +169,16 @@ abstract class FlxCameraView implements IFlxDestroyable
 	//{ region ------------------------ HELPERS ------------------------
 	
 	/**
+	 * Flushes any remaining graphics and renders everything to the screen.
+	 */
+	abstract public function render():Void;
+	
+	/**
+	 * Called before a new rendering frame, clears all previously drawn graphics.
+	 */
+	abstract public function clear():Void;
+	
+	/**
 	 * Fills the current render target with `color`.
 	 * 
 	 * @param   color        The color (in 0xAARRGGBB format) to fill the screen with.

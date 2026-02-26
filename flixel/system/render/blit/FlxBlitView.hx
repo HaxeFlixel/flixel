@@ -125,6 +125,45 @@ class FlxBlitView extends FlxCameraView
 		_flashRect = null;
 	}
 	
+	function render():Void
+	{
+		camera.drawFX();
+		
+		if (FlxBlitRenderer.useBufferLocking)
+		{
+			buffer.unlock();
+		}
+		
+		screen.dirty = true;
+	}
+	
+	public function clear():Void
+	{
+		checkResize();
+		
+		if (FlxBlitRenderer.useBufferLocking)
+		{
+			buffer.lock();
+		}
+		
+		fill(camera.bgColor, camera.useBgAlphaBlending);
+		screen.dirty = true;
+	}
+	
+	@:haxe.warning("-WDeprecated")
+	public function fill(color:FlxColor, blendAlpha:Bool = true)
+	{
+		if (blendAlpha)
+		{
+			_fill.fillRect(_flashRect, color);
+			buffer.copyPixels(_fill, _flashRect, camera._flashPoint, null, null, blendAlpha);
+		}
+		else
+		{
+			buffer.fillRect(_flashRect, color);
+		}
+	}
+	
 	override function offsetView(x:Float, y:Float):Void
 	{
 		flashSprite.x += x;
@@ -239,21 +278,8 @@ class FlxBlitView extends FlxCameraView
 	
 	//} endregion --------------------- DEBUG DRAW ------------------------
 	
-	//{ region ------------------------ HELPERS ------------------------
+	//{ region ------------------------ HELPERS ---------------------------
 	
-	@:haxe.warning("-WDeprecated")
-	public function fill(color:FlxColor, blendAlpha:Bool = true)
-	{
-		if (blendAlpha)
-		{
-			_fill.fillRect(_flashRect, color);
-			buffer.copyPixels(_fill, _flashRect, camera._flashPoint, null, null, blendAlpha);
-		}
-		else
-		{
-			buffer.fillRect(_flashRect, color);
-		}
-	}
 	
 	function checkResize():Void
 	{

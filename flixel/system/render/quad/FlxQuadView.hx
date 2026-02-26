@@ -226,8 +226,7 @@ class FlxQuadView extends FlxCameraView
 	 */
 	static var _storageTrianglesHead:FlxDrawTrianglesItem;
 	
-	@:noCompletion
-	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, ?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
+	function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, ?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
 	{
 		#if FLX_RENDER_TRIANGLE
 		return startTrianglesBatch(graphic, smooth, colored, blend);
@@ -288,8 +287,7 @@ class FlxQuadView extends FlxCameraView
 		#end
 	}
 	
-	@:noCompletion
-	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
+	function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
 			?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		if (_currentDrawItem != null
@@ -307,8 +305,7 @@ class FlxQuadView extends FlxCameraView
 		return getNewDrawTrianglesItem(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
 	}
 	
-	@:noCompletion
-	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
+	function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
 			?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
@@ -350,8 +347,35 @@ class FlxQuadView extends FlxCameraView
 		return itemToReturn;
 	}
 	
-	@:noCompletion
-	public function clearDrawStack():Void
+	public function render():Void
+	{
+		flashSprite.filters = camera.filtersEnabled ? camera.filters : null;
+		
+		var currItem:FlxDrawBaseItem<Dynamic> = _headOfDrawStack;
+		while (currItem != null)
+		{
+			currItem.render(camera);
+			currItem = currItem.next;
+		}
+
+		camera.drawFX();
+	}
+	
+	public function clear():Void
+	{
+		clearDrawStack();
+		
+		canvas.graphics.clear();
+		#if FLX_DEBUG
+		// Clearing camera's debug sprite
+		debugLayer.graphics.clear();
+		#end
+		
+		targetGraphics = canvas.graphics;
+		fill(camera.bgColor, camera.useBgAlphaBlending);
+	}
+	
+	function clearDrawStack():Void
 	{
 		var currTiles = _headTiles;
 		var newTilesHead;
