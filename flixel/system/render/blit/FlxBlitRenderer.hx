@@ -82,7 +82,7 @@ class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 		_flashPoint = null;
 	}
 	
-	override function drawPixels(view:FlxBlitView, ?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
+	public function drawPixels(view:FlxBlitView, ?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
 			?shader:FlxShader):Void
 	{
 		_helperMatrix.copyFrom(matrix);
@@ -100,7 +100,7 @@ class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 		}
 	}
 	
-	override function copyPixels(view:FlxBlitView, ?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
+	public function copyPixels(view:FlxBlitView, ?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
 			smoothing:Bool = false, ?shader:FlxShader)
 	{
 		final camera = view.camera;
@@ -127,7 +127,7 @@ class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 		}
 	}
 	
-	override function drawTriangles(view:FlxBlitView, graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
+	public function drawTriangles(view:FlxBlitView, graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader)
 	{
 		final camera = view.camera;

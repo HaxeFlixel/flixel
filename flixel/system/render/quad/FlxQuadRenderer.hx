@@ -53,7 +53,7 @@ class FlxQuadRenderer extends FlxTypedRenderer<FlxQuadView>
 		_helperMatrix = null;
 	}
 
-	override function drawPixels(view:FlxQuadView, ?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
+	public function drawPixels(view:FlxQuadView, ?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
 		?shader:FlxShader)
 	{
 		var isColored = (transform != null #if !html5 && transform.hasRGBMultipliers() #end);
@@ -67,7 +67,7 @@ class FlxQuadRenderer extends FlxTypedRenderer<FlxQuadView>
 		drawItem.addQuad(frame, matrix, transform);
 	}
 	
-	override function copyPixels(view:FlxQuadView, ?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
+	public function copyPixels(view:FlxQuadView, ?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
 			smoothing:Bool = false, ?shader:FlxShader)
 	{
 		_helperMatrix.identity();
@@ -84,7 +84,7 @@ class FlxQuadRenderer extends FlxTypedRenderer<FlxQuadView>
 		drawItem.addQuad(frame, _helperMatrix, transform);
 	}
 	
-	override function drawTriangles(view:FlxQuadView, graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
+	public function drawTriangles(view:FlxQuadView, graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader)
 	{
 		final camera = view.camera;

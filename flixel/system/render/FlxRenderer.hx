@@ -31,7 +31,7 @@ typedef FlxRenderer = FlxTypedRenderer<FlxCameraView>;
 /**
  * Typed Renderer, override this to handle specific backends that require specific cavera views
  */
-class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
+abstract class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 {
     /**
 	 * The number of total draw calls in the current frame.
@@ -94,7 +94,7 @@ class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	 */
     public var maxTextureSize(default, null):Int;
 
-    public function new() 
+    function new() 
     {
         maxTextureSize = -1;
     }
@@ -114,8 +114,8 @@ class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	 * @param   smoothing   Whether to use smoothing (anti-aliasing) when drawing.
 	 * @param   shader      The shader to use, optional (used only with the DRAW_TILES renderer).
 	 */
-	public function drawPixels(view:TView, ?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
-		?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false, ?shader:FlxShader):Void {}
+	abstract public function drawPixels(view:TView, ?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
+		?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false, ?shader:FlxShader):Void;
 	
 	/**
 	 * Draws `frame` or `pixels` (depends on the renderer backend) onto the current render target.
@@ -132,8 +132,8 @@ class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	 * @param   smoothing   Whether to use smoothing (anti-aliasing) when drawing.
 	 * @param   shader      The shader to use, optional (used only with the DRAW_TILES renderer).
 	 */
-	public function copyPixels(view:TView, ?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
-		smoothing:Bool = false, ?shader:FlxShader):Void {}
+	abstract public function copyPixels(view:TView, ?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
+		smoothing:Bool = false, ?shader:FlxShader):Void;
 	
 	/**
 	 * Draws a set of triangles onto the current render target.
@@ -150,8 +150,8 @@ class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	 * @param   transform  The color transform to use, optional.
 	 * @param   shader     The shader to use, optional (used only with the DRAW_TILES renderer).
 	 */
-	public function drawTriangles(view:TView, graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
-		?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader):Void {}
+	abstract public function drawTriangles(view:TView, graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
+		?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader):Void;
 	
 	//} endregion ------------------------ RENDERING ------------------------
 }
