@@ -1361,13 +1361,20 @@ class FlxCamera extends FlxBasic
 	 * @param   color        The color to fill with in `0xAARRGGBB` hex format.
 	 * @param   blendAlpha   Whether to blend the alpha value or just wipe the previous contents. Default is `true`.
 	 */
-	@:deprecated("camera.fill() is deprecated, use FlxG.renderer.fill() instead.")
+	@:deprecated("camera.fill() is deprecated, use camera.view.fill() instead.")
 	public function fill(color:FlxColor, blendAlpha:Bool = true, fxAlpha:Float = 1.0, ?graphics:Graphics):Void
 	{
 		color.alphaFloat = fxAlpha;
 
-		if (viewQuad != null && graphics != null)
-			viewQuad.targetGraphics = graphics;
+		if (viewQuad != null && graphics != null && graphics != view.getDebugGraphics())
+		{
+			graphics.overrideBlendMode(null);
+			graphics.beginFill(color.rgb, color.alphaFloat);
+			// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
+			// which could appear while cameras fading
+			graphics.drawRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2);
+			graphics.endFill();
+		}
 
 		view.fill(color, blendAlpha);
 	}

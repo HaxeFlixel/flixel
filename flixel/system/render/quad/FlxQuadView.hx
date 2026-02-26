@@ -55,8 +55,6 @@ class FlxQuadView extends FlxCameraView
 	 * Its position is modified by `updateScrollRect()` method, which is called on camera's resize and scale events.
 	 */
 	var _scrollRect:Sprite = new Sprite();
-
-	var targetGraphics:Graphics;
 	
 	@:allow(flixel.system.render.FlxCameraView)
 	function new(camera:FlxCamera)
@@ -73,8 +71,6 @@ class FlxQuadView extends FlxCameraView
 		debugLayer = new Sprite();
 		_scrollRect.addChild(debugLayer);
 		#end
-
-		targetGraphics = canvas.graphics;
 	}
 	
 	override function destroy():Void
@@ -130,7 +126,6 @@ class FlxQuadView extends FlxCameraView
 		debugLayer.graphics.clear();
 		#end
 		
-		targetGraphics = canvas.graphics;
 		fill(camera.bgColor, camera.useBgAlphaBlending);
 	}
 	
@@ -168,12 +163,12 @@ class FlxQuadView extends FlxCameraView
 	
 	public function fill(color:FlxColor, blendAlpha:Bool = true):Void
 	{
-		targetGraphics.overrideBlendMode(null);
-		targetGraphics.beginFill(color.rgb, color.alphaFloat);
+		canvas.graphics.overrideBlendMode(null);
+		canvas.graphics.beginFill(color.rgb, color.alphaFloat);
 		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 		// which could appear while cameras fading
-		targetGraphics.drawRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2);
-		targetGraphics.endFill();
+		canvas.graphics.drawRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2);
+		canvas.graphics.endFill();
 	}
 	
 	override function offsetView(x:Float, y:Float):Void
