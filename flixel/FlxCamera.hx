@@ -824,7 +824,7 @@ class FlxCamera extends FlxBasic
 		this.width = width;
 		this.height = height;
 
-		view = FlxCameraView.create(this);
+		view = createView();
 		if (view is FlxQuadView)
 			viewQuad = cast view;
 		else if (view is FlxBlitView)
@@ -843,6 +843,11 @@ class FlxCamera extends FlxBasic
 		updateInternalSpritePositions();
 
 		bgColor = FlxG.cameras.bgColor;
+	}
+	
+	function createView()
+	{
+		return FlxCameraView.create(this);
 	}
 
 	/**
