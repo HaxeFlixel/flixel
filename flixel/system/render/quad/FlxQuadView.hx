@@ -106,6 +106,76 @@ class FlxQuadView extends FlxCameraView
 		_scrollRect = null;
 	}
 	
+	public function render():Void
+	{
+		flashSprite.filters = camera.filtersEnabled ? camera.filters : null;
+		
+		var currItem:FlxDrawBaseItem<Dynamic> = _headOfDrawStack;
+		while (currItem != null)
+		{
+			currItem.render(camera);
+			currItem = currItem.next;
+		}
+
+		camera.drawFX();
+	}
+	
+	public function clear():Void
+	{
+		clearDrawStack();
+		
+		canvas.graphics.clear();
+		#if FLX_DEBUG
+		// Clearing camera's debug sprite
+		debugLayer.graphics.clear();
+		#end
+		
+		targetGraphics = canvas.graphics;
+		fill(camera.bgColor, camera.useBgAlphaBlending);
+	}
+	
+	function clearDrawStack():Void
+	{
+		var currTiles = _headTiles;
+		var newTilesHead;
+		
+		while (currTiles != null)
+		{
+			newTilesHead = currTiles.nextTyped;
+			currTiles.reset();
+			currTiles.nextTyped = _storageTilesHead;
+			_storageTilesHead = currTiles;
+			currTiles = newTilesHead;
+		}
+		
+		var currTriangles:FlxDrawTrianglesItem = _headTriangles;
+		var newTrianglesHead:FlxDrawTrianglesItem;
+		
+		while (currTriangles != null)
+		{
+			newTrianglesHead = currTriangles.nextTyped;
+			currTriangles.reset();
+			currTriangles.nextTyped = _storageTrianglesHead;
+			_storageTrianglesHead = currTriangles;
+			currTriangles = newTrianglesHead;
+		}
+		
+		_currentDrawItem = null;
+		_headOfDrawStack = null;
+		_headTiles = null;
+		_headTriangles = null;
+	}
+	
+	public function fill(color:FlxColor, blendAlpha:Bool = true):Void
+	{
+		targetGraphics.overrideBlendMode(null);
+		targetGraphics.beginFill(color.rgb, color.alphaFloat);
+		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
+		// which could appear while cameras fading
+		targetGraphics.drawRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2);
+		targetGraphics.endFill();
+	}
+	
 	override function offsetView(x:Float, y:Float):Void
 	{
 		flashSprite.x += x;
@@ -347,75 +417,7 @@ class FlxQuadView extends FlxCameraView
 		return itemToReturn;
 	}
 	
-	public function render():Void
-	{
-		flashSprite.filters = camera.filtersEnabled ? camera.filters : null;
-		
-		var currItem:FlxDrawBaseItem<Dynamic> = _headOfDrawStack;
-		while (currItem != null)
-		{
-			currItem.render(camera);
-			currItem = currItem.next;
-		}
-
-		camera.drawFX();
-	}
-	
-	public function clear():Void
-	{
-		clearDrawStack();
-		
-		canvas.graphics.clear();
-		#if FLX_DEBUG
-		// Clearing camera's debug sprite
-		debugLayer.graphics.clear();
-		#end
-		
-		targetGraphics = canvas.graphics;
-		fill(camera.bgColor, camera.useBgAlphaBlending);
-	}
-	
-	function clearDrawStack():Void
-	{
-		var currTiles = _headTiles;
-		var newTilesHead;
-		
-		while (currTiles != null)
-		{
-			newTilesHead = currTiles.nextTyped;
-			currTiles.reset();
-			currTiles.nextTyped = _storageTilesHead;
-			_storageTilesHead = currTiles;
-			currTiles = newTilesHead;
-		}
-		
-		var currTriangles:FlxDrawTrianglesItem = _headTriangles;
-		var newTrianglesHead:FlxDrawTrianglesItem;
-		
-		while (currTriangles != null)
-		{
-			newTrianglesHead = currTriangles.nextTyped;
-			currTriangles.reset();
-			currTriangles.nextTyped = _storageTrianglesHead;
-			_storageTrianglesHead = currTriangles;
-			currTriangles = newTrianglesHead;
-		}
-		
-		_currentDrawItem = null;
-		_headOfDrawStack = null;
-		_headTiles = null;
-		_headTriangles = null;
-	}
-	
-	public function fill(color:FlxColor, blendAlpha:Bool = true):Void
-	{
-		targetGraphics.overrideBlendMode(null);
-		targetGraphics.beginFill(color.rgb, color.alphaFloat);
-		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
-		// which could appear while cameras fading
-		targetGraphics.drawRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2);
-		targetGraphics.endFill();
-	}
+	//{ region ------------------------ DEBUG DRAW ------------------------
 	
 	public function beginDrawDebug()
 	{
@@ -462,4 +464,6 @@ class FlxQuadView extends FlxCameraView
 		gfx.lineTo(x2, y2);
 	}
 	#end
+	
+	//} endregion ------------------------ DEBUG DRAW ------------------------
 }

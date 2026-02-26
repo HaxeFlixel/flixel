@@ -82,6 +82,24 @@ abstract class FlxCameraView implements IFlxDestroyable
 		_flashOffset = FlxDestroyUtil.put(_flashOffset);
 	}
 	
+	/**
+	 * Flushes any remaining graphics and renders everything to the screen.
+	 */
+	abstract public function render():Void;
+	
+	/**
+	 * Called before a new rendering frame, clears all previously drawn graphics.
+	 */
+	abstract public function clear():Void;
+	
+	/**
+	 * Fills the current render target with `color`.
+	 * 
+	 * @param   color        The color (in 0xAARRGGBB format) to fill the screen with.
+	 * @param   blendAlpha   Whether to blend the alpha value or just wipe the previous contents.
+	 */
+	abstract public function fill(color:FlxColor, blendAlpha:Bool = true):Void;
+	
 	public function offsetView(x:Float, y:Float):Void {}
 
 	function updateScale():Void
@@ -166,25 +184,7 @@ abstract class FlxCameraView implements IFlxDestroyable
 	
 	//} endregion --------------------- DEBUG DRAW ------------------------
 	
-	//{ region ------------------------ HELPERS ------------------------
-	
-	/**
-	 * Flushes any remaining graphics and renders everything to the screen.
-	 */
-	abstract public function render():Void;
-	
-	/**
-	 * Called before a new rendering frame, clears all previously drawn graphics.
-	 */
-	abstract public function clear():Void;
-	
-	/**
-	 * Fills the current render target with `color`.
-	 * 
-	 * @param   color        The color (in 0xAARRGGBB format) to fill the screen with.
-	 * @param   blendAlpha   Whether to blend the alpha value or just wipe the previous contents.
-	 */
-	abstract public function fill(color:FlxColor, blendAlpha:Bool = true):Void;
+	//{ region ------------------------ HELPERS ---------------------------
 	
 	/**
 	 * Helper method preparing debug rectangle for rendering in blit render mode
