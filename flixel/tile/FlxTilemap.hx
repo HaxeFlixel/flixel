@@ -595,7 +595,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 					if (color != null)
 					{
 						final colStr = color.toHexString();
-						drawDebugBoundingBoxColor(camera.view.getDebugGraphics(), rect, color);
+						drawDebugBoundingBoxColorTo(camera.view, rect, color);
 					}
 				}
 			}
