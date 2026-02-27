@@ -2,7 +2,9 @@ package flixel.tile;
 
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
+import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxColor;
+import flixel.util.FlxDirection;
 import flixel.util.FlxDirectionFlags;
 import haxe.PosInfos;
 import massive.munit.Assert;
@@ -11,11 +13,13 @@ import openfl.errors.ArgumentError;
 
 using StringTools;
 
+// null safety breaks on 4.2
+#if (haxe >= version("4.3.0")) @:nullSafety(Strict) #end
 class FlxTilemapTest extends FlxTest
 {
-	var tilemap:FlxTilemap;
-	var sampleMapString:String;
-	var sampleMapArray:Array<Int>;
+	var tilemap:FlxTilemap = new FlxTilemap();
+	var sampleMapString:String = "";
+	var sampleMapArray:Array<Int> = [];
 
 	@Before
 	function before()
@@ -134,6 +138,7 @@ class FlxTilemapTest extends FlxTest
 	}
 	
 	@Test
+	@:haxe.warning("-WDeprecated")
 	function testLoadMapFromGraphic()
 	{
 		var map = new BitmapData(2, 2);
@@ -241,6 +246,147 @@ class FlxTilemapTest extends FlxTest
 		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData(), 8, 8);
 
 		Assert.isFalse(tilemap.ray(new FlxPoint(0, 0), new FlxPoint(tilemap.width, tilemap.height)));
+	}
+
+	@Test // #1617
+	function testRayAdvanced()
+	{
+		var mapData = [
+			0, 0, 0,
+			0, 1, 0,
+			0, 0, 0
+		];
+		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData(), 8, 8);
+		
+		final startP = FlxPoint.get();
+		final endP = FlxPoint.get();
+		
+		function assertRay(expected:FlxRayResult, start:FlxPoint, end:FlxPoint, checkDir = true, ?msg:String, ?pos:PosInfos)
+		{
+			final actual = tilemap.rayAdvanced(start, end, checkDir);
+			if (actual.equals(expected))
+				Assert.assertionCount++;
+			else if (msg != null)
+				Assert.fail(msg, pos);
+			else
+				Assert.fail('Expected rayAdvanced($start, $end, $checkDir)to be ${resultToString(expected)}, got ${resultToString(actual)}', pos);
+		}
+		
+		inline function getPos(index:Int, result:FlxPoint)
+		{
+			if (tilemap.getTilePos(index, true, result) == null)
+				throw 'Expected valid tile at index $index';
+			
+			return result;
+		}
+		inline function setStart(index:Int) return getPos(index, startP);
+		inline function setEnd  (index:Int) return getPos(index, endP  );
+		
+		function assertRayStopped(start:FlxPoint, end:FlxPoint, checkDir = true, ?msg:String, ?pos:PosInfos)
+		{
+			// Test start and end verbatim, then offset x and test again to ensure both pure-vertical and sloped tests
+			final result = tilemap.rayAdvanced(start, end, checkDir);
+			if (result.match(STOPPED(_, _, _, _)))
+				Assert.assertionCount++;
+			else if (msg != null)
+				Assert.fail(msg, pos);
+			else
+				Assert.fail('Expected rayAdvanced($start, $end, $checkDir) to be STOPPED', pos);
+		}
+		
+		function assertRayNotStopped(start:FlxPoint, end:FlxPoint, checkDir = true, ?msg:String, ?pos:PosInfos)
+		{
+			assertRay(END, start, end, checkDir, 'Expected rayAdvanced($start, $end, $checkDir) to be NOT STOPPED', pos);
+		}
+		
+		tilemap.setTileProperties(1, ANY);
+		
+		final tl = 0; final tc = 1; final tr = 2;
+		final lc = 3; final c  = 4; final rc = 5;
+		final bl = 6; final bc = 7; final br = 8;
+		
+		assertRayNotStopped(setStart(tl), setEnd(tr));
+		assertRayNotStopped(setStart(tr), setEnd(tl));
+		assertRayNotStopped(setStart(tl), setEnd(bl));
+		assertRayNotStopped(setStart(bl), setEnd(tl));
+		assertRayNotStopped(setStart(bl), setEnd(br));
+		assertRayNotStopped(setStart(br), setEnd(bl));
+		assertRayNotStopped(setStart(tr), setEnd(br));
+		assertRayNotStopped(setStart(br), setEnd(tr));
+		
+		// For all purely vertical tests, also check at a slight angle, since the code is different
+		assertRayNotStopped(setStart(tl).subtract(1, 0), setEnd(bl));
+		assertRayNotStopped(setStart(bl).subtract(1, 0), setEnd(tl));
+		assertRayNotStopped(setStart(tr).subtract(1, 0), setEnd(br));
+		assertRayNotStopped(setStart(br).subtract(1, 0), setEnd(tr));
+		
+		function testDirections(allowCollisions:FlxDirectionFlags, ?pos)
+		{
+			tilemap.setTileProperties(1, allowCollisions);
+			function assertRaySimplified(dir:FlxDirection, x, y, start, end, label:String, ?pos)
+			{
+				final expected = allowCollisions.has(dir) ? STOPPED(c, x, y, EDGE(dir)) : END;
+				final actual = tilemap.rayAdvanced(setStart(start), setEnd(end), true);
+				if (actual.equals(expected))
+					Assert.assertionCount++;
+				else
+					Assert.fail('Expected rayAdvanced[$label]($startP, $endP) '
+						+ 'to be ${resultToString(expected)}, got ${resultToString(actual)}', pos);
+			}
+			
+			// check pure vertical and horizontal
+			assertRaySimplified(LEFT ,  8, 12, lc, rc, "L->R", pos);
+			assertRaySimplified(RIGHT, 16, 12, rc, lc, "R->L", pos);
+			assertRaySimplified(UP   , 12,  8, tc, bc, "T->B", pos);
+			assertRaySimplified(DOWN, 12, 16, bc, tc, "B->T", pos);
+			
+			// then check at various slopes
+			assertRaySimplified(UP  , 14,  8, tc, br, "T->BR", pos);
+			assertRaySimplified(UP  , 10,  8, tc, bl, "T->BL", pos);
+			assertRaySimplified(DOWN, 14, 16, bc, tr, "B->TR", pos);
+			assertRaySimplified(DOWN, 10, 16, bc, tl, "B->TL", pos);
+		}
+		
+		testDirections(ANY);
+		testDirections(ANY.without(LEFT ));
+		testDirections(ANY.without(RIGHT));
+		testDirections(ANY.without(UP   ));
+		testDirections(ANY.without(DOWN ));
+		testDirections(LEFT .with(RIGHT));
+		testDirections(LEFT .with(UP   ));
+		testDirections(LEFT .with(DOWN ));
+		testDirections(RIGHT.with(UP   ));
+		testDirections(RIGHT.with(DOWN ));
+		testDirections(DOWN .with(UP   ));
+		testDirections(LEFT );
+		testDirections(RIGHT);
+		testDirections(UP   );
+		testDirections(DOWN );
+		testDirections(NONE);
+		
+		// checkDir:false (always a hit if the tile allows any conditions)
+		tilemap.setTileProperties(1, UP);
+		
+		// check pure vertical and horizontal
+		assertRay(STOPPED(c,  8, 12, EDGE(LEFT )), setStart(lc), setEnd(rc), false);
+		assertRay(STOPPED(c, 16, 12, EDGE(RIGHT)), setStart(rc), setEnd(lc), false);
+		assertRay(STOPPED(c, 12,  8, EDGE(UP   )), setStart(tc), setEnd(bc), false);
+		assertRay(STOPPED(c, 12, 16, EDGE(DOWN )), setStart(bc), setEnd(tc), false);
+		
+		// then check at various slopes
+		assertRay(STOPPED(c, 14,  8, EDGE(UP  )), setStart(tc), setEnd(br), false);
+		assertRay(STOPPED(c, 10,  8, EDGE(UP  )), setStart(tc), setEnd(bl), false);
+		assertRay(STOPPED(c, 14, 16, EDGE(DOWN)), setStart(bc), setEnd(tr), false);
+		assertRay(STOPPED(c, 10, 16, EDGE(DOWN)), setStart(bc), setEnd(tl), false);
+	}
+	
+	function resultToString(result:FlxRayResult)
+	{
+		return switch result
+		{
+			case STOPPED(index, x, y, EDGE(dir)): 'STOPPED($index, $x, $y, EDGE($dir))';
+			default: Std.string(result);
+		}
 	}
 
 	@Test
@@ -444,6 +590,11 @@ class FlxTilemapTest extends FlxTest
 		tilemap.y += 20;
 		tilemap.scale.set(2, 2);
 		
+		Assert.areEqual(16, tilemap.scaledTileWidth);
+		Assert.areEqual(16, tilemap.scaledTileHeight);
+		Assert.areEqual(16, tilemap.getTileWidth());
+		Assert.areEqual(16, tilemap.getTileHeight());
+		
 		final size = 16;
 		final half = 8;
 		
@@ -487,6 +638,31 @@ class FlxTilemapTest extends FlxTest
 	}
 	
 	@Test
+	function testGetColumnRowPosAt()
+	{
+		final mapData = [
+			0, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 0, 0,
+		];
+		tilemap.x += 10;
+		tilemap.y += 20;
+		tilemap.loadMapFromArray(mapData, 4, 3, getBitmapData(), 8, 8);
+		
+		Assert.areEqual(10 + 24    , tilemap.getColumnPosAt(10 + 24));
+		Assert.areEqual(10 + 32    , tilemap.getColumnPosAt(10 + 32    , false));
+		Assert.areEqual(10 + 32 + 4, tilemap.getColumnPosAt(10 + 32    , true));
+		Assert.areEqual(10 + 32    , tilemap.getColumnPosAt(10 + 32 + 4, false));
+		Assert.areEqual(10 + 32 + 4, tilemap.getColumnPosAt(10 + 32 + 4, true));
+		
+		Assert.areEqual(20 + 16    , tilemap.getRowPosAt(20 + 16));
+		Assert.areEqual(20 + 24    , tilemap.getRowPosAt(20 + 24    , false));
+		Assert.areEqual(20 + 24 + 4, tilemap.getRowPosAt(20 + 24    , true));
+		Assert.areEqual(20 + 24    , tilemap.getRowPosAt(20 + 24 + 4, false));
+		Assert.areEqual(20 + 24 + 4, tilemap.getRowPosAt(20 + 24 + 4, true));
+	}
+	
+	@Test
 	function testColumnRowPos()
 	{
 		tilemap.loadMapFromArray(sampleMapArray, 4, 3, getBitmapData(), 8, 8);
@@ -501,6 +677,14 @@ class FlxTilemapTest extends FlxTest
 		Assert.areEqual(1, tilemap.getColumnAt(tilemap.getColumnPos(1)));
 		Assert.areEqual(2, tilemap.getColumnAt(tilemap.getColumnPos(2)));
 		Assert.areEqual(3, tilemap.getColumnAt(tilemap.getColumnPos(3)));
+		Assert.areEqual(0, tilemap.getColumnAt(10 + 0 * size));
+		Assert.areEqual(1, tilemap.getColumnAt(10 + 1 * size));
+		Assert.areEqual(2, tilemap.getColumnAt(10 + 2 * size));
+		Assert.areEqual(3, tilemap.getColumnAt(10 + 3 * size));
+		Assert.areEqual(0, tilemap.getColumnAt(10 + 0 * size + half));
+		Assert.areEqual(1, tilemap.getColumnAt(10 + 1 * size + half));
+		Assert.areEqual(2, tilemap.getColumnAt(10 + 2 * size + half));
+		Assert.areEqual(3, tilemap.getColumnAt(10 + 3 * size + half));
 		Assert.areEqual(1000, tilemap.getColumnAt(tilemap.getColumnPos(1000)));
 		Assert.areEqual(10 + 3 * size, tilemap.getColumnPos(3));
 		Assert.areEqual(10 + 3 * size + half, tilemap.getColumnPos(3, true));
@@ -509,13 +693,22 @@ class FlxTilemapTest extends FlxTest
 		Assert.areEqual(0, tilemap.getRowAt(tilemap.getRowPos(0)));
 		Assert.areEqual(1, tilemap.getRowAt(tilemap.getRowPos(1)));
 		Assert.areEqual(2, tilemap.getRowAt(tilemap.getRowPos(2)));
+		Assert.areEqual(0, tilemap.getRowAt(20 + 0 * size));
+		Assert.areEqual(1, tilemap.getRowAt(20 + 1 * size));
+		Assert.areEqual(2, tilemap.getRowAt(20 + 2 * size));
+		Assert.areEqual(0, tilemap.getRowAt(20 + 0 * size + half));
+		Assert.areEqual(1, tilemap.getRowAt(20 + 1 * size + half));
+		Assert.areEqual(2, tilemap.getRowAt(20 + 2 * size + half));
 		Assert.areEqual(1000, tilemap.getRowAt(tilemap.getRowPos(1000)));
 		Assert.areEqual(20 + 2 * size, tilemap.getRowPos(2));
 		Assert.areEqual(20 + 2 * size + half, tilemap.getRowPos(2, true));
 		Assert.areEqual(20 + 1000 * size, tilemap.getRowPos(1000));
 		
-		Assert.areEqual(null, tilemap.getTilePos(1000));
+		final testPoint = FlxPoint.get(100, 50);
+		Assert.areEqual(null, tilemap.getTilePos(1000)); // null is returned
+		FlxAssert.pointsEqualXY(100, 50, testPoint); // result is unchanged
 		Assert.areEqual(null, tilemap.getTilePos(-1));
+		FlxAssert.pointsEqualXY(100, 50, testPoint);
 		
 		
 		inline function assertPosEqual(expectedX:Float, expectedY:Float, actual:FlxPoint, ?infos:PosInfos)
@@ -653,28 +846,46 @@ class FlxTilemapTest extends FlxTest
 	@Test
 	function testOrientDelta()
 	{
-		final mapData = [0];
-		tilemap.loadMapFromArray(mapData, 1, 1, getBitmapData(), 8, 8);
+		final mapData = [
+			0, 0, 0,
+			0, 1, 0,
+			0, 0, 0
+		];
+		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData(), 8, 8);
 		step();
 		
 		tilemap.x = 0;
 		tilemap.last.x = 0;
 		final tile = tilemap.getTileData(0);
 		tile.orient(0, 0);
-		
-		Assert.areEqual(tile.x, tile.last.x);
+		Assert.areEqual(0, tile.last.x);
 		Assert.areEqual(0, tile.x);
 		
-		tilemap.last.x = 10;
-		tilemap.x = 10;
-		tile.orient(0, 0);
+		final tile = tilemap.getTileData(4, true);// get oriented
+		Assert.areEqual(8, tile.last.x);
+		Assert.areEqual(8, tile.x);
 		
-		Assert.areEqual(tilemap.x - tilemap.last.x, tile.x - tile.last.x);
-		Assert.areEqual(tile.x, tile.last.x);
+		tilemap.last.set(0, 5);
+		tilemap.x = 10;
+		tilemap.y = 10;
+		final tile = tilemap.getTileData(1, 1, true);// get oriented
+		
+		Assert.areEqual(8, tile.last.x);
+		Assert.areEqual(13, tile.last.y);
+		Assert.areEqual(18, tile.x);
+		Assert.areEqual(18, tile.y);
+		
+		final tileA = tilemap.getTileData(1, 1);
+		final tileB = tilemap.getTileData(4);
+		final tileC = tilemap.getTileDataAt(22, 22);
+		final tileD = tilemap.getTileData(FlxPoint.weak(22, 22));
+		Assert.areEqual(tileA, tileB);
+		Assert.areEqual(tileA, tileC);
+		Assert.areEqual(tileA, tileD);
+		Assert.areNotEqual(null, tileA);
 	}
 	
 	@Test
-	@:haxe.warning("-WDeprecated")
 	function testNegativeIndex()
 	{
 		final mapData = [
@@ -694,7 +905,7 @@ class FlxTilemapTest extends FlxTest
 		var overlapResult = true;
 		var rayResult = false;
 		var rayStepResult = false;
-		var getIndexResult:FlxTile = null;
+		var getIndexResult:Null<FlxTile> = null;
 		try
 		{
 			overlapResult = tilemap.overlaps(object);
@@ -711,6 +922,489 @@ class FlxTilemapTest extends FlxTest
 		Assert.isFalse(rayResult);
 		Assert.isFalse(rayStepResult);
 		Assert.isNull(getIndexResult);
+	}
+	
+	@Test
+	function testForEachInRay()
+	{
+		final mapData = [
+		//  0, 1, 2, 3, 4, 5, 6, 7, 8, 9 - Map indices
+			0, 1, 2, 3, 0, 0, 0, 4, 5, 6,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+		];
+		tilemap.loadMapFromArray(mapData, 10, 2, getBitmapData(), 8, 8);
+		tilemap.setTileIndex(4, -1);
+		tilemap.setTileIndex(5, -1);
+		tilemap.setTileIndex(6, -1);
+		
+		// Test all overloads
+		var callCount = 0;
+		var nullCount = 0;
+		tilemap.forEachInRay(FlxPoint.weak(4, 4), FlxPoint.weak(84, 4), function (index, tile, entry)
+		{
+			final isNullIndex = index >= 4 && index <= 6;
+			Assert.areEqual(isNullIndex, tile == null, 'Expected index $index to be, ${isNullIndex ? "null" : "non-null"}');
+			if (isNullIndex)
+				nullCount++;
+			
+			final expectedEntry = index == 0 ? START : EDGE(LEFT);
+			Assert.isTrue(entry.equals(expectedEntry), 'Expected entry $expectedEntry got $entry');
+			Assert.areEqual(callCount, index, 'Reached index $index without reaching index $callCount');
+			callCount++;
+		});
+		Assert.areEqual(10, callCount);
+		Assert.areEqual(3, nullCount);
+		
+		// Test left skip ends
+		var expectedIndex = 8;
+		tilemap.forEachInRay(FlxPoint.weak(68, 4), FlxPoint.weak(14, 4), function (index, tile, entry)
+		{
+			Assert.isTrue(index == 8 ? entry.equals(START) : entry.equals(EDGE(RIGHT)));
+			Assert.areEqual(expectedIndex, index, tile == null ? null : 'Reached tile $index at ${tile.x} | ${tile.y}');
+			expectedIndex--;
+		});
+		Assert.areEqual(0, expectedIndex);
+	}
+	
+	@Test
+	function testFindInRay()
+	{
+		final mapData = [
+		//  0, 1, 2, 3, 4, 5, 6, 7, 8, 9 - columns
+			0, 1, 2, 3, 0, 0, 0, 4, 5, 6,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+		];
+		tilemap.loadMapFromArray(mapData, 10, 2, getBitmapData(), 8, 8);
+		tilemap.setTileIndex(4, -1);
+		tilemap.setTileIndex(5, -1);
+		tilemap.setTileIndex(6, -1);
+		
+		// Test all overloads
+		var callCount = 0;
+		var nullCount = 0;
+		final result = tilemap.findInRay(FlxPoint.weak(4, 4), FlxPoint.weak(76, 4), function (index, tile, entry)
+		{
+			final isNullIndex = index >= 4 && index <= 6;
+			Assert.areEqual(isNullIndex, tile == null, 'Expected index $index to be, ${isNullIndex ? "null" : "non-null"}');
+			if (isNullIndex)
+				nullCount++;
+				
+			final expectedEntry = index == 0 ? START : EDGE(LEFT);
+			Assert.isTrue(entry.equals(expectedEntry), 'Expected entry $expectedEntry got $entry');
+			Assert.areEqual(callCount, index, 'Reached index $index without reaching index $callCount');
+			++callCount;
+			return index == 9;
+		});
+		final expectedResult = STOPPED(9, 72, 4, EDGE(LEFT));
+		Assert.isTrue(result.equals(expectedResult), 'Expected ${resultToString(expectedResult)}, got ${resultToString(result)}');
+		Assert.areEqual(3, nullCount);
+		
+		callCount = 0;
+		final result = tilemap.findInRay(FlxPoint.weak(4, 4), FlxPoint.weak(76, 4), function (_, _, _)
+		{
+			callCount++;
+			return false;
+		});
+		Assert.isTrue(result.equals(END), 'Expected END, got ${resultToString(result)}');
+		Assert.areEqual(10, callCount);
+		
+		// Test left skip ends
+		var expectedIndex = 8;
+		final result = tilemap.findInRay(FlxPoint.weak(68, 4), FlxPoint.weak(14, 4), function (index:Int, tile:Null<FlxTile>, entry:FlxRayEntry)
+		{
+			final expectedEntry = index == 8 ? START : EDGE(RIGHT);
+			Assert.isTrue(entry.equals(expectedEntry), 'Expected entry $expectedEntry got $entry');
+			Assert.areEqual(expectedIndex, index, tile == null ? null : 'Reached tile $index at ${tile.x} | ${tile.y}');
+			expectedIndex--;
+			return index == 1;
+		});
+		final expectedResult = STOPPED(1, 16, 4, EDGE(RIGHT));
+		Assert.isTrue(result.equals(expectedResult), 'Expected ${resultToString(expectedResult)}, got ${resultToString(result)}');
+		Assert.areEqual(0, expectedIndex);
+	}
+	
+	@Test
+	function testFindIndexInRay()
+	{
+		final mapData = [
+		//  0, 1, 2, 3, 4, 5, 6, 7, 8, 9 - columns
+			0, 1, 2, 3, 0, 0, 0, 4, 5, 6,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+		];
+		tilemap.loadMapFromArray(mapData, 10, 2, getBitmapData(), 8, 8);
+		tilemap.setTileIndex(4, -1);
+		tilemap.setTileIndex(5, -1);
+		tilemap.setTileIndex(6, -1);
+		
+		// Test all overloads
+		var callCount = 0;
+		var nullCount = 0;
+		final result = tilemap.findIndexInRay(FlxPoint.weak(4, 4), FlxPoint.weak(76, 4), function (index:Int, tile:Null<FlxTile>, entry:FlxRayEntry)
+		{
+			final isNullIndex = index >= 4 && index <= 6;
+			Assert.areEqual(isNullIndex, tile == null, 'Expected index $index to be, ${isNullIndex ? "null" : "non-null"}');
+			if (isNullIndex)
+				nullCount++;
+			
+			final expectedEntry = index == 0 ? START : EDGE(LEFT);
+			Assert.isTrue(entry.equals(expectedEntry), 'Expected entry $expectedEntry got $entry');
+			Assert.areEqual(callCount, index, 'Reached index $index without reaching index $callCount');
+			++callCount;
+			return index == 9;
+		});
+		Assert.areEqual(3, nullCount);
+		Assert.areEqual(9, result);
+		
+		callCount = 0;
+		final result = tilemap.findIndexInRay(FlxPoint.weak(4, 4), FlxPoint.weak(76, 4), function (_, _, _)
+		{
+			callCount++;
+			return false;
+		});
+		Assert.areEqual(-1, result);
+		Assert.areEqual(10, callCount);
+		
+		var expectedIndex = 8;
+		final result = tilemap.findIndexInRay(FlxPoint.weak(68, 4), FlxPoint.weak(14, 4), function (index, _, entry)
+		{
+			final expectedEntry = index == 8 ? START : EDGE(RIGHT);
+			Assert.isTrue(entry.equals(expectedEntry), 'Expected entry $expectedEntry got $entry');
+			
+			Assert.areEqual(expectedIndex, index, 'Expected index $expectedIndex, got $index');
+			expectedIndex--;
+			return index == 1;
+		});
+		Assert.areEqual(1, result);
+		Assert.areEqual(0, expectedIndex);
+	}
+	
+	@Test
+	function testForEachInRow()
+	{
+		final mapData = [
+		//  0, 1, 2, 3, 4, 5, 6, 7, 8, 9 - Map indices
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 1, 2, 3, 0, 0, 0, 4, 5, 6
+		];
+		tilemap.loadMapFromArray(mapData, 10, 2, getBitmapData(), 8, 8);
+		tilemap.setTileIndex(14, -1);
+		tilemap.setTileIndex(15, -1);
+		tilemap.setTileIndex(16, -1);
+		
+		try
+		{
+			tilemap.forEachInRow(2, 0, 8, (_, _)->{});
+			Assert.fail("Expected error t be thrown for invalid row");
+		}
+		catch(e)
+		{
+			Assert.assertionCount++;
+		}
+		
+		// Test all overloads
+		var callCount = 0;
+		var nullCount = 0;
+		tilemap.forEachInRow(1, 0, 100, function (index:Int, tile:Null<FlxTile>)
+		{
+			final isNullIndex = index >= 14 && index <= 16;
+			Assert.areEqual(isNullIndex, tile == null, 'Expected index $index to be, ${isNullIndex ? "null" : "non-null"}');
+			if (isNullIndex)
+				nullCount++;
+			
+			Assert.areEqual(callCount, index - 10, 'Reached index $index without reaching index $callCount');
+			callCount++;
+		});
+		Assert.areEqual(10, callCount);
+		Assert.areEqual(3, nullCount);
+		
+		var expectedIndex = 18;
+		tilemap.forEachInRow(1, 8, 1, function (index, _)
+		{
+			Assert.areEqual(expectedIndex, index, 'Expected index $expectedIndex, got $index');
+			expectedIndex--;
+		});
+		Assert.areEqual(10, expectedIndex);
+	}
+	
+	@Test
+	function testFindInRow()
+	{
+		final mapData = [
+		//  0, 1, 2, 3, 4, 5, 6, 7, 8, 9 - Map indices
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 1, 2, 3, 0, 0, 0, 4, 5, 6
+		];
+		tilemap.loadMapFromArray(mapData, 10, 2, getBitmapData(), 8, 8);
+		tilemap.setTileIndex(14, -1);
+		tilemap.setTileIndex(15, -1);
+		tilemap.setTileIndex(16, -1);
+		
+		try
+		{
+			tilemap.findInRow(2, 0, 8, (_, _)->false);
+			Assert.fail("Expected error t be thrown for invalid row");
+		}
+		catch(e)
+		{
+			Assert.assertionCount++;
+		}
+		
+		// Test all overloads
+		var callCount = 0;
+		var nullCount = 0;
+		final result = tilemap.findInRow(1, 0, 100, function (index:Int, tile:Null<FlxTile>)
+		{
+			final isNullIndex = index >= 14 && index <= 16;
+			Assert.areEqual(isNullIndex, tile == null, 'Expected index $index to be, ${isNullIndex ? "null" : "non-null"}');
+			if (isNullIndex)
+				nullCount++;
+			
+			Assert.areEqual(callCount, index - 10, 'Reached index $index without reaching index $callCount');
+			callCount++;
+			return index == 19;
+		});
+		Assert.isNotNull(result);
+		if (result == null) throw "check needed for null safety";
+		Assert.areEqual(72, result.x);
+		Assert.areEqual(8, result.y);
+		Assert.areEqual(10, callCount);
+		Assert.areEqual(3, nullCount);
+		
+		var expectedIndex = 18;
+		tilemap.findInRow(1, 8, 1, function (index, _)
+		{
+			Assert.areEqual(expectedIndex, index, 'Expected index $expectedIndex, got $index');
+			expectedIndex--;
+			return false;
+		});
+		Assert.areEqual(10, expectedIndex);
+	}
+	
+	@Test
+	function testFindIndexInRow()
+	{
+		final mapData = [
+		//  0, 1, 2, 3, 4, 5, 6, 7, 8, 9 - Map indices
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 1, 2, 3, 0, 0, 0, 4, 5, 6
+		];
+		tilemap.loadMapFromArray(mapData, 10, 2, getBitmapData(), 8, 8);
+		tilemap.setTileIndex(14, -1);
+		tilemap.setTileIndex(15, -1);
+		tilemap.setTileIndex(16, -1);
+		
+		try
+		{
+			tilemap.findIndexInRow(2, 0, 8, (i,t)->false);
+			Assert.fail("Expected error t be thrown for invalid row");
+		}
+		catch(e)
+		{
+			Assert.assertionCount++;
+		}
+		
+		// Test all overloads
+		var callCount = 0;
+		var nullCount = 0;
+		final result = tilemap.findIndexInRow(1, 0, 100, function (index:Int, tile:Null<FlxTile>)
+		{
+			final isNullIndex = index >= 14 && index <= 16;
+			Assert.areEqual(isNullIndex, tile == null, 'Expected index $index to be, ${isNullIndex ? "null" : "non-null"}');
+			if (isNullIndex)
+				nullCount++;
+			
+			Assert.areEqual(callCount, index - 10, 'Reached index $index without reaching index $callCount');
+			callCount++;
+			return index == 19;
+		});
+		Assert.areEqual(10, callCount);
+		Assert.areEqual(3, nullCount);
+		Assert.areEqual(19, result);
+		
+		var expectedIndex = 18;
+		final result = tilemap.findIndexInRow(1, 8, 1, function (index, _)
+		{
+			Assert.areEqual(expectedIndex, index, 'Expected index $expectedIndex, got $index');
+			expectedIndex--;
+			return false;
+		});
+		Assert.areEqual(10, expectedIndex);
+	}
+	
+	@Test
+	function testFindInColumn()
+	{
+		final mapData = [
+			0, 0, // 0
+			0, 1, // 1
+			0, 2, // 2
+			0, 3, // 3
+			0, 0, // 4
+			0, 0, // 5
+			0, 0, // 6
+			0, 4, // 7
+			0, 5, // 8
+			0, 6  // 9
+		];
+		tilemap.loadMapFromArray(mapData, 2, 10, getBitmapData(), 8, 8);
+		tilemap.setTileIndex(9, -1);
+		tilemap.setTileIndex(11, -1);
+		tilemap.setTileIndex(13, -1);
+		
+		try
+		{
+			tilemap.findInColumn(2, 0, 8, (i,t)->false);
+			Assert.fail("Expected error t be thrown for invalid row");
+		}
+		catch(e)
+		{
+			Assert.assertionCount++;
+		}
+		
+		// Test all overloads
+		var callCount = 0;
+		var nullCount = 0;
+		final result = tilemap.findInColumn(1, 0, 100, function (index, tile)
+		{
+			final isNullIndex = index == 9 || index == 11 || index == 13;
+			Assert.areEqual(isNullIndex, tile == null, 'Expected index $index to be, ${isNullIndex ? "null" : "non-null"}');
+			if (isNullIndex)
+				nullCount++;
+			
+			Assert.areEqual(index, callCount * 2 + 1, 'Reached index $index without reaching index $callCount');
+			callCount++;
+			return index == 19;
+		});
+		Assert.isNotNull(result);
+		if (result == null) throw "check needed for null safety";
+		Assert.areEqual(8, result.x);
+		Assert.areEqual(72, result.y);
+		Assert.areEqual(10, callCount);
+		Assert.areEqual(3, nullCount);
+		
+		var expectedIndex = 17;
+		final result = tilemap.findInColumn(1, 8, 1, function (index, _)
+		{
+			Assert.areEqual(expectedIndex, index, 'Expected index $expectedIndex, got $index');
+			expectedIndex -= 2;
+			return false;
+		});
+		Assert.areEqual(1, expectedIndex);
+	}
+	
+	
+	@Test
+	function testFindIndexInColumn()
+	{
+		final mapData = [
+			0, 0, // 0
+			0, 1, // 1
+			0, 2, // 2
+			0, 3, // 3
+			0, 0, // 4
+			0, 0, // 5
+			0, 0, // 6
+			0, 4, // 7
+			0, 5, // 8
+			0, 6  // 9
+		];
+		tilemap.loadMapFromArray(mapData, 2, 10, getBitmapData(), 8, 8);
+		tilemap.setTileIndex(9, -1);
+		tilemap.setTileIndex(11, -1);
+		tilemap.setTileIndex(13, -1);
+		
+		try
+		{
+			tilemap.findIndexInColumn(2, 0, 8, (i,t)->false);
+			Assert.fail("Expected error t be thrown for invalid row");
+		}
+		catch(e)
+		{
+			Assert.assertionCount++;
+		}
+		
+		// Test all overloads
+		var callCount = 0;
+		var nullCount = 0;
+		final result = tilemap.findIndexInColumn(1, 0, 100, function (index, tile)
+		{
+			final isNullIndex = index == 9 || index == 11 || index == 13;
+			Assert.areEqual(isNullIndex, tile == null, 'Expected index $index to be, ${isNullIndex ? "null" : "non-null"}');
+			if (isNullIndex)
+				nullCount++;
+			
+			Assert.areEqual(index, callCount * 2 + 1, 'Reached index $index without reaching index $callCount');
+			callCount++;
+			return index == 19;
+		});
+		Assert.isNotNull(19);
+		Assert.areEqual(10, callCount);
+		Assert.areEqual(3, nullCount);
+		
+		var expectedIndex = 17;
+		final result = tilemap.findIndexInColumn(1, 8, 1, function (index, _)
+		{
+			Assert.areEqual(expectedIndex, index, 'Expected index $expectedIndex, got $index');
+			expectedIndex -= 2;
+			return false;
+		});
+		Assert.areEqual(-1, result);
+		Assert.areEqual(1, expectedIndex);
+	}
+	
+	@Test
+	function testForEachInColumn()
+	{
+		final mapData = [
+			0, 0, // 0
+			0, 1, // 1
+			0, 2, // 2
+			0, 3, // 3
+			0, 0, // 4
+			0, 0, // 5
+			0, 0, // 6
+			0, 4, // 7
+			0, 5, // 8
+			0, 6  // 9
+		];
+		tilemap.loadMapFromArray(mapData, 2, 10, getBitmapData(), 8, 8);
+		tilemap.setTileIndex(9, -1);
+		tilemap.setTileIndex(11, -1);
+		tilemap.setTileIndex(13, -1);
+		
+		try
+		{
+			tilemap.forEachInColumn(2, 0, 8, (i,t)->false);
+			Assert.fail("Expected error t be thrown for invalid row");
+		}
+		catch(e)
+		{
+			Assert.assertionCount++;
+		}
+		
+		// Test all overloads
+		var callCount = 0;
+		var nullCount = 0;
+		tilemap.forEachInColumn(1, 0, 100, function (index, tile)
+		{
+			final isNullIndex = index == 9 || index == 11 || index == 13;
+			Assert.areEqual(isNullIndex, tile == null, 'Expected index $index to be, ${isNullIndex ? "null" : "non-null"}');
+			if (isNullIndex)
+				nullCount++;
+			
+			Assert.areEqual(index, callCount * 2 + 1, 'Reached index $index without reaching index $callCount');
+			callCount++;
+		});
+		Assert.areEqual(10, callCount);
+		Assert.areEqual(3, nullCount);
+		
+		var expectedIndex = 17;
+		tilemap.forEachInColumn(1, 8, 1, function (index, _)
+		{
+			Assert.areEqual(expectedIndex, index, 'Expected index $expectedIndex, got $index');
+			expectedIndex -= 2;
+		});
+		Assert.areEqual(1, expectedIndex);
 	}
 	
 	function getBitmapData()

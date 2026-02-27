@@ -168,6 +168,115 @@ class FlxArrayUtil
 				result.push(element);
 		return result;
 	}
+	
+	/**
+	 * For each nested array, duplicates each item the specifed `amount`, and then duplicates the
+	 * arrays themselves.
+	 * 
+	 * For example: 
+	 * ```haxe
+	 * final arr =
+	 * [
+	 *     [0, 2, 6],
+	 *     [1, 3, 7],
+	 *     [0, 0, 0]
+	 * ];
+	 * trace(FlxArrayUtil.scale(arr, 2, 3).join("\n"));
+	 * // output:
+	 * // 0,0,2,2,6,6
+	 * // 0,0,2,2,6,6
+	 * // 1,1,3,3,7,7
+	 * // 1,1,3,3,7,7
+	 * // 0,0,0,0,0,0
+	 * // 0,0,0,0,0,0
+	 * ```
+	 * 
+	 * **NOTE:** Each added array is a unique instance, unlike the following, which will contain
+	 * the same array instances:
+	 * ```haxe
+	 * FlxArrayUtil.scale(array.map((subArray)->FlxArrayUtil.scale(subArray, amount)), amount);
+	 * ```
+	 * 
+	 * @param   data    The array to be scaled
+	 * @param   amount  The amount to duplicate each array and sub-array item
+	 * 
+	 * @since 6.2.0
+	 */
+	overload public static inline extern function scale<T>(data:Array<Array<T>>, amount:Int):Array<Array<T>>
+	{
+		return scale(data, amount, amount);
+	}
+	
+	/**
+	 * For each nested array, duplicates each item by the specifed `subAmount`, and then duplicates
+	 * the arrays by the specified `amount`.
+	 * 
+	 * For example: 
+	 * ```haxe
+	 * final arr =
+	 * [
+	 *     [0, 2, 6],
+	 *     [1, 3, 7],
+	 *     [0, 0, 0]
+	 * ];
+	 * trace(FlxArrayUtil.scale(arr, 3, 2).join("\n"));
+	 * // outputs:
+	 * // 0,0,0,2,2,2,6,6,6
+	 * // 0,0,0,2,2,2,6,6,6
+	 * // 1,1,1,3,3,3,7,7,7
+	 * // 1,1,1,3,3,3,7,7,7
+	 * // 0,0,0,0,0,0,0,0,0
+	 * // 0,0,0,0,0,0,0,0,0
+	 * ```
+	 * @since 6.2.0
+	 * 
+	 * **NOTE:** Each added array is a unique instance, unlike the following, which will contain
+	 * the same array instances:
+	 * ```haxe
+	 * FlxArrayUtil.scale(array.map((subArray)->FlxArrayUtil.scale(subArray, subAmount)), amount);
+	 * ```
+	 * 
+	 * @param   data       The array to be scaled
+	 * @param   subAmount  The amount to duplicate each sub-array item
+	 * @param   amount     The amount to duplicate each array
+	 * 
+	 * @since 6.2.0
+	 */
+	overload public static inline extern function scale<T>(data:Array<Array<T>>, subAmount:Int, amount:Int):Array<Array<T>>
+	{
+		return scale2dHelper(data, subAmount, amount);
+	}
+	
+	static function scale2dHelper<T>(data:Array<Array<T>>, subAmount:Int, amount:Int):Array<Array<T>>
+	{
+		final result:Array<Array<T>> = [];
+		for (row in data)
+		{
+			final scaledRow = scale(row, subAmount);
+			for (s in 0...amount)
+				result.push(s == 0 ? scaledRow : scaledRow.copy());
+		}
+		return result;
+	}
+	
+	/**
+	 * Takes an array and turns every duplicates item the specified `amount`.
+	 * For example `scale([0, 9, 5], 3)` becomes `[0, 0, 0, 9, 9, 9, 5, 5, 5]`
+	 * 
+	 * **NOTE:** Duplicated items will be the same instance, even if the data is an array of arrays
+	 * 
+	 * @since 6.2.0
+	 */
+	overload public static inline extern function scale<T>(data:Array<T>, amount:Int):Array<T>
+	{
+		final result:Array<T> = [];
+		for (value in data)
+		{
+			for (s in 0...amount)
+				result.push(value);
+		}
+		return result;
+	}
 
 	/**
 	 * Compares the contents with `==` to see if the two arrays are the same.

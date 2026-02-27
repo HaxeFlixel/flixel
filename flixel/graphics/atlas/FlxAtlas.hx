@@ -142,7 +142,7 @@ class FlxAtlas implements IFlxDestroyable
 		this.minWidth = Std.int(minSize.x);
 		this.minHeight = Std.int(minSize.y);
 		this.maxWidth = (maxSize.x > minSize.x) ? Std.int(maxSize.x) : minWidth;
-		this.maxHeight = (maxSize.y > minSize.x) ? Std.int(maxSize.y) : minHeight;
+		this.maxHeight = (maxSize.y > minSize.y) ? Std.int(maxSize.y) : minHeight;
 		this.allowRotation = rotate;
 
 		initRoot();
