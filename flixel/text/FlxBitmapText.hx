@@ -1042,7 +1042,7 @@ class FlxBitmapText extends FlxSprite
 		for (i in 0...numLines)
 		{
 			line = _lines[i];
-			lineWidth = _linesWidth[i];
+			lineWidth = getLineWidth(i);
 
 			// LEFT
 			ox = font.minOffsetX;
