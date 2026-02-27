@@ -152,33 +152,33 @@ abstract class FlxCameraView implements IFlxDestroyable
 	/**
 	 * Draws a filled rectangle.
 	 * 
-	 * @param   x           The x position of the rectangle.
-	 * @param   y           The y position of the rectangle.
-	 * @param   width       The width of the rectangle (in pixels).
-	 * @param   height      The height of the rectangle (in pixels).
-	 * @param   color       The color (in 0xAARRGGBB hex format) of the rectangle's fill.
+	 * @param   x       The x position of the rectangle.
+	 * @param   y       The y position of the rectangle.
+	 * @param   width   The width of the rectangle (in pixels).
+	 * @param   height  The height of the rectangle (in pixels).
+	 * @param   color   The color (in 0xAARRGGBB hex format) of the rectangle's fill.
 	 */
 	abstract public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void;
 	
 	/**
 	 * Draws a filled circle.
 	 * 
-	 * @param   x        The x position of the circle.
-	 * @param   y        The y position of the circle.
-	 * @param   radius   The radius of the circle.
-	 * @param   color    The color (in 0xAARRGGBB hex format) of the circle's fill.
+	 * @param   x       The x position of the circle.
+	 * @param   y       The y position of the circle.
+	 * @param   radius  The radius of the circle.
+	 * @param   color   The color (in 0xAARRGGBB hex format) of the circle's fill.
 	 */
 	abstract public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void;
 	
 	/**
 	 * Draws a line.
 	 * 
-	 * @param   x1          The start x position of the line.
-	 * @param   y1          The start y position of the line.
-	 * @param   x2          The end x position of the line.
-	 * @param   y2          The end y position of the line.
-	 * @param   color       The color (in 0xAARRGGBB hex format) of the line.
-	 * @param   thickness   The thickness of the line.
+	 * @param   x1         The start x position of the line.
+	 * @param   y1         The start y position of the line.
+	 * @param   x2         The end x position of the line.
+	 * @param   y2         The end y position of the line.
+	 * @param   color      The color (in 0xAARRGGBB hex format) of the line.
+	 * @param   thickness  The thickness of the line.
 	 */
 	abstract public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void;
 	
@@ -188,8 +188,8 @@ abstract class FlxCameraView implements IFlxDestroyable
 	
 	/**
 	 * Helper method preparing debug rectangle for rendering in blit render mode
-	 * @param	rect	rectangle to prepare for rendering
-	 * @return	transformed rectangle with respect to camera's zoom factor
+	 * @param   rect  Rectangle to prepare for rendering
+	 * @return  Transformed rectangle with respect to camera's zoom factor
 	 */
 	function transformRect(rect:FlxRect):FlxRect
 	{
@@ -198,8 +198,8 @@ abstract class FlxCameraView implements IFlxDestroyable
 	
 	/**
 	 * Helper method preparing debug point for rendering in blit render mode (for debug path rendering, for example)
-	 * @param	point		point to prepare for rendering
-	 * @return	transformed point with respect to camera's zoom factor
+	 * @param   point  Point to prepare for rendering
+	 * @return  Transformed point with respect to camera's zoom factor
 	 */
 	function transformPoint(point:FlxPoint):FlxPoint
 	{
@@ -208,8 +208,8 @@ abstract class FlxCameraView implements IFlxDestroyable
 	
 	/**
 	 * Helper method preparing debug vectors (relative positions) for rendering in blit render mode
-	 * @param	vector	relative position to prepare for rendering
-	 * @return	transformed vector with respect to camera's zoom factor
+	 * @param   vector  Relative position to prepare for rendering
+	 * @return  Transformed vector with respect to camera's zoom factor
 	 */
 	function transformVector(vector:FlxPoint):FlxPoint
 	{
@@ -221,7 +221,7 @@ abstract class FlxCameraView implements IFlxDestroyable
 	 * to specified display objects which has been added to the camera display list.
 	 * For example, debug sprite for nape debug rendering.
 	 * @param	object	display object to apply transformations to.
-	 * @return	transformed object.
+	 * @return	Transformed object.
 	 */
 	function transformObject(object:DisplayObject):DisplayObject
 	{
