@@ -61,6 +61,12 @@ abstract class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	 */
 	public var method(default, null):FlxRenderMethod;
 	
+	public var blit(get, never):Bool;
+	inline function get_blit() return method.match(BLITTING);
+	
+	public var tile(get, never):Bool;
+	inline function get_tile() return method.match(DRAW_TILES);
+	
 	/**
 	 * Returns whether the current renderer is hardware accelerated.
 	 */
@@ -166,6 +172,7 @@ enum FlxRenderMethod
 	 * This method is the default and is used on all targets (when hardware acceleration is available), except for Flash.
 	 */
 	DRAW_TILES;
+	
 	/**
 	 * Draws sprites directly onto bitmaps using a software renderer.
 	 * 
@@ -173,4 +180,9 @@ enum FlxRenderMethod
 	 * hardware acceleration is unavailable.
 	 */
 	BLITTING;
+	
+	/**
+	 * A custom backend
+	 */
+	CUSTOM;
 }

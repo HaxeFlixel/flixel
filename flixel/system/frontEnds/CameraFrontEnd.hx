@@ -136,7 +136,7 @@ class CameraFrontEnd
 			return;
 		}
 
-		if (FlxG.renderer.method != BLITTING)
+		if (FlxG.renderer.tile)
 		{
 			for (i in 0...list.length)
 			{
@@ -343,7 +343,7 @@ class CameraFrontEnd
 
 	function get_useBufferLocking():Bool 
 	{
-		if (FlxG.renderer.method == BLITTING)
+		if (FlxG.renderer.blit)
 			return FlxBlitRenderer.useBufferLocking;
 
 		return false;
@@ -351,7 +351,7 @@ class CameraFrontEnd
 
 	function set_useBufferLocking(value:Bool):Bool
 	{
-		if (FlxG.renderer.method == BLITTING)
+		if (FlxG.renderer.blit)
 			return FlxBlitRenderer.useBufferLocking = value;
 
 		return value;

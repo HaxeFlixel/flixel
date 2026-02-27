@@ -375,7 +375,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 			result.y -= camera.scroll.y * object.scrollFactor.y;
 		}
 		
-		if (FlxG.renderer.method == BLITTING)
+		if (FlxG.renderer.blit)
 		{
 			result.x -= camera.viewMarginX;
 			result.y -= camera.viewMarginY;

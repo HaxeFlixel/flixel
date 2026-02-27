@@ -1311,7 +1311,7 @@ class FlxObject extends FlxBasic
 		final rect = getBoundingBox(camera);
 		
 		// TODO: Remove and handle this in the view via drawDebugRect
-		if (FlxG.renderer.method != BLITTING)
+		if (FlxG.renderer.tile)
 		{
 			final view = camera.getViewMarginRect();
 			view.pad(2);

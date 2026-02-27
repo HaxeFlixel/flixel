@@ -1,6 +1,5 @@
 package flixel;
 
-import flixel.system.render.FlxRenderer;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
@@ -19,6 +18,7 @@ import flixel.system.frontEnds.SignalFrontEnd;
 import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
+import flixel.system.render.FlxRenderer;
 import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
@@ -144,25 +144,25 @@ class FlxG
 	 */
 	public static var onMobile(get, never):Bool;
 
-	@:deprecated("renderMethod is deprecated, use FlxG.render.method, instead.")
+	@:deprecated("renderMethod is deprecated, use FlxG.renderer.method, instead.")
 	public static var renderMethod(get, null):flixel.system.render.FlxRenderer.FlxRenderMethod;
 	@:noCompletion static inline function get_renderMethod():flixel.system.render.FlxRenderer.FlxRenderMethod
 	{
 		return FlxG.renderer.method;
 	}
 
-	@:deprecated("renderBlit is deprecated, compare against FlxG.render.method, instead.")
+	@:deprecated("renderBlit is deprecated, compare against FlxG.renderer.blit, instead.")
 	public static var renderBlit(get, never):Bool;
 	@:noCompletion static inline function get_renderBlit():Bool
 	{
-		return FlxG.renderer.method == BLITTING;
+		return FlxG.renderer.blit;
 	}
 
-	@:deprecated("renderTile is deprecated, compare against FlxG.render.method, instead.")
+	@:deprecated("renderTile is deprecated, compare against FlxG.renderer.method, instead.")
 	public static var renderTile(get, never):Bool;
 	@:noCompletion static inline function get_renderTile():Bool
 	{
-		return FlxG.renderer.method != BLITTING;
+		return FlxG.renderer.tile;
 	}
 
 	/**
@@ -611,7 +611,7 @@ class FlxG
 	static function initRenderMethod():Void
 	{
 		renderer = FlxRenderer.create();
-		FlxObject.defaultPixelPerfectPosition =	FlxG.renderer.method == BLITTING;
+		FlxObject.defaultPixelPerfectPosition =	FlxG.renderer.blit;
 	}
 
 	#if FLX_SAVE

@@ -1,8 +1,5 @@
 package flixel.system.debug.stats;
 
-import openfl.display.BitmapData;
-import openfl.system.System;
-import openfl.text.TextField;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.system.FlxLinkedList;
@@ -10,6 +7,9 @@ import flixel.system.FlxQuadTree;
 import flixel.system.debug.DebuggerUtil;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
+import openfl.display.BitmapData;
+import openfl.system.System;
+import openfl.text.TextField;
 
 
 /**
@@ -88,7 +88,7 @@ class Stats extends Window
 	{
 		super("Stats", Icon.stats, 0, 0, false);
 
-		var minHeight = if (FlxG.renderer.method != BLITTING) 200 else 185;
+		var minHeight = if (FlxG.renderer.tile) 200 else 185;
 		minSize.y = minHeight;
 		resize(INITIAL_WIDTH, minHeight);
 
@@ -130,7 +130,7 @@ class Stats extends Window
 		_leftTextField.multiline = _rightTextField.multiline = true;
 
 		var drawMethod = "";
-		if (FlxG.renderer.method != BLITTING)
+		if (FlxG.renderer.tile)
 		{
 			drawMethod =
 				#if FLX_RENDER_TRIANGLE
@@ -267,7 +267,7 @@ class Stats extends Window
 			}
 			visibleCount = Std.int(divide(visibleCount, _visibleObjectMarker));
 
-			if (FlxG.renderer.method != BLITTING)
+			if (FlxG.renderer.blit)
 			{
 				for (i in 0..._drawCallsMarker)
 				{
@@ -280,7 +280,7 @@ class Stats extends Window
 			_drawMarker = 0;
 			_activeObjectMarker = 0;
 			_visibleObjectMarker = 0;
-			if (FlxG.renderer.method != BLITTING)
+			if (FlxG.renderer.tile)
 			{
 				_drawCallsMarker = 0;
 			}
@@ -298,7 +298,7 @@ class Stats extends Window
 		updateTimeGraph.update(updTime);
 
 		_rightTextField.text = activeCount + " (" + updTime + "ms)\n" + visibleCount + " (" + drwTime + "ms)\n"
-			+ (FlxG.renderer.method != BLITTING ? (drawCallsCount + "\n") : "")
+			+ (FlxG.renderer.tile ? (drawCallsCount + "\n") : "")
 			+ FlxQuadTree._NUM_CACHED_QUAD_TREES
 			+ "\n"
 			+ FlxLinkedList._NUM_CACHED_FLX_LIST;

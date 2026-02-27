@@ -534,7 +534,7 @@ class FlxCamera extends FlxBasic
 			@:privateAccess @:bypassAccessor _helperPoint = renderBlit._helperPoint;
 		}
 
-		pixelPerfectRender = FlxG.renderer.method == BLITTING;
+		pixelPerfectRender = FlxG.renderer.blit;
 
 		set_color(FlxColor.WHITE);
 		
@@ -1842,7 +1842,7 @@ class FlxCamera extends FlxBasic
 	@:deprecated("checkResize() is deprecated") // 6.2.0
 	function checkResize():Void
 	{
-		if (FlxG.renderer.method == BLITTING)
+		if (FlxG.renderer.blit)
 			viewBlit.checkResize();
 	}
 	

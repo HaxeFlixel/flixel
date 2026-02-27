@@ -381,14 +381,14 @@ class Interaction extends Window
 	@:deprecated("getDebugGraphics() is deprecated. Use the debug draw functions from FlxCamera instead.")
 	public function getDebugGraphics():Graphics
 	{
-		if (FlxG.renderer.method == BLITTING)
+		if (FlxG.renderer.blit)
 		{
 			FlxSpriteUtil.flashGfx.clear();
 			return FlxSpriteUtil.flashGfx;
 		}
 
 		#if FLX_DEBUG
-		return FlxG.camera.debugLayer.graphics;
+		return FlxG.camera.view.getDebugGraphics();
 		#end
 
 		return null;
