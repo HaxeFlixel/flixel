@@ -6,6 +6,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.graphics.tile.FlxDrawQuadsItem;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
+import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
 import flixel.util.FlxColor;
@@ -56,6 +57,8 @@ class FlxQuadView extends FlxCameraView
 	 */
 	var _scrollRect:Sprite = new Sprite();
 	
+	var _flashOffset:FlxPoint = FlxPoint.get();
+	
 	@:allow(flixel.system.render.FlxCameraView)
 	function new(camera:FlxCamera)
 	{
@@ -100,6 +103,7 @@ class FlxQuadView extends FlxCameraView
 		
 		flashSprite = null;
 		_scrollRect = null;
+		_flashOffset = FlxDestroyUtil.put(_flashOffset);
 	}
 	
 	public function render():Void
@@ -173,12 +177,16 @@ class FlxQuadView extends FlxCameraView
 	
 	override function offsetView(x:Float, y:Float):Void
 	{
+		super.offsetView(x, y);
+		
 		flashSprite.x += x;
 		flashSprite.y += y;
 	}
 	
 	override function updatePosition():Void
 	{
+		super.updatePosition();
+		
 		if (flashSprite != null)
 		{
 			flashSprite.x = camera.x * FlxG.scaleMode.scale.x + _flashOffset.x;
@@ -186,9 +194,19 @@ class FlxQuadView extends FlxCameraView
 		}
 	}
 	
+	override function updateOffset()
+	{
+		super.updateOffset();
+		
+		_flashOffset.x = camera.width * 0.5 * FlxG.scaleMode.scale.x * camera.initialZoom;
+		_flashOffset.y = camera.height * 0.5 * FlxG.scaleMode.scale.y * camera.initialZoom;
+	}
+	
 	override function updateScrollRect():Void
 	{
-		var rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
+		super.updateScrollRect();
+		
+		final rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
 		
 		if (rect != null)
 		{
@@ -304,7 +322,7 @@ class FlxQuadView extends FlxCameraView
 	 */
 	static var _storageTrianglesHead:FlxDrawTrianglesItem;
 	
-	function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, ?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
+	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, ?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
 	{
 		#if FLX_RENDER_TRIANGLE
 		return startTrianglesBatch(graphic, smooth, colored, blend);
@@ -365,7 +383,7 @@ class FlxQuadView extends FlxCameraView
 		#end
 	}
 	
-	function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
+	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
 			?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		if (_currentDrawItem != null
@@ -383,7 +401,7 @@ class FlxQuadView extends FlxCameraView
 		return getNewDrawTrianglesItem(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
 	}
 	
-	function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
+	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
 			?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;

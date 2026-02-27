@@ -166,7 +166,7 @@ enum FlxRenderMethod
 	 * 
 	 * This method is the default and is used on all targets (when hardware acceleration is available), except for Flash.
 	 */
-	DRAW_TILES;	
+	DRAW_TILES;
 	/**
 	 * Draws sprites directly onto bitmaps using a software renderer.
 	 * 

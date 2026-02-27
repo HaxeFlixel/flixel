@@ -16,6 +16,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
+import flixel.system.render.quad.FlxQuadView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
@@ -1229,7 +1230,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			scaledHeight = scaledTileHeight;
 
 			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
-			drawItem = camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
+			drawItem = cast (camera.view, FlxQuadView).startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
 		}
 
 		// Copy tile images into the tile buffer

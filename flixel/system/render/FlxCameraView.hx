@@ -70,17 +70,12 @@ abstract class FlxCameraView implements IFlxDestroyable
 	 */
 	public var visible(get, set):Bool;
 	
-	var _flashOffset:FlxPoint = FlxPoint.get();
-	
 	function new(camera:FlxCamera)
 	{
 		this.camera = camera;
 	}
 	
-	public function destroy():Void
-	{
-		_flashOffset = FlxDestroyUtil.put(_flashOffset);
-	}
+	public function destroy():Void {}
 	
 	/**
 	 * Flushes any remaining graphics and renders everything to the screen.
@@ -108,11 +103,7 @@ abstract class FlxCameraView implements IFlxDestroyable
 	
 	function updateInternals():Void {}
 	
-	function updateOffset():Void
-	{
-		_flashOffset.x = camera.width * 0.5 * FlxG.scaleMode.scale.x * camera.initialZoom;
-		_flashOffset.y = camera.height * 0.5 * FlxG.scaleMode.scale.y * camera.initialZoom;
-	}
+	function updateOffset():Void {}
 	
 	function updateScrollRect():Void {}
 	

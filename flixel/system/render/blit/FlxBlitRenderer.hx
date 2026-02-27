@@ -60,13 +60,6 @@ class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 	var _helperMatrix:FlxMatrix = new FlxMatrix();
 	var _helperPoint:Point = new Point();
 	
-	/**
-	 * Internal, used in blit render mode in camera's `fill()` method for less garbage creation:
-	 * Its coordinates are always `(0,0)`, where camera's buffer filling should start.
-	 * Do not modify it unless you know what are you doing.
-	 */
-	var _flashPoint:Point = new Point();
-	
 	public function new()
 	{
 		super();
@@ -79,7 +72,6 @@ class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 		_bounds = FlxDestroyUtil.put(_bounds);
 		_helperMatrix = null;
 		_helperPoint = null;
-		_flashPoint = null;
 	}
 	
 	public function drawPixels(view:FlxBlitView, ?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,

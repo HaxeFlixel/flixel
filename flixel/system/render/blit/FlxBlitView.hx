@@ -15,6 +15,7 @@ import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
 import openfl.geom.ColorTransform;
+import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
 class FlxBlitView extends FlxCameraView
@@ -75,6 +76,13 @@ class FlxBlitView extends FlxCameraView
 	var _flashBitmap:Bitmap;
 	
 	/**
+	 * Internal, used in blit render mode in camera's `fill()` method for less garbage creation:
+	 * Its coordinates are always `(0,0)`, where camera's buffer filling should start.
+	 * Do not modify it unless you know what are you doing.
+	 */
+	var _flashPoint:Point = new Point();
+	
+	/**
 	 * Internal helper variable for doing better wipes/fills between renders.
 	 * Used it blit render mode only (in `fill()` method).
 	 */
@@ -90,6 +98,8 @@ class FlxBlitView extends FlxCameraView
 	 * (it is applied to all objects rendered on the camera at such circumstances).
 	 */
 	var _blitMatrix:FlxMatrix = new FlxMatrix();
+	
+	var _flashOffset:FlxPoint = FlxPoint.get();
 	
 	@:allow(flixel.system.render.FlxCameraView)
 	function new(camera:FlxCamera)
@@ -123,6 +133,7 @@ class FlxBlitView extends FlxCameraView
 		flashSprite = null;
 		_scrollRect = null;
 		_flashRect = null;
+		_flashOffset = FlxDestroyUtil.put(_flashOffset);
 	}
 	
 	function render():Void
@@ -156,7 +167,7 @@ class FlxBlitView extends FlxCameraView
 		if (blendAlpha)
 		{
 			_fill.fillRect(_flashRect, color);
-			buffer.copyPixels(_fill, _flashRect, camera._flashPoint, null, null, blendAlpha);
+			buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, blendAlpha);
 		}
 		else
 		{
@@ -166,12 +177,16 @@ class FlxBlitView extends FlxCameraView
 	
 	override function offsetView(x:Float, y:Float):Void
 	{
+		super.offsetView(x, y);
+		
 		flashSprite.x += x;
 		flashSprite.y += y;
 	}
 	
 	override function updatePosition():Void
 	{
+		super.updatePosition();
+		
 		if (flashSprite != null)
 		{
 			flashSprite.x = camera.x * FlxG.scaleMode.scale.x + _flashOffset.x;
@@ -179,9 +194,19 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
+	override function updateOffset()
+	{
+		super.updateOffset();
+		
+		_flashOffset.x = camera.width * 0.5 * FlxG.scaleMode.scale.x * camera.initialZoom;
+		_flashOffset.y = camera.height * 0.5 * FlxG.scaleMode.scale.y * camera.initialZoom;
+	}
+	
 	override function updateScrollRect():Void
 	{
-		var rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
+		super.updateScrollRect();
+		
+		final rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
 		
 		if (rect != null)
 		{
@@ -217,6 +242,8 @@ class FlxBlitView extends FlxCameraView
 	
 	override function updateInternals():Void
 	{
+		super.updateInternals();
+		
 		if (_flashBitmap != null)
 		{
 			_flashBitmap.x = 0;
