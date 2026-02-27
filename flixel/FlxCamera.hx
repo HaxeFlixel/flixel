@@ -310,11 +310,6 @@ class FlxCamera extends FlxBasic
 	public var viewBottom(get, never):Float;
 
 	/**
-	 * Reference to camera's `view.display`.
-	 */
-	public var display(get, never):DisplayObjectContainer;
-
-	/**
 	 * The alpha value of this camera display (a number between `0.0` and `1.0`).
 	 */
 	public var alpha(default, set):Float = 1;
@@ -1741,11 +1736,6 @@ class FlxCamera extends FlxBasic
 	inline function get_viewBottom():Float
 	{
 		return scroll.y + viewMarginBottom;
-	}
-
-	inline function get_display():DisplayObjectContainer
-	{
-		return view.display;
 	}
 	
 	/**
