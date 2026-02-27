@@ -455,9 +455,8 @@ class FlxQuadView extends FlxCameraView
 	{
 		final gfx = debugLayer.graphics;
 		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
-		final offset = thickness / 2;
-		gfx.moveTo(x1 + offset, y1 + offset);
-		gfx.lineTo(x2 + offset, y2 + offset);
+		gfx.moveTo(x1, y1);
+		gfx.lineTo(x2, y2);
 	}
 	#end
 	
