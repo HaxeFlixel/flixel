@@ -102,11 +102,7 @@ abstract class FlxCameraView implements IFlxDestroyable
 	
 	public function offsetView(x:Float, y:Float):Void {}
 
-	function updateScale():Void
-	{
-		camera.calcMarginX();
-		camera.calcMarginY();
-	}
+	function updateScale():Void {}
 	
 	function updatePosition():Void {}
 	

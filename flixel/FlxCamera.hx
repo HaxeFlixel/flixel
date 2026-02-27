@@ -1828,6 +1828,9 @@ class FlxCamera extends FlxBasic
 		totalScaleY = scaleY * FlxG.scaleMode.scale.y;
 
 		view.updateScale();
+		
+		calcMarginX();
+		calcMarginY();
 
 		updateScrollRect();
 		updateInternalSpritePositions();
