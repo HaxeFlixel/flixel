@@ -219,27 +219,6 @@ abstract class FlxCameraView implements IFlxDestroyable
 		return vector;
 	}
 	
-	/**
-	 * Helper method for applying transformations (scaling and offsets)
-	 * to specified display objects which has been added to the camera display list.
-	 * For example, debug sprite for nape debug rendering.
-	 * @param	object	display object to apply transformations to.
-	 * @return	Transformed object.
-	 */
-	function transformObject(object:DisplayObject):DisplayObject
-	{
-		object.scaleX *= camera.totalScaleX;
-		object.scaleY *= camera.totalScaleY;
-		
-		object.x -= camera.scroll.x * camera.totalScaleX;
-		object.y -= camera.scroll.y * camera.totalScaleY;
-		
-		object.x -= 0.5 * camera.width * (camera.scaleX - camera.initialZoom) * FlxG.scaleMode.scale.x;
-		object.y -= 0.5 * camera.height * (camera.scaleY - camera.initialZoom) * FlxG.scaleMode.scale.y;
-		
-		return object;
-	}
-	
 	//} endregion --------------------- HELPERS ------------------------
 	
 	//{ region ------------------------ GETTERS ------------------------

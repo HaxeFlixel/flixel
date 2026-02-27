@@ -782,19 +782,23 @@ class FlxCamera extends FlxBasic
 	{
 		return view.transformVector(vector);
 	}
-
-	/**
-	 * Helper method for applying transformations (scaling and offsets)
-	 * to specified display objects which has been added to the camera display list.
-	 * For example, debug sprite for nape debug rendering.
-	 * @param	object	display object to apply transformations to.
-	 * @return	transformed object.
-	 */
-	inline function transformObject(object:DisplayObject):DisplayObject
+	
+	@:noCompletion
+	@:deprecated("transformObject is deprecated, there is no replacement")
+	function transformObject(object:DisplayObject):DisplayObject
 	{
-		return view.transformObject(object);
+		object.scaleX *= totalScaleX;
+		object.scaleY *= totalScaleY;
+		
+		object.x -= scroll.x * totalScaleX;
+		object.y -= scroll.y * totalScaleY;
+		
+		object.x -= 0.5 * width * (scaleX - initialZoom) * FlxG.scaleMode.scale.x;
+		object.y -= 0.5 * height * (scaleY - initialZoom) * FlxG.scaleMode.scale.y;
+		
+		return object;
 	}
-
+	
 	/**
 	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
 	 *
