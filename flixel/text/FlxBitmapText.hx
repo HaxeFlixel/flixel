@@ -379,8 +379,6 @@ class FlxBitmapText extends FlxSprite
 					continue;
 				}
 
-				FlxG.renderer.begin(camera);
-
 				getScreenPosition(screenPos, camera).subtract(offset);
 
 				if (isPixelPerfectRender(camera))
@@ -407,7 +405,7 @@ class FlxBitmapText extends FlxSprite
 					matrix.translate(screenPos.x + originX, screenPos.y + originY);
 					final colorTransform = bgColorTransformDrawHelper.reset();
 					colorTransform.setMultipliers(colorHelper).scaleMultipliers(backgroundColor);
-					FlxG.renderer.drawPixels(FlxG.bitmap.whitePixel, null, matrix, colorTransform, blend, antialiasing);
+					FlxG.renderer.drawPixels(camera.view, FlxG.bitmap.whitePixel, null, matrix, colorTransform, blend, antialiasing);
 				}
 				
 				final hasColorOffsets = (colorTransform != null && colorTransform.hasRGBAOffsets());
