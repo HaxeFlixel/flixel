@@ -790,19 +790,13 @@ class Interaction extends Window
 	
 	public function toDebugX(worldX:Float, camera:FlxCamera)
 	{
-		if (FlxG.renderer.method != BLITTING)
-			return camera.viewQuad.canvas.localToGlobal(new Point(worldX, 0)).x;
-		else
-			@:privateAccess
-			return camera.viewBlit._flashBitmap.localToGlobal(new Point(worldX, 0)).x;
+		@:privateAccess
+		return camera.view.worldToDebugX(worldX);
 	}
 	
 	public function toDebugY(worldY:Float, camera:FlxCamera)
 	{
-		if (FlxG.renderer.method != BLITTING)
-			return camera.viewQuad.canvas.localToGlobal(new Point(0, worldY)).y;
-		else
-			@:privateAccess
-			return camera.viewBlit._flashBitmap.localToGlobal(new Point(0, worldY)).y;
+		@:privateAccess
+		return camera.view.worldToDebugY(worldY);
 	}
 }

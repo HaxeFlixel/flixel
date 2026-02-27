@@ -245,14 +245,11 @@ class Transform extends Tool
 	function drawSelection(camera:FlxCamera)
 	{
 		// draw lines
-		var prevX = markers[3].x;
-		var prevY = markers[3].y;
-		for (marker in markers)
+		final scroll = camera.scroll;
+		for (i => marker in markers)
 		{
-			camera.view.drawDebugLine(prevX, prevY, marker.x, marker.y, FlxColor.MAGENTA);
-
-			prevX = marker.x;
-			prevY = marker.y;
+			final prev = markers[(i + 3) % 4];
+			camera.view.drawDebugLine(prev.x - scroll.x, prev.y - scroll.y, marker.x - scroll.x, marker.y - scroll.y, FlxColor.MAGENTA);
 		}
 		
 		// draw markers
@@ -260,7 +257,7 @@ class Transform extends Tool
 		{
 			final x = marker.x;
 			final y = marker.y;
-			Marker.draw(x, y, marker.type == ROTATE, camera);
+			Marker.draw(x - scroll.x, y - scroll.y, marker.type == ROTATE, camera);
 		}
 	}
 }

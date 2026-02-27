@@ -144,9 +144,8 @@ class Pointer extends Tool
 				final rect = FlxRect.get();
 				setAbsRect(rect, startX, startY, _brain.flixelPointer.x, _brain.flixelPointer.y);
 				// Render the selection rectangle
-				var color:FlxColor = 0xbb0000;
-				color.alphaFloat = 0.9;
-				view.drawDebugRect(FlxG.camera.scroll.x + rect.x, FlxG.camera.scroll.y + rect.y, rect.width, rect.height, color);
+				final scroll = view.camera.scroll;
+				view.drawDebugRect(rect.x - scroll.x, rect.y - scroll.y, rect.width, rect.height, 0xFFbb0000, 0.9);
 				rect.put();
 		}
 		

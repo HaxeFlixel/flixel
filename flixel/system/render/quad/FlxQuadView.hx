@@ -204,6 +204,19 @@ class FlxQuadView extends FlxCameraView
 		}
 	}
 	
+	static final toDebugHelper = new openfl.geom.Point();
+	function worldToDebugX(worldX:Float)//TODO: rename
+	{
+		toDebugHelper.setTo(worldX, 0);
+		return canvas.localToGlobal(toDebugHelper).x;
+	}
+	
+	function worldToDebugY(worldY:Float)//TODO: rename
+	{
+		toDebugHelper.setTo(worldY, 0);
+		return canvas.localToGlobal(toDebugHelper).y;
+	}
+	
 	override function updateInternals():Void
 	{
 		if (canvas != null)

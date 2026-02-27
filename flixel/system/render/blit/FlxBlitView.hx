@@ -389,4 +389,21 @@ class FlxBlitView extends FlxCameraView
 	}
 	
 	//} endregion --------------------- GETTERS ------------------------
+	
+	//{ region ------------------------ HELPERS ------------------------
+	
+	static final toDebugHelper = new openfl.geom.Point();
+	function worldToDebugX(worldX:Float)//TODO: rename
+	{
+		toDebugHelper.setTo(worldX, 0);
+		return _flashBitmap.localToGlobal(toDebugHelper).x;
+	}
+	
+	function worldToDebugY(worldY:Float)//TODO: rename
+	{
+		toDebugHelper.setTo(0, worldY);
+		return _flashBitmap.localToGlobal(toDebugHelper).y;
+	}
+	
+	//} endregion --------------------- HELPERS ------------------------
 }

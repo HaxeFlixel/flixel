@@ -54,6 +54,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		if (numTriangles <= 0)
 			return;
 
+		@:privateAccess
+		final view = camera.viewQuad;
+		
 		#if !flash
 		var shader = shader != null ? shader : graphics.shader;
 		shader.bitmap.input = graphics.bitmap;
@@ -75,20 +78,20 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		setParameterValue(shader.hasTransform, true);
 		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
 
-		camera.viewQuad.canvas.graphics.overrideBlendMode(blend);
+		view.canvas.graphics.overrideBlendMode(blend);
 
-		camera.viewQuad.canvas.graphics.beginShaderFill(shader);
+		view.canvas.graphics.beginShaderFill(shader);
 		#else
-		camera.viewQuad.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
+		view.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
 		#end
 
-		camera.viewQuad.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
-		camera.viewQuad.canvas.graphics.endFill();
+		view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
+		view.canvas.graphics.endFill();
 
 		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
 		{
-			var gfx:Graphics = camera.viewQuad.debugLayer.graphics;
+			var gfx:Graphics = view.debugLayer.graphics;
 			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
 			gfx.drawTriangles(vertices, indices, uvtData);
 		}

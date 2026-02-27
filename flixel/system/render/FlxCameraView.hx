@@ -186,6 +186,9 @@ abstract class FlxCameraView implements IFlxDestroyable
 	
 	//{ region ------------------------ HELPERS ---------------------------
 	
+	abstract function worldToDebugX(worldX:Float):Float;//TODO: find out what "debug space" actually is, rename and make public
+	abstract function worldToDebugY(worldY:Float):Float;//TODO: find out what "debug space" actually is, rename and make public
+	
 	/**
 	 * Helper method preparing debug rectangle for rendering in blit render mode
 	 * @param   rect  Rectangle to prepare for rendering

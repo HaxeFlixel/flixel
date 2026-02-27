@@ -105,14 +105,14 @@ class FlxCamera extends FlxBasic
 	 * 
 	 * **NOTE**: May be null depending on the render implementation used.
 	 */
-	public var viewQuad(default, null):Null<FlxQuadView>;
+	var viewQuad(default, null):Null<FlxQuadView>;
 
 	/**
 	 * This camera's `view`, typed as a `FlxBlitView`.
 	 * 
 	 * **NOTE**: May be null depending on the render implementation used.
 	 */
-	public var viewBlit(default, null):Null<FlxBlitView>;
+	var viewBlit(default, null):Null<FlxBlitView>;
 
 	/**
 	 * Tells the camera to use this following style.
