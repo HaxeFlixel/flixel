@@ -35,22 +35,27 @@ class FlxQuadRenderer extends FlxTypedRenderer<FlxQuadView>
 	 */
 	var _bounds:FlxRect = FlxRect.get();
 
-    public function new()
-    {
-        super();
-        method = DRAW_TILES;
-
+	public function new()
+	{
+		super();
+		method = DRAW_TILES;
+		
 		#if FLX_OPENGL_AVAILBLE
 		if (isGL)
 			maxTextureSize = cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
 		#end
-    }
+	}
 
 	override function destroy():Void
 	{
 		super.destroy();
 		_bounds = FlxDestroyUtil.put(_bounds);
 		_helperMatrix = null;
+	}
+	
+	public function createCameraView(camera:FlxCamera)
+	{
+		return new FlxQuadView(camera);
 	}
 
 	public function drawPixels(view:FlxQuadView, ?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,

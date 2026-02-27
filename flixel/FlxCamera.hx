@@ -551,7 +551,7 @@ class FlxCamera extends FlxBasic
 	
 	function createView()
 	{
-		return FlxCameraView.create(this);
+		return FlxG.renderer.createCameraView(this);
 	}
 
 	/**

@@ -15,25 +15,7 @@ import openfl.display.Graphics;
  */
 @:allow(flixel.FlxCamera)
 abstract class FlxCameraView implements IFlxDestroyable
-{	
-	/**
-	 * Creates a `FlxCameraView` object tied to a camera, based on the target and project configuration.
-	 * This function is dynamic, which means that you can change the return value yourself.
-	 * 
-	 * @param   camera   The camera to create the view for
-	 */
-	public static dynamic function create(camera:FlxCamera):FlxCameraView
-	{
-		if (!FlxG.renderer.isHardware)
-		{
-			return cast new flixel.system.render.blit.FlxBlitView(camera);
-		}
-		else
-		{
-			return cast new flixel.system.render.quad.FlxQuadView(camera);
-		}
-	}
-
+{
 	/**
 	 * Display object which is used as a container for all of the camera's graphics.
 	 * This object is added to the display tree.

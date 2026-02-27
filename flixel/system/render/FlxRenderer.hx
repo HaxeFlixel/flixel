@@ -33,75 +33,74 @@ typedef FlxRenderer = FlxTypedRenderer<FlxCameraView>;
  */
 abstract class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 {
-    /**
+	/**
 	 * The number of total draw calls in the current frame.
 	 */
-    public static var totalDrawCalls:Int = 0;
-
-    /**
-     * Creates a renderer instance, based on the used rendering backend.
-     * This function is dynamic, which means that you can change the return value yourself.
-     * 
-     * @return A `FlxRenderer` instance.
-     */
-    public static dynamic function create():FlxRenderer 
-    {
-        if (!FlxG.renderer.isHardware)
-        {
-            return cast new flixel.system.render.blit.FlxBlitRenderer();
-        }
-        else
-        {
-            return cast new flixel.system.render.quad.FlxQuadRenderer();
-        }
-    }
-
-    /**
-     * Returns the current render method as an enum.
-     */
-    public var method(default, null):FlxRenderMethod;
-
-    /**
-     * Returns whether the current renderer is hardware accelerated.
-     */
-    public var isHardware(get, never):Bool;
-    @:noCompletion inline function get_isHardware():Bool
-    {
-        return FlxG.stage.window.context.attributes.hardware;
-    }
-
-    /**
-     * Returns whether OpenGL access is available for the current renderer.
-     */
-    public var isGL(get, never):Bool;
-    @:noCompletion inline function get_isGL():Bool
-    {
-        #if FLX_OPENGL_AVAILABLE
+	public static var totalDrawCalls:Int = 0;
+	
+	/**
+	 * Creates a renderer instance, based on the used rendering backend.
+	 * This function is dynamic, which means that you can change the return value yourself.
+	 * 
+	 * @return A `FlxRenderer` instance.
+	 */
+	public static dynamic function create():FlxRenderer 
+	{
+		if (!FlxG.renderer.isHardware)
+		{
+			return cast new flixel.system.render.blit.FlxBlitRenderer();
+		}
+		else
+		{
+			return cast new flixel.system.render.quad.FlxQuadRenderer();
+		}
+	}
+	
+	/**
+	 * Returns the current render method as an enum.
+	 */
+	public var method(default, null):FlxRenderMethod;
+	
+	/**
+	 * Returns whether the current renderer is hardware accelerated.
+	 */
+	public var isHardware(get, never):Bool;
+	@:noCompletion inline function get_isHardware():Bool
+	{
+		return FlxG.stage.window.context.attributes.hardware;
+	}
+	
+	/**
+	 * Returns whether OpenGL access is available for the current renderer.
+	 */
+	public var isGL(get, never):Bool;
+	@:noCompletion inline function get_isGL():Bool
+	{
+		#if FLX_OPENGL_AVAILABLE
 		return FlxG.stage.window.context.type == OPENGL
 			|| FlxG.stage.window.context.type == OPENGLES
 			|| FlxG.stage.window.context.type == WEBGL;
-        #else
-        return false;
-        #end
-    }
-
-    /**
+		#else
+		return false;
+		#end
+	}
+	
+	/**
 	 * Returns the maximum allowed width and height (in pixels) for a texture.
 	 * This value is only available on hardware-accelerated targets that use OpenGL.
 	 * On unsupported targets, the returned value will always be -1.
 	 * 
 	 * @see https://opengl.gpuinfo.org/displaycapability.php?name=GL_MAX_TEXTURE_SIZE
 	 */
-    public var maxTextureSize(default, null):Int;
-
-    function new() 
-    {
-        maxTextureSize = -1;
-    }
-
+	public var maxTextureSize(default, null):Int = -1;
+	
+	function new() {}
+	
 	public function destroy():Void {}
 	
 	//{ region ------------------------ RENDERING ------------------------
+	
+	abstract function createCameraView(camera:FlxCamera):TView;
 
 	/**
 	 * Draws `frame` or `pixels` (depends on the renderer backend) onto the current render target.

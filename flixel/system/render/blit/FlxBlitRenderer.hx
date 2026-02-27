@@ -74,6 +74,11 @@ class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 		_helperPoint = null;
 	}
 	
+	public function createCameraView(camera:FlxCamera)
+	{
+		return new FlxBlitView(camera);
+	}
+	
 	public function drawPixels(view:FlxBlitView, ?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
 			?shader:FlxShader):Void
 	{
