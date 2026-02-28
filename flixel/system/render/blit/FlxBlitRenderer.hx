@@ -66,6 +66,13 @@ class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 		method = BLITTING;
 	}
 	
+	override function initGlobals()
+	{
+		super.initGlobals();
+		
+		FlxObject.defaultPixelPerfectPosition = true;
+	}
+	
 	override function destroy():Void
 	{
 		super.destroy();

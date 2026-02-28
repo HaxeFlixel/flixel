@@ -148,21 +148,21 @@ class FlxG
 	public static var renderMethod(get, null):flixel.system.render.FlxRenderer.FlxRenderMethod;
 	@:noCompletion static inline function get_renderMethod():flixel.system.render.FlxRenderer.FlxRenderMethod
 	{
-		return FlxG.renderer.method;
+		return renderer.method;
 	}
 
 	@:deprecated("renderBlit is deprecated, compare against FlxG.renderer.blit, instead.")
 	public static var renderBlit(get, never):Bool;
 	@:noCompletion static inline function get_renderBlit():Bool
 	{
-		return FlxG.renderer.blit;
+		return renderer.blit;
 	}
 
 	@:deprecated("renderTile is deprecated, compare against FlxG.renderer.method, instead.")
 	public static var renderTile(get, never):Bool;
 	@:noCompletion static inline function get_renderTile():Bool
 	{
-		return FlxG.renderer.tile;
+		return renderer.tile;
 	}
 
 	/**
@@ -611,7 +611,7 @@ class FlxG
 	static function initRenderMethod():Void
 	{
 		renderer = FlxRenderer.create();
-		FlxObject.defaultPixelPerfectPosition =	FlxG.renderer.blit;
+		renderer.initGlobals();
 	}
 
 	#if FLX_SAVE

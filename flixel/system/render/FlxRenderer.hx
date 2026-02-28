@@ -102,6 +102,12 @@ abstract class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	
 	function new() {}
 	
+	/**
+	 * Initializes and global fields that are dependant on the global rendering method.
+	 * Called automatically by `FlxG.init`
+	 */
+	public function initGlobals() {}
+	
 	public function destroy():Void {}
 	
 	//{ region ------------------------ RENDERING ------------------------
