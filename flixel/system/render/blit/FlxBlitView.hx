@@ -378,41 +378,44 @@ class FlxBlitView extends FlxCameraView
 		return flashSprite;
 	}
 	
-	override function set_color(color:FlxColor):FlxColor
+	override function set_color(value:FlxColor):FlxColor
 	{
 		if (_flashBitmap != null)
 		{
 			final colorTransform:ColorTransform = _flashBitmap.transform.colorTransform;
 			
-			colorTransform.redMultiplier = color.redFloat;
-			colorTransform.greenMultiplier = color.greenFloat;
-			colorTransform.blueMultiplier = color.blueFloat;
+			colorTransform.redMultiplier = value.redFloat;
+			colorTransform.greenMultiplier = value.greenFloat;
+			colorTransform.blueMultiplier = value.blueFloat;
 			
 			_flashBitmap.transform.colorTransform = colorTransform;
 		}
 		
-		return color;
+		return super.set_color(value);
 	}
 	
-	override function set_antialiasing(antialiasing:Bool):Bool
+	override function set_antialiasing(value:Bool):Bool
 	{
-		return _flashBitmap.smoothing = antialiasing;
+		_flashBitmap.smoothing = value;
+		return super.set_antialiasing(value);
 	}
 	
-	override function set_alpha(alpha:Float):Float
+	override function set_alpha(value:Float):Float
 	{
-		return _flashBitmap.alpha = alpha;
+		_flashBitmap.alpha = value;
+		return super.set_alpha(value);
 	}
 	
-	override function set_angle(angle:Float):Float
+	override function set_angle(value:Float):Float
 	{
-		return flashSprite.rotation = angle;
+		flashSprite.rotation = value;
+		return super.set_angle(value);
 	}
 	
-	override function set_visible(visible:Bool):Bool
+	override function set_visible(value:Bool):Bool
 	{
-		flashSprite.visible = visible;
-		return visible;
+		flashSprite.visible = value;
+		return super.set_visible(value);
 	}
 	
 	//} endregion --------------------- GETTERS ------------------------

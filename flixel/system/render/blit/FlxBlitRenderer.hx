@@ -95,12 +95,12 @@ class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 		if (view._useBlitMatrix)
 		{
 			_helperMatrix.concat(view._blitMatrix);
-			view.buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || camera.antialiasing));
+			view.buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || view.antialiasing));
 		}
 		else
 		{
 			_helperMatrix.translate(-camera.viewMarginLeft, -camera.viewMarginTop);
-			view.buffer.draw(pixels, _helperMatrix, null, blend, null, (smoothing || camera.antialiasing));
+			view.buffer.draw(pixels, _helperMatrix, null, blend, null, (smoothing || view.antialiasing));
 		}
 	}
 	
@@ -115,7 +115,7 @@ class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 				_helperMatrix.identity();
 				_helperMatrix.translate(destPoint.x, destPoint.y);
 				_helperMatrix.concat(view._blitMatrix);
-				view.buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || camera.antialiasing));
+				view.buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || view.antialiasing));
 			}
 			else
 			{

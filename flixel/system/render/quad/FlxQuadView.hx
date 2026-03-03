@@ -258,33 +258,35 @@ class FlxQuadView extends FlxCameraView
 		}
 	}
 	
-	override function set_color(color:FlxColor):FlxColor
+	override function set_color(value:FlxColor):FlxColor
 	{
 		final colorTransform:ColorTransform = canvas.transform.colorTransform;
 		
-		colorTransform.redMultiplier = color.redFloat;
-		colorTransform.greenMultiplier = color.greenFloat;
-		colorTransform.blueMultiplier = color.blueFloat;
+		colorTransform.redMultiplier = value.redFloat;
+		colorTransform.greenMultiplier = value.greenFloat;
+		colorTransform.blueMultiplier = value.blueFloat;
 		
 		canvas.transform.colorTransform = colorTransform;
 		
-		return color;
+		return super.set_color(value);
 	}
 	
-	override function set_alpha(alpha:Float):Float
+	override function set_alpha(value:Float):Float
 	{
-		return canvas.alpha = alpha;
+		canvas.alpha = alpha;
+		return super.set_alpha(value);
 	}
 	
-	override function set_angle(angle:Float):Float
+	override function set_angle(value:Float):Float
 	{
-		return flashSprite.rotation = angle;
+		flashSprite.rotation = value;
+		return super.set_angle(value);
 	}
 	
-	override function set_visible(visible:Bool):Bool
+	override function set_visible(value:Bool):Bool
 	{
-		flashSprite.visible = visible;
-		return visible;
+		flashSprite.visible = value;
+		return super.set_visible(value);
 	}
 	
 	function get_display():DisplayObjectContainer

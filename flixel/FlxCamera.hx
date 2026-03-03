@@ -328,6 +328,8 @@ class FlxCamera extends FlxBasic
 	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
 	 * Default behavior is chunky-style.
 	 */
+	@:noCompletion
+	@:deprecated("camera.antialiasing is deprecated, use camera.view.anstialiasing instead")
 	public var antialiasing(default, set):Bool = false;
 
 	/**
@@ -1610,34 +1612,26 @@ class FlxCamera extends FlxBasic
 		return zoom;
 	}
 
-	function set_alpha(alpha:Float):Float
+	function set_alpha(value:Float):Float
 	{
-		this.alpha = FlxMath.bound(alpha, 0, 1);
-		view.alpha = alpha;
-		return alpha;
+		return this.alpha = view.alpha = FlxMath.bound(value, 0, 1);
 	}
-
-	function set_angle(angle:Float):Float
+	
+	function set_angle(value:Float):Float
 	{
-		this.angle = angle;
-		view.angle = angle;
-		return angle;
+		return this.angle = view.angle = value;
 	}
-
-	function set_color(color:FlxColor):FlxColor
+	
+	function set_color(value:FlxColor):FlxColor
 	{
-		this.color = color;
-		view.color = color;
-		return color;
+		return this.color = view.color = value;
 	}
-
-	function set_antialiasing(antialiasing:Bool):Bool
+	
+	function set_antialiasing(value:Bool):Bool
 	{
-		this.antialiasing = antialiasing;
-		view.antialiasing = antialiasing;
-		return antialiasing;
+		return this.antialiasing = view.antialiasing = value;
 	}
-
+	
 	function set_x(x:Float):Float
 	{
 		this.x = x;
@@ -1652,10 +1646,9 @@ class FlxCamera extends FlxBasic
 		return y;
 	}
 
-	override function set_visible(visible:Bool):Bool
+	override function set_visible(value:Bool):Bool
 	{
-		view.visible = visible;
-		return this.visible = visible;
+		return this.visible = view.visible = value;
 	}
 
 	inline function calcMarginX():Void
@@ -2287,6 +2280,15 @@ class FlxCamera extends FlxBasic
 	static var renderRect(get, set):FlxRect;
 	static inline function get_renderRect():FlxRect return FlxBlitRenderer.renderRect;
 	static inline function set_renderRect(value:FlxRect):FlxRect return FlxBlitRenderer.renderRect = value;
+	
+	// @:bypassAccess doesn't work from external classes in haxe 4. So call this when needed
+	@:noCompletion inline function setColorBypass       (value:FlxColor):FlxColor return @:bypassAccessor this.color = value;
+	@:noCompletion inline function setAlphaBypass       (value:Float   ):Float    return @:bypassAccessor this.alpha = value;
+	@:noCompletion inline function setAngleBypass       (value:Float   ):Float    return @:bypassAccessor this.angle = value;
+	@:noCompletion inline function setVisibleBypass     (value:Bool    ):Bool     return @:bypassAccessor this.visible = value;
+	@:haxe.warning("-WDeprecated")
+	@:noCompletion inline function setAntialiasingBypass(value:Bool    ):Bool     return @:bypassAccessor this.antialiasing = value;
+	
 	
 	//{ endregion --- DEPRECATED VIEW FIELDS ------
 }

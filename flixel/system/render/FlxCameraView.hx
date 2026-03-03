@@ -14,6 +14,7 @@ import openfl.display.Graphics;
  * A `FlxCameraView` is a helper added to cameras, that holds some rendering-related objects
  */
 @:allow(flixel.FlxCamera)
+@:access(flixel.FlxCamera)
 abstract class FlxCameraView implements IFlxDestroyable
 {
 	/**
@@ -28,29 +29,30 @@ abstract class FlxCameraView implements IFlxDestroyable
 	public var camera(default, null):FlxCamera;
 	
 	/**
-	 * A shortcut for `camera.antialiasing`. Used so implementations can listen to changes.
+	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
+	 * Default behavior is chunky-style.
 	 */
-	public var antialiasing(get, set):Bool;
+	public var antialiasing(default, set):Bool;
 
 	/**
 	 * A shortcut for `camera.angle`. Used so implementations can listen to changes.
 	 */
-	public var angle(get, set):Float;
+	public var angle(default, set):Float;
 
 	/**
 	 * A shortcut for `camera.alpha`. Used so implementations can listen to changes.
 	 */
-	public var alpha(get, set):Float;
+	public var alpha(default, set):Float;
 
 	/**
 	 * A shortcut for `camera.color`. Used so implementations can listen to changes.
 	 */
-	public var color(get, set):FlxColor;
+	public var color(default, set):FlxColor;
 
 	/**
 	 * A shortcut for `camera.visible`. Used so implementations can listen to changes.
 	 */
-	public var visible(get, set):Bool;
+	public var visible(default, set):Bool;
 	
 	function new(camera:FlxCamera)
 	{
@@ -194,55 +196,43 @@ abstract class FlxCameraView implements IFlxDestroyable
 	
 	abstract function get_display():DisplayObjectContainer;
 	
-	function get_color():FlxColor
+	@:haxe.warning("-WDeprecated")
+	function set_antialiasing(value:Bool):Bool
 	{
-		return camera.color;
+		camera.setAntialiasingBypass(value);
+		return this.antialiasing = value;
 	}
 	
 	function set_color(value:FlxColor):FlxColor
 	{
-		return camera.color = value;
-	}
-	
-	function get_antialiasing():Bool
-	{
-		return camera.antialiasing;
-	}
-	
-	function set_antialiasing(value:Bool):Bool
-	{
-		return camera.antialiasing = value;
-	}
-	
-	function get_angle():Float
-	{
-		return camera.angle;
+		camera.setColorBypass(value);
+		return this.color = value;
 	}
 	
 	function set_angle(value:Float):Float
 	{
-		return camera.angle = value;
-	}
-	
-	function get_visible():Bool
-	{
-		return camera.visible;
+		camera.setAngleBypass(value);
+		return this.angle = value;
 	}
 	
 	function set_visible(value:Bool):Bool
 	{
-		return camera.visible = value;
-	}
-	
-	function get_alpha():Float
-	{
-		return camera.alpha;
+		camera.setVisibleBypass(value);
+		return this.visible = value;
 	}
 	
 	function set_alpha(value:Float):Float
 	{
-		return camera.alpha = value;
+		camera.setAlphaBypass(value);
+		return this.alpha = value;
 	}
+	
+	// @:bypassAccess doesn't work from external classes in haxe 4. So call this when needed
+	@:noCompletion inline function setColorBypass       (value:FlxColor):FlxColor return @:bypassAccessor this.color = value;
+	@:noCompletion inline function setAlphaBypass       (value:Float   ):Float    return @:bypassAccessor this.alpha = value;
+	@:noCompletion inline function setAngleBypass       (value:Float   ):Float    return @:bypassAccessor this.angle = value;
+	@:noCompletion inline function setAntialiasingBypass(value:Bool    ):Bool     return @:bypassAccessor this.antialiasing = value;
+	@:noCompletion inline function setVisibleBypass     (value:Bool    ):Bool     return @:bypassAccessor this.visible = value;
 	
 	//} endregion --------------------- GETTERS ------------------------
 }
