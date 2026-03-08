@@ -1755,6 +1755,22 @@ class FlxCamera extends FlxBasic
 	//{ region ------ DEPRECATED VIEW FIELDS ------
 	
 	@:noCompletion
+	@:deprecated("camera.transformObject is deprecated, there will be no replacement")
+	function transformObject(object:DisplayObject):DisplayObject
+	{
+		object.scaleX *= totalScaleX;
+		object.scaleY *= totalScaleY;
+
+		object.x -= scroll.x * totalScaleX;
+		object.y -= scroll.y * totalScaleY;
+
+		object.x -= 0.5 * width * (scaleX - initialZoom) * FlxG.scaleMode.scale.x;
+		object.y -= 0.5 * height * (scaleY - initialZoom) * FlxG.scaleMode.scale.y;
+
+		return object;
+	}
+	
+	@:noCompletion
 	@:deprecated("camera.startQuadBatch() is deprecated, use view.startQuadBatch() instead.") // 6.2.0
 	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, ?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
 	{
