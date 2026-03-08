@@ -11,6 +11,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
+import flixel.system.render.FlxVertexBuffer;
 import flixel.system.render.blit.FlxBlitRenderer;
 import flixel.system.render.blit.FlxBlitView;
 import flixel.system.render.quad.FlxQuadRenderer;
@@ -1786,15 +1787,16 @@ class FlxCamera extends FlxBasic
 	public function fill(color:FlxColor, blendAlpha:Bool = true, fxAlpha:Float = 1.0, ?graphics:Graphics):Void
 	{
 		color.alphaFloat = fxAlpha;
-
-		if (viewQuad != null && graphics != null && graphics != view.getDebugGraphics())
+		
+		final useTargetGraphic = graphics != null #if FLX_DEBUG && graphics != view.getDebugBuffer() #end;
+		if (useTargetGraphic)
 		{
 			graphics.overrideBlendMode(null);
-			graphics.beginFill(color.rgb, color.alphaFloat);
+			final buffer:FlxVertexBuffer = cast graphics;
 			// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 			// which could appear while cameras fading
-			graphics.drawRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2);
-			graphics.endFill();
+			buffer.drawFilledRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2, color);
+			return;
 		}
 
 		view.fill(color, blendAlpha);

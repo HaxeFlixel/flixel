@@ -136,6 +136,10 @@ class FlxBlitView extends FlxCameraView
 		_flashOffset = FlxDestroyUtil.put(_flashOffset);
 	}
 	
+	// =============================================================================
+	//{ region                             REDNERING
+	// =============================================================================
+	
 	function render():Void
 	{
 		camera.drawFX();
@@ -174,6 +178,14 @@ class FlxBlitView extends FlxCameraView
 			buffer.fillRect(_flashRect, color);
 		}
 	}
+	
+	// =============================================================================
+	//} endregion                          REDNERING
+	// =============================================================================
+	
+	// =============================================================================
+	//{ region                             INTERNALS
+	// =============================================================================
 	
 	override function offsetView(x:Float, y:Float):Void
 	{
@@ -251,62 +263,55 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
-	//{ region ------------------------ DEBUG DRAW ------------------------
+	// =============================================================================
+	//} endregion                          INTERNALS
+	// =============================================================================
+	
+	// =============================================================================
+	//{ region                            DEBUG DRAW
+	// =============================================================================
 	
 	public function beginDrawDebug()
 	{
+		#if FLX_DEBUG
 		debugSprite.graphics.clear();
-		return debugSprite.graphics;
-	}
-	
-	public function getDebugGraphics()
-	{
-		return debugSprite.graphics;
+		#end
 	}
 	
 	public function endDrawDebug():Void
 	{
+		#if FLX_DEBUG
 		buffer.draw(debugSprite);
+		#end
 	}
 	
 	#if FLX_DEBUG
-	public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1.0):Void
+	
+	public function getDebugBuffer():FlxVertexBuffer
 	{
-		final gfx = debugSprite.graphics;
-		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
-		gfx.drawRect(x, y, width, height);
+		return debugSprite.graphics;
 	}
 	
-	public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void
+	static final toDebugHelper = new openfl.geom.Point();
+	function worldToDebugX(worldX:Float)//TODO: rename
 	{
-		final gfx = debugSprite.graphics;
-		gfx.lineStyle();
-		gfx.beginFill(color.rgb, color.alphaFloat);
-		gfx.drawRect(x, y, width, height);
-		gfx.endFill();
+		toDebugHelper.setTo(worldX, 0);
+		return _flashBitmap.localToGlobal(toDebugHelper).x;
 	}
 	
-	public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void
+	function worldToDebugY(worldY:Float)//TODO: rename
 	{
-		final gfx = debugSprite.graphics;
-		gfx.beginFill(color.rgb, color.alphaFloat);
-		gfx.drawCircle(x, y, radius);
-		gfx.endFill();
-	}
-	
-	public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void
-	{
-		final gfx = debugSprite.graphics;
-		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
-		gfx.moveTo(x1, y1);
-		gfx.lineTo(x2, y2);
+		toDebugHelper.setTo(0, worldY);
+		return _flashBitmap.localToGlobal(toDebugHelper).y;
 	}
 	#end
 	
-	//} endregion --------------------- DEBUG DRAW ------------------------
+	//} endregion                         DEBUG DRAW
+	// =============================================================================
 	
-	//{ region ------------------------ HELPERS ---------------------------
-	
+	// =============================================================================
+	//{ region                             HELPERS
+	// =============================================================================
 	
 	function checkResize():Void
 	{
@@ -369,9 +374,12 @@ class FlxBlitView extends FlxCameraView
 		return vector;
 	}
 	
-	//} endregion --------------------- HELPERS ------------------------
+	//} endregion                          HELPERS
+	// =============================================================================
 	
-	//{ region ------------------------ GETTERS ------------------------
+	// =============================================================================
+	//{ region                             GETTERS
+	// =============================================================================
 	
 	function get_display():DisplayObjectContainer
 	{
@@ -418,22 +426,6 @@ class FlxBlitView extends FlxCameraView
 		return super.set_visible(value);
 	}
 	
-	//} endregion --------------------- GETTERS ------------------------
-	
-	//{ region ------------------------ HELPERS ------------------------
-	
-	static final toDebugHelper = new openfl.geom.Point();
-	function worldToDebugX(worldX:Float)//TODO: rename
-	{
-		toDebugHelper.setTo(worldX, 0);
-		return _flashBitmap.localToGlobal(toDebugHelper).x;
-	}
-	
-	function worldToDebugY(worldY:Float)//TODO: rename
-	{
-		toDebugHelper.setTo(0, worldY);
-		return _flashBitmap.localToGlobal(toDebugHelper).y;
-	}
-	
-	//} endregion --------------------- HELPERS ------------------------
+	//} endregion                          GETTERS
+	// =============================================================================
 }

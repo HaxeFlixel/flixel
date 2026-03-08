@@ -61,6 +61,10 @@ abstract class FlxCameraView implements IFlxDestroyable
 	
 	public function destroy():Void {}
 	
+	// =============================================================================
+	//{ region                             REDNERING
+	// =============================================================================
+	
 	/**
 	 * Flushes any remaining graphics and renders everything to the screen.
 	 */
@@ -79,8 +83,13 @@ abstract class FlxCameraView implements IFlxDestroyable
 	 */
 	abstract public function fill(color:FlxColor, blendAlpha:Bool = true):Void;
 	
+	
+	// =============================================================================
+	//} endregion                          REDNERING
+	// =============================================================================
+	
 	public function offsetView(x:Float, y:Float):Void {}
-
+	
 	function updateScale():Void {}
 	
 	function updatePosition():Void {}
@@ -91,7 +100,9 @@ abstract class FlxCameraView implements IFlxDestroyable
 	
 	function updateScrollRect():Void {}
 	
-	//{ region ------------------------ DEBUG DRAW ------------------------
+	// =============================================================================
+	//{ region                             DEBUG DRAW
+	// =============================================================================
 	
 	/**
 	 * Begins debug draw on the current (or optionally specified) camera.
@@ -99,66 +110,29 @@ abstract class FlxCameraView implements IFlxDestroyable
 	 * 
 	 * @param camera Optional, the camera to draw to.
 	 */
-	abstract public function beginDrawDebug():Graphics;
-	
-	abstract public function getDebugGraphics():Graphics;
+	abstract public function beginDrawDebug():Void;
 	
 	/**
 	 * Cleans up and finalizes the debug draw.
 	 */
 	abstract public function endDrawDebug():Void;
 	
-	/**
-	 * Draws a rectangle with an outline.
-	 * 
-	 * @param   x           The x position of the rectangle.
-	 * @param   y           The y position of the rectangle.
-	 * @param   width       The width of the rectangle (in pixels).
-	 * @param   height      The height of the rectangle (in pixels).
-	 * @param   color       The color (in 0xAARRGGBB hex format) of the rectangle's outline.
-	 * @param   thickness   The thickness of the rectangle's outline.
-	 */
-	abstract public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1.0):Void;
+	#if FLX_DEBUG
 	
-	/**
-	 * Draws a filled rectangle.
-	 * 
-	 * @param   x       The x position of the rectangle.
-	 * @param   y       The y position of the rectangle.
-	 * @param   width   The width of the rectangle (in pixels).
-	 * @param   height  The height of the rectangle (in pixels).
-	 * @param   color   The color (in 0xAARRGGBB hex format) of the rectangle's fill.
-	 */
-	abstract public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void;
-	
-	/**
-	 * Draws a filled circle.
-	 * 
-	 * @param   x       The x position of the circle.
-	 * @param   y       The y position of the circle.
-	 * @param   radius  The radius of the circle.
-	 * @param   color   The color (in 0xAARRGGBB hex format) of the circle's fill.
-	 */
-	abstract public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void;
-	
-	/**
-	 * Draws a line.
-	 * 
-	 * @param   x1         The start x position of the line.
-	 * @param   y1         The start y position of the line.
-	 * @param   x2         The end x position of the line.
-	 * @param   y2         The end y position of the line.
-	 * @param   color      The color (in 0xAARRGGBB hex format) of the line.
-	 * @param   thickness  The thickness of the line.
-	 */
-	abstract public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void;
-	
-	//} endregion --------------------- DEBUG DRAW ------------------------
-	
-	//{ region ------------------------ HELPERS ---------------------------
+	abstract public function getDebugBuffer():FlxVertexBuffer;
 	
 	abstract function worldToDebugX(worldX:Float):Float;//TODO: find out what "debug space" actually is, rename and make public
 	abstract function worldToDebugY(worldY:Float):Float;//TODO: find out what "debug space" actually is, rename and make public
+	
+	#end
+	
+	// =============================================================================
+	//} endregion                          DEBUG DRAW
+	// =============================================================================
+	
+	// =============================================================================
+	//{ region                             HELPERS
+	// =============================================================================
 	
 	/**
 	 * Helper method preparing debug rectangle for rendering in blit render mode
@@ -190,9 +164,13 @@ abstract class FlxCameraView implements IFlxDestroyable
 		return vector;
 	}
 	
-	//} endregion --------------------- HELPERS ------------------------
+	// =============================================================================
+	//} endregion                          HELPERS
+	// =============================================================================
 	
-	//{ region ------------------------ GETTERS ------------------------
+	// =============================================================================
+	//{ region                             GETTERS
+	// =============================================================================
 	
 	abstract function get_display():DisplayObjectContainer;
 	
@@ -234,5 +212,7 @@ abstract class FlxCameraView implements IFlxDestroyable
 	@:noCompletion inline function setAntialiasingBypass(value:Bool    ):Bool     return @:bypassAccessor this.antialiasing = value;
 	@:noCompletion inline function setVisibleBypass     (value:Bool    ):Bool     return @:bypassAccessor this.visible = value;
 	
-	//} endregion --------------------- GETTERS ------------------------
+	// =============================================================================
+	//} endregion                          GETTERS
+	// =============================================================================
 }

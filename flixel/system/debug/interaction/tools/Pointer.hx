@@ -132,10 +132,12 @@ class Pointer extends Tool
 		state = IDLE;
 	}
 	
+	#if FLX_DEBUG
 	override public function draw():Void
 	{
 		final view = FlxG.camera.view;
 		view.beginDrawDebug();
+		final buffer = view.getDebugBuffer();
 		
 		switch state
 		{
@@ -145,12 +147,13 @@ class Pointer extends Tool
 				setAbsRect(rect, startX, startY, _brain.flixelPointer.x, _brain.flixelPointer.y);
 				// Render the selection rectangle
 				final scroll = view.camera.scroll;
-				view.drawDebugRect(rect.x - scroll.x, rect.y - scroll.y, rect.width, rect.height, 0xFFbb0000, 0.9);
+				buffer.drawRect(rect.x - scroll.x, rect.y - scroll.y, rect.width, rect.height, 0xFFbb0000, 0.9);
 				rect.put();
 		}
 		
 		view.endDrawDebug();
 	}
+	#end
 	
 	static function setAbsRect(rect:FlxRect, x1:Float, y1:Float, x2:Float, y2:Float)
 	{

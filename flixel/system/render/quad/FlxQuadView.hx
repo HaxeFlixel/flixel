@@ -106,6 +106,10 @@ class FlxQuadView extends FlxCameraView
 		_flashOffset = FlxDestroyUtil.put(_flashOffset);
 	}
 	
+	// =============================================================================
+	//{ region                            RENDERING
+	// =============================================================================
+	
 	public function render():Void
 	{
 		flashSprite.filters = camera.filtersEnabled ? camera.filters : null;
@@ -175,6 +179,14 @@ class FlxQuadView extends FlxCameraView
 		canvas.graphics.endFill();
 	}
 	
+	// =============================================================================
+	//} endregion                         RENDERING
+	// =============================================================================
+	
+	// =============================================================================
+	//{ region                            INTERNALS
+	// =============================================================================
+	
 	override function offsetView(x:Float, y:Float):Void
 	{
 		super.offsetView(x, y);
@@ -220,19 +232,6 @@ class FlxQuadView extends FlxCameraView
 			_scrollRect.x = -0.5 * rect.width;
 			_scrollRect.y = -0.5 * rect.height;
 		}
-	}
-	
-	static final toDebugHelper = new openfl.geom.Point();
-	function worldToDebugX(worldX:Float)//TODO: rename
-	{
-		toDebugHelper.setTo(worldX, 0);
-		return canvas.localToGlobal(toDebugHelper).x;
-	}
-	
-	function worldToDebugY(worldY:Float)//TODO: rename
-	{
-		toDebugHelper.setTo(worldY, 0);
-		return canvas.localToGlobal(toDebugHelper).y;
 	}
 	
 	override function updateInternals():Void
@@ -445,53 +444,38 @@ class FlxQuadView extends FlxCameraView
 		return itemToReturn;
 	}
 	
-	//{ region ------------------------ DEBUG DRAW ------------------------
+	//} endregion                         INTERNALS
+	// =============================================================================
 	
-	public function beginDrawDebug()
-	{
-		return debugLayer.graphics;
-	}
+	// =============================================================================
+	//{ region                            DEBUG DRAW
+	// =============================================================================
 	
-	public function getDebugGraphics()
-	{
-		return debugLayer.graphics;
-	}
+	public function beginDrawDebug() {}
 	
-	public function endDrawDebug():Void {}
+	public function endDrawDebug() {}
 	
 	#if FLX_DEBUG
-	public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1.0):Void
+	
+	public function getDebugBuffer():FlxVertexBuffer
 	{
-		final gfx = debugLayer.graphics;
-		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
-		gfx.drawRect(x, y, width, height);
+		return debugLayer.graphics;
+	}
+	
+	static final toDebugHelper = new openfl.geom.Point();
+	function worldToDebugX(worldX:Float)//TODO: rename?
+	{
+		toDebugHelper.setTo(worldX, 0);
+		return canvas.localToGlobal(toDebugHelper).x;
 	}
 
-	public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void
+	function worldToDebugY(worldY:Float)//TODO: rename?
 	{
-		final gfx = debugLayer.graphics;
-		gfx.lineStyle();
-		gfx.beginFill(color.rgb, color.alphaFloat);
-		gfx.drawRect(x, y, width, height);
-		gfx.endFill();
-	}
-
-	public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void
-	{
-		final gfx = debugLayer.graphics;
-		gfx.beginFill(color.rgb, color.alphaFloat);
-		gfx.drawCircle(x, y, radius);
-		gfx.endFill();
-	}
-
-	public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void
-	{
-		final gfx = debugLayer.graphics;
-		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
-		gfx.moveTo(x1, y1);
-		gfx.lineTo(x2, y2);
+		toDebugHelper.setTo(worldY, 0);
+		return canvas.localToGlobal(toDebugHelper).y;
 	}
 	#end
 	
-	//} endregion ------------------------ DEBUG DRAW ------------------------
+	//} endregion                         DEBUG DRAW
+	// =============================================================================
 }

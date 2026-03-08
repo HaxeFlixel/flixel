@@ -388,7 +388,7 @@ class Interaction extends Window
 		}
 
 		#if FLX_DEBUG
-		return FlxG.camera.view.getDebugGraphics();
+		return FlxG.camera.view.getDebugBuffer();
 		#end
 
 		return null;
@@ -396,23 +396,27 @@ class Interaction extends Window
 
 	function drawItemsSelection():Void
 	{
+		#if FLX_DEBUG
 		final view = FlxG.camera.view;
 		view.beginDrawDebug();
+		final buffer = view.getDebugBuffer();
 
 		for (member in selectedItems)
 		{
 			if (member != null && member.scrollFactor != null && member.isOnScreen())
 			{
-				final margin = 0.5;
 				final scroll = FlxG.camera.scroll;
 				// Render a white rectangle centered at the selected item
 
 				final color:FlxColor = FlxColor.fromRGBFloat(1, 1, 1, 0.75);
-				view.drawDebugRect(member.x - scroll.x - margin, member.y - scroll.y - margin, member.width + margin*2, member.height + margin*2, color);
+				final MARGIN = 0.5;
+				final MARGIN_2 = MARGIN * 2;
+				buffer.drawRect(member.x - scroll.x - MARGIN, member.y - scroll.y - MARGIN, member.width + MARGIN_2, member.height + MARGIN_2, color);
 			}
 		}
 
 		view.endDrawDebug();
+		#end
 	}
 
 	/**
@@ -790,13 +794,21 @@ class Interaction extends Window
 	
 	public function toDebugX(worldX:Float, camera:FlxCamera)
 	{
+		#if FLX_DEBUG
 		@:privateAccess
 		return camera.view.worldToDebugX(worldX);
+		#else
+		return worldX;
+		#end
 	}
 	
 	public function toDebugY(worldY:Float, camera:FlxCamera)
 	{
+		#if FLX_DEBUG
 		@:privateAccess
 		return camera.view.worldToDebugY(worldY);
+		#else
+		return worldY;
+		#end
 	}
 }

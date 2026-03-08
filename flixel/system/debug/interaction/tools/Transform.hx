@@ -7,6 +7,7 @@ import flixel.math.FlxRect;
 import flixel.system.debug.Icon;
 import flixel.system.debug.Tooltip;
 import flixel.system.debug.interaction.Interaction;
+import flixel.system.render.FlxVertexBuffer;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BitmapData;
@@ -218,6 +219,7 @@ class Transform extends Tool
 		}
 	}
 	
+	#if FLX_DEBUG
 	override function draw():Void
 	{
 		if (!isActive())
@@ -237,19 +239,20 @@ class Transform extends Tool
 
 		final view = camera.view;
 		view.beginDrawDebug();
-		drawSelection(camera);
-		Marker.draw(target.x + target.origin.x, target.y + target.origin.y, false, camera);
+		final buffer = view.getDebugBuffer();
+		drawSelection(buffer, camera);
+		Marker.draw(buffer, target.x + target.origin.x, target.y + target.origin.y, false);
 		view.endDrawDebug();
 	}
 
-	function drawSelection(camera:FlxCamera)
+	function drawSelection(buffer:FlxVertexBuffer, camera:FlxCamera)
 	{
 		// draw lines
 		final scroll = camera.scroll;
 		for (i => marker in markers)
 		{
 			final prev = markers[(i + 3) % 4];
-			camera.view.drawDebugLine(prev.x - scroll.x, prev.y - scroll.y, marker.x - scroll.x, marker.y - scroll.y, FlxColor.MAGENTA);
+			buffer.drawLine(prev.x - scroll.x, prev.y - scroll.y, marker.x - scroll.x, marker.y - scroll.y, FlxColor.MAGENTA);
 		}
 		
 		// draw markers
@@ -257,9 +260,10 @@ class Transform extends Tool
 		{
 			final x = marker.x;
 			final y = marker.y;
-			Marker.draw(x - scroll.x, y - scroll.y, marker.type == ROTATE, camera);
+			Marker.draw(buffer, x - scroll.x, y - scroll.y, marker.type == ROTATE);
 		}
 	}
+	#end
 }
 
 private class Marker
@@ -296,12 +300,12 @@ private class Marker
 		rot.put();
 	}
 
-	public static function draw(screenX:Float, screenY:Float, circle:Bool, camera:FlxCamera)
+	public static function draw(buffer:FlxVertexBuffer, screenX:Float, screenY:Float, circle:Bool)
 	{
 		if (circle)
-			camera.view.drawDebugFilledCircle(screenX, screenY, CIRCLE_RADIUS, FlxColor.MAGENTA);
+			buffer.drawFilledCircle(screenX, screenY, CIRCLE_RADIUS, FlxColor.MAGENTA);
 		else
-			camera.view.drawDebugFilledRect(screenX - RECT_MARGIN, screenY - RECT_MARGIN, RECT_SIZE, RECT_SIZE, FlxColor.MAGENTA);
+			buffer.drawFilledRect(screenX - RECT_MARGIN, screenY - RECT_MARGIN, RECT_SIZE, RECT_SIZE, FlxColor.MAGENTA);
 	}
 }
 
