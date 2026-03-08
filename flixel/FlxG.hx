@@ -158,7 +158,7 @@ class FlxG
 		return renderer.blit;
 	}
 
-	@:deprecated("renderTile is deprecated, compare against FlxG.renderer.method, instead.")
+	@:deprecated("renderTile is deprecated, compare against FlxG.renderer.tile, instead.")
 	public static var renderTile(get, never):Bool;
 	@:noCompletion static inline function get_renderTile():Bool
 	{
