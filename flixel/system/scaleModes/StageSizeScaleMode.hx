@@ -25,15 +25,15 @@ class StageSizeScaleMode extends BaseScaleMode
 
 		if (FlxG.camera != null)
 		{
-			var oldW = FlxG.camera.width;
-			var oldH = FlxG.camera.height;
+			final camera = FlxG.camera;
+			final oldW = camera.width;
+			final oldH = camera.height;
 
-			var newW = Math.ceil(Width / FlxG.camera.zoom);
-			var newH = Math.ceil(Height / FlxG.camera.zoom);
+			final newW = Math.ceil(Width / camera.zoom);
+			final newH = Math.ceil(Height / camera.zoom);
 
-			FlxG.camera.setSize(newW, newH);
-			FlxG.camera.display.x += (newW - oldW) / 2;
-			FlxG.camera.display.y += (newH - oldH) / 2;
+			camera.setPosition(0, 0);
+			camera.setSize(newW, newH);
 		}
 	}
 }

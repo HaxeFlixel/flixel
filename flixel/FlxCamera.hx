@@ -520,7 +520,7 @@ class FlxCamera extends FlxBasic
 		{
 			viewBlit = Std.downcast(view, FlxBlitView);
 			@:bypassAccessor _flashPoint = viewBlit._flashPoint;
-			@:bypassAccessor flashSprite = viewQuad.flashSprite;
+			@:bypassAccessor flashSprite = viewBlit.flashSprite;
 			@:bypassAccessor _flashOffset = viewBlit._flashOffset;
 			@:bypassAccessor _scrollRect = viewBlit._scrollRect;
 			@:bypassAccessor _flashRect = viewBlit._flashRect;
