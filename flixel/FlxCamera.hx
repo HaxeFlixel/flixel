@@ -1901,12 +1901,14 @@ class FlxCamera extends FlxBasic
 	}
 	
 	@:noCompletion
-	@:deprecated("flashSprite is deprecated, use camera.display, instead") // 6.2.0
+	@:deprecated("flashSprite is deprecated, use camera.viewBlit.flashSprite or camera.viewQuad.flashSprite, instead") // 6.2.0
 	@:isVar public var flashSprite(get, set):Sprite;
 	function get_flashSprite()
 	{
 		if (viewBlit != null)
 			this.flashSprite = viewBlit.flashSprite;
+		else if (viewQuad != null)
+			this.flashSprite = viewQuad.flashSprite;
 		
 		return this.flashSprite;
 	}
@@ -1914,6 +1916,8 @@ class FlxCamera extends FlxBasic
 	{
 		return if (viewBlit != null)
 			this.flashSprite = viewBlit.flashSprite = value;
+		else if (viewQuad != null)
+			this.flashSprite = viewQuad.flashSprite = value;
 		else
 			this.flashSprite = value;
 	}

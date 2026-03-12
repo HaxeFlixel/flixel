@@ -110,8 +110,10 @@ class FlxQuadView extends FlxCameraView
 	//{ region                            RENDERING
 	// =============================================================================
 	
-	public function render():Void
+	override function render()
 	{
+		// super.render();
+		
 		flashSprite.filters = camera.filtersEnabled ? camera.filters : null;
 		
 		var currItem:FlxDrawBaseItem<Dynamic> = _headOfDrawStack;
@@ -124,8 +126,10 @@ class FlxQuadView extends FlxCameraView
 		camera.drawFX();
 	}
 	
-	public function clear():Void
+	override function clear()
 	{
+		// super.clear();
+		
 		clearDrawStack();
 		
 		canvas.graphics.clear();
@@ -169,8 +173,10 @@ class FlxQuadView extends FlxCameraView
 		_headTriangles = null;
 	}
 	
-	public function fill(color:FlxColor, blendAlpha:Bool = true):Void
+	override function fill(color:FlxColor, blendAlpha:Bool = true)
 	{
+		// super.fill(color, blendAlpha);
+		
 		canvas.graphics.overrideBlendMode(null);
 		canvas.graphics.beginFill(color.rgb, color.alphaFloat);
 		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
@@ -187,18 +193,14 @@ class FlxQuadView extends FlxCameraView
 	//{ region                            INTERNALS
 	// =============================================================================
 	
-	override function offsetView(x:Float, y:Float):Void
+	function offsetView(x:Float, y:Float)
 	{
-		super.offsetView(x, y);
-		
 		flashSprite.x += x;
 		flashSprite.y += y;
 	}
 	
-	override function updatePosition():Void
+	function updatePosition()
 	{
-		super.updatePosition();
-		
 		if (flashSprite != null)
 		{
 			flashSprite.x = camera.x * FlxG.scaleMode.scale.x + _flashOffset.x;
@@ -206,18 +208,14 @@ class FlxQuadView extends FlxCameraView
 		}
 	}
 	
-	override function updateOffset()
+	function updateOffset()
 	{
-		super.updateOffset();
-		
 		_flashOffset.x = camera.width * 0.5 * FlxG.scaleMode.scale.x * camera.initialZoom;
 		_flashOffset.y = camera.height * 0.5 * FlxG.scaleMode.scale.y * camera.initialZoom;
 	}
 	
-	override function updateScrollRect():Void
+	function updateScrollRect()
 	{
-		super.updateScrollRect();
-		
 		final rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
 		
 		if (rect != null)
@@ -234,7 +232,9 @@ class FlxQuadView extends FlxCameraView
 		}
 	}
 	
-	override function updateInternals():Void
+	function updateScale() {}
+	
+	function updateInternals()
 	{
 		if (canvas != null)
 		{
@@ -323,7 +323,7 @@ class FlxQuadView extends FlxCameraView
 	 */
 	static var _storageTrianglesHead:FlxDrawTrianglesItem;
 	
-	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, ?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
+	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets = false, ?blend:BlendMode, smooth = false, ?shader:FlxShader)
 	{
 		#if FLX_RENDER_TRIANGLE
 		return startTrianglesBatch(graphic, smooth, colored, blend);
@@ -384,7 +384,7 @@ class FlxQuadView extends FlxCameraView
 		#end
 	}
 	
-	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
+	public function startTrianglesBatch(graphic:FlxGraphic, smoothing = false, isColored = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
 			?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		if (_currentDrawItem != null
@@ -402,7 +402,7 @@ class FlxQuadView extends FlxCameraView
 		return getNewDrawTrianglesItem(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
 	}
 	
-	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
+	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing = false, isColored = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
 			?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
@@ -468,7 +468,7 @@ class FlxQuadView extends FlxCameraView
 		toDebugHelper.setTo(worldX, 0);
 		return canvas.localToGlobal(toDebugHelper).x;
 	}
-
+	
 	function worldToDebugY(worldY:Float)//TODO: rename?
 	{
 		toDebugHelper.setTo(worldY, 0);

@@ -137,11 +137,13 @@ class FlxBlitView extends FlxCameraView
 	}
 	
 	// =============================================================================
-	//{ region                             REDNERING
+	//{ region                             RENDERING
 	// =============================================================================
 	
-	function render():Void
+	override function render()
 	{
+		// super.render();
+		
 		camera.drawFX();
 		
 		if (FlxBlitRenderer.useBufferLocking)
@@ -152,8 +154,10 @@ class FlxBlitView extends FlxCameraView
 		screen.dirty = true;
 	}
 	
-	public function clear():Void
+	override function clear()
 	{
+		// super.clear();
+		
 		checkResize();
 		
 		if (FlxBlitRenderer.useBufferLocking)
@@ -166,8 +170,10 @@ class FlxBlitView extends FlxCameraView
 	}
 	
 	@:haxe.warning("-WDeprecated")
-	public function fill(color:FlxColor, blendAlpha:Bool = true)
+	override function fill(color:FlxColor, blendAlpha:Bool = true)
 	{
+		// super.fill(color, blendAlpha);
+		
 		if (blendAlpha)
 		{
 			_fill.fillRect(_flashRect, color);
@@ -180,25 +186,21 @@ class FlxBlitView extends FlxCameraView
 	}
 	
 	// =============================================================================
-	//} endregion                          REDNERING
+	//} endregion                          RENDERING
 	// =============================================================================
 	
 	// =============================================================================
 	//{ region                             INTERNALS
 	// =============================================================================
 	
-	override function offsetView(x:Float, y:Float):Void
+	function offsetView(x:Float, y:Float)
 	{
-		super.offsetView(x, y);
-		
 		flashSprite.x += x;
 		flashSprite.y += y;
 	}
 	
-	override function updatePosition():Void
+	function updatePosition()
 	{
-		super.updatePosition();
-		
 		if (flashSprite != null)
 		{
 			flashSprite.x = camera.x * FlxG.scaleMode.scale.x + _flashOffset.x;
@@ -206,18 +208,14 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
-	override function updateOffset()
+	function updateOffset()
 	{
-		super.updateOffset();
-		
 		_flashOffset.x = camera.width * 0.5 * FlxG.scaleMode.scale.x * camera.initialZoom;
 		_flashOffset.y = camera.height * 0.5 * FlxG.scaleMode.scale.y * camera.initialZoom;
 	}
 	
-	override function updateScrollRect():Void
+	function updateScrollRect()
 	{
-		super.updateScrollRect();
-		
 		final rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
 		
 		if (rect != null)
@@ -234,7 +232,7 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
-	override function updateScale():Void
+	function updateScale()
 	{
 		updateBlitMatrix();
 		
@@ -248,14 +246,10 @@ class FlxBlitView extends FlxCameraView
 			_flashBitmap.scaleX = camera.totalScaleX;
 			_flashBitmap.scaleY = camera.totalScaleY;
 		}
-		
-		super.updateScale();
 	}
 	
-	override function updateInternals():Void
+	function updateInternals()
 	{
-		super.updateInternals();
-		
 		if (_flashBitmap != null)
 		{
 			_flashBitmap.x = 0;
@@ -271,14 +265,14 @@ class FlxBlitView extends FlxCameraView
 	//{ region                            DEBUG DRAW
 	// =============================================================================
 	
-	public function beginDrawDebug()
+	function beginDrawDebug()
 	{
 		#if FLX_DEBUG
 		debugSprite.graphics.clear();
 		#end
 	}
 	
-	public function endDrawDebug():Void
+	function endDrawDebug():Void
 	{
 		#if FLX_DEBUG
 		buffer.draw(debugSprite);
@@ -287,7 +281,7 @@ class FlxBlitView extends FlxCameraView
 	
 	#if FLX_DEBUG
 	
-	public function getDebugBuffer():FlxVertexBuffer
+	function getDebugBuffer():FlxVertexBuffer
 	{
 		return debugSprite.graphics;
 	}

@@ -62,18 +62,26 @@ abstract class FlxCameraView implements IFlxDestroyable
 	public function destroy():Void {}
 	
 	// =============================================================================
-	//{ region                             REDNERING
+	//{ region                             RENDERING
 	// =============================================================================
 	
 	/**
 	 * Flushes any remaining graphics and renders everything to the screen.
 	 */
-	abstract public function render():Void;
+	public function render()
+	{
+		throw "Not implemented";
+		// Note: abstracts mehtods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
+	}
 	
 	/**
 	 * Called before a new rendering frame, clears all previously drawn graphics.
 	 */
-	abstract public function clear():Void;
+	public function clear()
+	{
+		throw "Not implemented";
+		// Note: abstracts mehtods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
+	}
 	
 	/**
 	 * Fills the current render target with `color`.
@@ -81,24 +89,28 @@ abstract class FlxCameraView implements IFlxDestroyable
 	 * @param   color        The color (in 0xAARRGGBB format) to fill the screen with.
 	 * @param   blendAlpha   Whether to blend the alpha value or just wipe the previous contents.
 	 */
-	abstract public function fill(color:FlxColor, blendAlpha:Bool = true):Void;
+	public function fill(color:FlxColor, blendAlpha:Bool = true)
+	{
+		throw "Not implemented";
+		// Note: abstracts mehtods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
+	}
 	
 	
 	// =============================================================================
-	//} endregion                          REDNERING
+	//} endregion                          RENDERING
 	// =============================================================================
 	
-	public function offsetView(x:Float, y:Float):Void {}
+	abstract public function offsetView(x:Float, y:Float):Void;
 	
-	function updateScale():Void {}
+	abstract function updateScale():Void;
 	
-	function updatePosition():Void {}
+	abstract function updatePosition():Void;
 	
-	function updateInternals():Void {}
+	abstract function updateInternals():Void;
 	
-	function updateOffset():Void {}
+	abstract function updateOffset():Void;
 	
-	function updateScrollRect():Void {}
+	abstract function updateScrollRect():Void;
 	
 	// =============================================================================
 	//{ region                             DEBUG DRAW
