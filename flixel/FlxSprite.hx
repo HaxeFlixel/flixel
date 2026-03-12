@@ -1009,7 +1009,7 @@ class FlxSprite extends FlxObject
 			_point.floor();
 
 		_point.copyTo(_flashPoint);
-		FlxG.renderer.copyPixels(camera.view, _frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
+		camera.view.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
 	}
 
 	@:noCompletion
@@ -1025,7 +1025,7 @@ class FlxSprite extends FlxObject
 		final matrix = drawComplexMatrix; // TODO: Just use local?
 		prepareComplexMatrix(matrix, frame, camera);
 		
-		FlxG.renderer.drawPixels(camera.view, frame, framePixels, matrix, colorTransform, blend, antialiasing, shader);
+		camera.view.drawPixels(frame, framePixels, matrix, colorTransform, blend, antialiasing, shader);
 	}
 	
 	function prepareComplexMatrix(matrix:FlxMatrix, frame:FlxFrame, camera:FlxCamera)

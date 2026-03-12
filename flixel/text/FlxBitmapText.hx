@@ -405,7 +405,7 @@ class FlxBitmapText extends FlxSprite
 					matrix.translate(screenPos.x + originX, screenPos.y + originY);
 					final colorTransform = bgColorTransformDrawHelper.reset();
 					colorTransform.setMultipliers(colorHelper).scaleMultipliers(backgroundColor);
-					FlxG.renderer.drawPixels(camera.view, FlxG.bitmap.whitePixel, null, matrix, colorTransform, blend, antialiasing);
+					camera.view.drawPixels(FlxG.bitmap.whitePixel, null, matrix, colorTransform, blend, antialiasing);
 				}
 				
 				final hasColorOffsets = (colorTransform != null && colorTransform.hasRGBAOffsets());

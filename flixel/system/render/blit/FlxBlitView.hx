@@ -3,14 +3,19 @@ package flixel.system.render.blit;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.tile.FlxDrawTrianglesItem;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets;
 import flixel.system.render.FlxCameraView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSpriteUtil;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
+import openfl.display.BlendMode;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
@@ -183,6 +188,136 @@ class FlxBlitView extends FlxCameraView
 		{
 			buffer.fillRect(_flashRect, color);
 		}
+	}
+	
+	@:noCompletion
+	static final _helperMatrix = new FlxMatrix();
+	override function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
+			?shader:FlxShader)
+	{
+		// super.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+		
+		_helperMatrix.copyFrom(matrix);
+		
+		if (_useBlitMatrix)
+		{
+			_helperMatrix.concat(_blitMatrix);
+			buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || antialiasing));
+		}
+		else
+		{
+			_helperMatrix.translate(-camera.viewMarginLeft, -camera.viewMarginTop);
+			buffer.draw(pixels, _helperMatrix, null, blend, null, (smoothing || antialiasing));
+		}
+	}
+	
+	@:noCompletion
+	static final _helperPoint:Point = new Point();
+	override function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
+			smoothing:Bool = false, ?shader:FlxShader)
+	{
+		// super.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+		
+		if (pixels != null)
+		{
+			if (_useBlitMatrix)
+			{
+				_helperMatrix.identity();
+				_helperMatrix.translate(destPoint.x, destPoint.y);
+				_helperMatrix.concat(_blitMatrix);
+				buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || antialiasing));
+			}
+			else
+			{
+				_helperPoint.x = destPoint.x - Std.int(camera.viewMarginLeft);
+				_helperPoint.y = destPoint.y - Std.int(camera.viewMarginTop);
+				buffer.copyPixels(pixels, sourceRect, _helperPoint, null, null, true);
+			}
+		}
+		else if (frame != null)
+		{
+			// TODO: fix this case for zoom less than initial zoom...
+			frame.paint(buffer, destPoint, true);
+		}
+	}
+	
+	@:noCompletion
+	static final _trianglesSprite = new Sprite();
+	
+	@:noCompletion
+	static final drawVertices = new DrawData<Float>();
+	override function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
+			?position, ?blend, repeat = false, smoothing = false, ?transform, ?shader)
+	{
+		// super.drawTriangles(graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing, transform, shader);
+		
+		final cameraBounds = FlxRect.weak(camera.viewMarginLeft, camera.viewMarginTop, camera.viewWidth, camera.viewHeight);
+		
+		if (position == null)
+			position = FlxPoint.weak();
+		
+		final verticesLength:Int = vertices.length >> 1;
+		
+		final bounds = FlxRect.get();
+		drawVertices.splice(0, drawVertices.length);
+		
+		for (i in 0...verticesLength)
+		{
+			final tempX = position.x + vertices[(i << 1) + 0];
+			final tempY = position.y + vertices[(i << 1) + 1];
+			
+			drawVertices.push(tempX);
+			drawVertices.push(tempY);
+			
+			if (i == 0)
+			{
+				bounds.set(tempX, tempY, 0, 0);
+			}
+			else
+			{
+				FlxDrawTrianglesItem.inflateBounds(bounds, tempX, tempY);
+			}
+		}
+		
+		position.putWeak();
+		
+		final overlaps = cameraBounds.overlaps(bounds);
+		bounds.put();
+		
+		if (!overlaps)
+		{
+			drawVertices.splice(drawVertices.length - verticesLength, verticesLength);
+			return;
+		}
+		
+		_trianglesSprite.graphics.clear();
+		_trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
+		_trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvtData);
+		_trianglesSprite.graphics.endFill();
+		
+		// TODO: check this block of code for cases, when zoom < 1 (or initial zoom?)...
+		if (_useBlitMatrix)
+			_helperMatrix.copyFrom(_blitMatrix);
+		else
+		{
+			_helperMatrix.identity();
+			_helperMatrix.translate(-camera.viewMarginLeft, -camera.viewMarginTop);
+		}
+		
+		buffer.draw(_trianglesSprite, _helperMatrix, transform);
+		
+		#if FLX_DEBUG
+		if (FlxG.debugger.drawDebug)
+		{
+			// TODO: add a drawDebugTriangles method
+			var gfx:Graphics = FlxSpriteUtil.flashGfx;
+			gfx.clear();
+			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
+			gfx.drawTriangles(drawVertices, indices);
+			buffer.draw(FlxSpriteUtil.flashGfxSprite, _helperMatrix);
+		}
+		#end
+		// End of TODO...
 	}
 	
 	// =============================================================================

@@ -183,14 +183,14 @@ class FlxTilemapBuffer implements IFlxDestroyable
 
 		if (isPixelPerfectRender(camera) && (scaleX == 1.0 && scaleY == 1.0) && blend == null)
 		{
-			FlxG.renderer.copyPixels(camera.view, pixels, _flashRect, flashPoint, null, null, true);
+			camera.view.copyPixels(pixels, _flashRect, flashPoint, null, null, true);
 		}
 		else
 		{
 			_matrix.identity();
 			_matrix.scale(scaleX, scaleY);
 			_matrix.translate(flashPoint.x, flashPoint.y);
-			FlxG.renderer.drawPixels(camera.view, pixels, _matrix, null, blend, antialiasing);
+			camera.view.drawPixels(pixels, _matrix, null, blend, antialiasing);
 		}
 	}
 	

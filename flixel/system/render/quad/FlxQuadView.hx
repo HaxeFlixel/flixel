@@ -3,19 +3,24 @@ package flixel.system.render.quad;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.graphics.tile.FlxDrawQuadsItem;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
+import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
 import openfl.geom.ColorTransform;
+import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
 using flixel.util.FlxColorTransformUtil;
@@ -183,6 +188,57 @@ class FlxQuadView extends FlxCameraView
 		// which could appear while cameras fading
 		canvas.graphics.drawRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2);
 		canvas.graphics.endFill();
+	}
+	
+	override function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false,
+		?shader)
+	{
+		// super.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+		
+		var isColored = (transform != null #if !html5 && transform.hasRGBMultipliers() #end);
+		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+		
+		#if FLX_RENDER_TRIANGLE
+		final drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend, hasColorOffsets, shader);
+		#else
+		final drawItem:FlxDrawQuadsItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
+		#end
+		drawItem.addQuad(frame, matrix, transform);
+	}
+	
+	@:noCompletion
+	static final _helperMatrix = new FlxMatrix();
+	override function copyPixels(?frame:FlxFrame, ?_:BitmapData, ?_:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend,
+			smoothing = false, ?shader)
+	{
+		// super.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+		
+		_helperMatrix.identity();
+		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
+		
+		var isColored = (transform != null && transform.hasRGBMultipliers());
+		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+		
+		#if FLX_RENDER_TRIANGLE
+		final drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend, hasColorOffsets, shader);
+		#else
+		final drawItem:FlxDrawQuadsItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
+		#end
+		drawItem.addQuad(frame, _helperMatrix, transform);
+	}
+	
+	override function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
+			?position:FlxPoint, ?blend:BlendMode, repeat = false, smoothing = false, ?transform:ColorTransform, ?shader:FlxShader)
+	{
+		// super.drawTriangles(graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing, transform, shader);
+		
+		final cameraBounds = FlxRect.weak(camera.viewMarginLeft, camera.viewMarginTop, camera.viewWidth, camera.viewHeight);
+		
+		final isColored = (colors != null && colors.length != 0) || (transform != null && transform.hasRGBMultipliers());
+		final hasColorOffsets = (transform != null && transform.hasRGBAOffsets());
+		
+		final drawItem = startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
+		drawItem.addTriangles(vertices, indices, uvtData, colors, position, cameraBounds, transform);
 	}
 	
 	// =============================================================================

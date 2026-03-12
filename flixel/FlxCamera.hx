@@ -511,10 +511,6 @@ class FlxCamera extends FlxBasic
 			@:bypassAccessor debugLayer = viewQuad.canvas;
 			#end
 			
-			final renderQuad = cast(FlxG.renderer, FlxQuadRenderer);
-			@:privateAccess @:bypassAccessor _bounds = renderQuad._bounds;
-			@:privateAccess @:bypassAccessor _helperMatrix = renderQuad._helperMatrix;
-			@:bypassAccessor _helperPoint = new Point();
 		}
 		else if (view is FlxBlitView)
 		{
@@ -530,11 +526,6 @@ class FlxCamera extends FlxBasic
 			@:bypassAccessor _flashBitmap = viewBlit._flashBitmap;
 			@:bypassAccessor _blitMatrix = viewBlit._blitMatrix;
 			@:bypassAccessor _fill = viewBlit._fill;
-			
-			final renderBlit = cast(FlxG.renderer, FlxBlitRenderer);
-			@:privateAccess @:bypassAccessor _bounds = renderBlit._bounds;
-			@:privateAccess @:bypassAccessor _helperMatrix = renderBlit._helperMatrix;
-			@:privateAccess @:bypassAccessor _helperPoint = renderBlit._helperPoint;
 		}
 
 		pixelPerfectRender = FlxG.renderer.blit;
@@ -586,14 +577,17 @@ class FlxCamera extends FlxBasic
 		@:bypassAccessor _flashBitmap = null;
 		@:bypassAccessor _scrollRect = null;
 		@:bypassAccessor canvas = null;
-		@:bypassAccessor debugLayer = null;
 		@:bypassAccessor _currentDrawItem = null;
 		@:bypassAccessor _headOfDrawStack = null;
 		@:bypassAccessor _headTiles = null;
 		@:bypassAccessor _headTriangles = null;
-		@:bypassAccessor _bounds = null;
-		@:bypassAccessor _helperMatrix = null;
-		@:bypassAccessor _helperPoint = null;
+		@:bypassAccessor _bounds = FlxDestroyUtil.put(_bounds);
+		#if FLX_DEBUG
+		@:bypassAccessor debugLayer = null;
+		#end
+		
+		_helperMatrix = null;
+		_helperPoint = null;
 
 		super.destroy();
 	}
@@ -1830,23 +1824,23 @@ class FlxCamera extends FlxBasic
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false,
 			?shader:FlxShader):Void
 	{
-		FlxG.renderer.drawPixels(view, frame, pixels, matrix, transform, blend, smoothing, shader);
+		view.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
 	}
 	
 	@:noCompletion
-	@:deprecated("camera.copyPixels() is deprecated, use FlxG.renderer.copyPixels() instead.") // 6.2.0
+	@:deprecated("camera.copyPixels() is deprecated, use camera.view.copyPixels instead.") // 6.2.0
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
 			?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
-		FlxG.renderer.copyPixels(view, frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+		view.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
 	}
 	
 	@:noCompletion
-	@:deprecated("camera.drawTriangles() is deprecated, use FlxG.renderer.drawTriangles() instead.") // 6.2.0
+	@:deprecated("camera.drawTriangles() is deprecated, use camera.view.drawTriangles instead.") // 6.2.0
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader):Void
 	{
-		FlxG.renderer.drawTriangles(view, graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing, transform, shader);
+		view.drawTriangles(graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing, transform, shader);
 	}
 	
 	@:noCompletion
@@ -2053,7 +2047,7 @@ class FlxCamera extends FlxBasic
 	}
 	
 	@:noCompletion
-	@:deprecated("_scrollRect is deprecated, use camera.viewQuad._scrollRect/camera.viewBlit._scrollRect, instead") // 6.2.0
+	@:deprecated("_scrollRect is deprecated, use camera.viewQuad._scrollRect or camera.viewBlit._scrollRect, instead") // 6.2.0
 	@:isVar var _scrollRect(get, set):Sprite;
 	function get__scrollRect():Sprite
 	{
@@ -2075,33 +2069,8 @@ class FlxCamera extends FlxBasic
 	}
 	
 	@:noCompletion
-	@:deprecated("_bounds is deprecated, use FlxBlitRenderer/FlxQuadRender._bounds, instead") // 6.2.0
-	@:isVar var _bounds(get, set):FlxRect;
-	function get__bounds():FlxRect
-	{
-		switch FlxG.renderer.method
-		{
-			case BLITTING:
-				this._bounds = cast(FlxG.renderer, FlxBlitRenderer)._bounds;
-			case DRAW_TILES:
-				this._bounds = cast(FlxG.renderer, FlxQuadRenderer)._bounds;
-			default:
-		}
-		
-		return this._bounds;
-	}
-	function set__bounds(value:FlxRect):FlxRect 
-	{
-		return this._bounds = switch FlxG.renderer.method
-		{
-			case BLITTING:
-				cast(FlxG.renderer, FlxBlitRenderer)._bounds = value;
-			case DRAW_TILES:
-				cast(FlxG.renderer, FlxQuadRenderer)._bounds = value;
-			default:
-				value;
-		}
-	}
+	@:deprecated("_bounds is deprecated, there will be no replacement") // 6.2.0
+	var _bounds = new FlxRect();
 	
 	@:noCompletion
 	@:deprecated("canvas is deprecated, use camera.viewQuad.canvas, instead") // 6.2.0
@@ -2142,58 +2111,12 @@ class FlxCamera extends FlxBasic
 	#end
 	
 	@:noCompletion
-	@:deprecated("_helperMatrix is deprecated, use FlxBlitRenderer/FlxQuadRenderer._helperMatrix, instead") // 6.2.0
-	@:isVar var _helperMatrix(get, set):FlxMatrix;
-	function get__helperMatrix()
-	{
-		switch FlxG.renderer.method
-		{
-			case BLITTING:
-				this._helperMatrix = cast(FlxG.renderer, FlxBlitRenderer)._helperMatrix;
-			case DRAW_TILES:
-				this._helperMatrix = cast(FlxG.renderer, FlxQuadRenderer)._helperMatrix;
-			default:
-		}
-		
-		return this._helperMatrix;
-	}
-	function set__helperMatrix(value:FlxMatrix):FlxMatrix
-	{
-		return this._helperMatrix = switch FlxG.renderer.method
-		{
-			case BLITTING:
-				cast(FlxG.renderer, FlxBlitRenderer)._helperMatrix = value;
-			case DRAW_TILES:
-				cast(FlxG.renderer, FlxQuadRenderer)._helperMatrix = value;
-			default:
-				value;
-		}
-	}
+	@:deprecated("_helperMatrix is deprecated, there will be no replacement") // 6.2.0
+	var _helperMatrix = new FlxMatrix();
 	
 	@:noCompletion
-	@:deprecated("_helperPoint is deprecated, use FlxBlitRenderer._helperPoint, instead") // 6.2.0
-	@:isVar var _helperPoint(get, set):Point;
-	function get__helperPoint()
-	{
-		switch FlxG.renderer.method
-		{
-			case BLITTING:
-				this._helperPoint = cast(FlxG.renderer, FlxBlitRenderer)._helperPoint;
-			default:
-		}
-		
-		return this._helperPoint;
-	}
-	function set__helperPoint(value:Point):Point
-	{
-		return switch FlxG.renderer.method
-		{
-			case BLITTING:
-				this._helperPoint = cast(FlxG.renderer, FlxBlitRenderer)._helperPoint = value;
-			default:
-				this._helperPoint = value;
-		}
-	}
+	@:deprecated("_helperPoint is deprecated, there will be no replacement") // 6.2.0
+	var _helperPoint = new Point();
 	
 	@:noCompletion
 	@:deprecated("_currentDrawItem is deprecated, use camera.viewQuad._currentDrawItem, instead") // 6.2.0
@@ -2280,28 +2203,20 @@ class FlxCamera extends FlxBasic
 	static inline function set__storageTrianglesHead(value:FlxDrawTrianglesItem):FlxDrawTrianglesItem return FlxQuadView._storageTrianglesHead = value;
 	
 	@:noCompletion
-	@:deprecated("drawVertices is deprecated, use FlxBlitRenderer.drawVertices, instead") // 6.2.0
-	static var drawVertices(get, set):Vector<Float>;
-	static inline function get_drawVertices():Vector<Float> return FlxBlitRenderer.drawVertices;
-	static inline function set_drawVertices(value:Vector<Float>):Vector<Float> return FlxBlitRenderer.drawVertices = value;
+	@:deprecated("drawVertices is deprecated, there will be no replacement") // 6.2.0
+	static var drawVertices = new Vector<Float>();
 	
 	@:noCompletion
-	@:deprecated("trianglesSprite is deprecated, use FlxBlitRenderer.trianglesSprite, instead") // 6.2.0
-	static var trianglesSprite(get, set):Sprite;
-	static inline function get_trianglesSprite():Sprite return FlxBlitRenderer.trianglesSprite;
-	static inline function set_trianglesSprite(value:Sprite):Sprite return FlxBlitRenderer.trianglesSprite = value;
+	@:deprecated("trianglesSprite is deprecated, there will be no replacement") // 6.2.0
+	static var trianglesSprite = new Sprite();
 	
 	@:noCompletion
-	@:deprecated("renderPoint is deprecated, use FlxBlitRenderer.renderPoint, instead") // 6.2.0
-	static var renderPoint(get, set):FlxPoint;
-	static inline function get_renderPoint():FlxPoint return FlxBlitRenderer.renderPoint;
-	static inline function set_renderPoint(value:FlxPoint):FlxPoint return FlxBlitRenderer.renderPoint = value;
+	@:deprecated("renderPoint is deprecated, there will be no replacement") // 6.2.0
+	static var renderPoint = new FlxPoint();
 	
 	@:noCompletion
-	@:deprecated("renderRect is deprecated, use FlxBlitRenderer.renderRect, instead") // 6.2.0
-	static var renderRect(get, set):FlxRect;
-	static inline function get_renderRect():FlxRect return FlxBlitRenderer.renderRect;
-	static inline function set_renderRect(value:FlxRect):FlxRect return FlxBlitRenderer.renderRect = value;
+	@:deprecated("renderRect is deprecated, there will be no replacement") // 6.2.0
+	static var renderRect = new FlxRect();
 	
 	// @:bypassAccess doesn't work from external classes in haxe 4. So call this when needed
 	@:noCompletion inline function setColorBypass       (value:FlxColor):FlxColor return @:bypassAccessor this.color = value;
