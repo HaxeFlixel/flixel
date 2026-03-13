@@ -106,6 +106,9 @@ class FlxBlitView extends FlxCameraView
 	
 	var _flashOffset:FlxPoint = FlxPoint.get();
 	
+	var _renderer(get, never):FlxBlitRenderer;
+	inline function get__renderer() return cast (FlxG.renderer, FlxBlitRenderer);
+	
 	@:allow(flixel.system.render.FlxCameraView)
 	function new(camera:FlxCamera)
 	{
@@ -151,7 +154,7 @@ class FlxBlitView extends FlxCameraView
 		
 		camera.drawFX();
 		
-		if (FlxBlitRenderer.useBufferLocking)
+		if (_renderer.useBufferLocking)
 		{
 			buffer.unlock();
 		}
@@ -165,7 +168,7 @@ class FlxBlitView extends FlxCameraView
 		
 		checkResize();
 		
-		if (FlxBlitRenderer.useBufferLocking)
+		if (_renderer.useBufferLocking)
 		{
 			buffer.lock();
 		}

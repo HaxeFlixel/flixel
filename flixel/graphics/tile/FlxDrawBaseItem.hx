@@ -2,8 +2,8 @@ package flixel.graphics.tile;
 
 import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
-import flixel.system.render.FlxRenderer;
 import flixel.math.FlxMatrix;
+import flixel.system.render.FlxRenderer;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 
@@ -15,17 +15,17 @@ class FlxDrawBaseItem<T>
 	/**
 	 * Tracks the total number of draw calls made each frame.
 	 */
-	@:deprecated("drawCalls is deprecated, use FlxRenderer.totalDrawCalls instead")
+	@:deprecated("drawCalls is deprecated, use FlxG.renderer.totalDrawCalls instead")
 	public static var drawCalls(get, set):Int;
 
 	static function set_drawCalls(value:Int):Int
 	{
-		return FlxRenderer.totalDrawCalls = value;
+		return FlxG.renderer.totalDrawCalls = value;
 	}
 
 	static function get_drawCalls():Int
 	{
-		return FlxRenderer.totalDrawCalls;
+		return FlxG.renderer.totalDrawCalls;
 	}
 
 	@:noCompletion
@@ -75,7 +75,7 @@ class FlxDrawBaseItem<T>
 
 	public function render(camera:FlxCamera):Void
 	{
-		FlxRenderer.totalDrawCalls++;
+		FlxG.renderer.totalDrawCalls++;
 	}
 
 	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void {}

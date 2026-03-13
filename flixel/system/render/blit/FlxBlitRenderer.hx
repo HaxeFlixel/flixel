@@ -32,7 +32,7 @@ class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 	 * 
 	 * This property only has effects when targeting Flash.
 	 */
-	public static var useBufferLocking:Bool = false;
+	public var useBufferLocking:Bool = false;
 	
 	public function new()
 	{

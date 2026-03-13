@@ -32,11 +32,6 @@ typedef FlxRenderer = FlxTypedRenderer<FlxCameraView>;
 abstract class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 {
 	/**
-	 * The number of total draw calls in the current frame.
-	 */
-	public static var totalDrawCalls:Int = 0;
-	
-	/**
 	 * Creates a renderer instance, based on the used rendering backend.
 	 * This function is dynamic, which means that you can change the return value yourself.
 	 * 
@@ -53,6 +48,11 @@ abstract class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 			return cast new flixel.system.render.quad.FlxQuadRenderer();
 		}
 	}
+	
+	/**
+	 * The number of total draw calls in the current frame.
+	 */
+	public var totalDrawCalls:Int = 0;
 	
 	/**
 	 * Returns the current render method as an enum.

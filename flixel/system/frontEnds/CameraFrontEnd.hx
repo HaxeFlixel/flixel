@@ -344,7 +344,7 @@ class CameraFrontEnd
 	function get_useBufferLocking():Bool 
 	{
 		if (FlxG.renderer.blit)
-			return FlxBlitRenderer.useBufferLocking;
+			return cast(FlxG.renderer, FlxBlitRenderer).useBufferLocking;
 
 		return false;
 	}
@@ -352,7 +352,7 @@ class CameraFrontEnd
 	function set_useBufferLocking(value:Bool):Bool
 	{
 		if (FlxG.renderer.blit)
-			return FlxBlitRenderer.useBufferLocking = value;
+			return cast(FlxG.renderer, FlxBlitRenderer).useBufferLocking = value;
 
 		return value;
 	}

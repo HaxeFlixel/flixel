@@ -64,6 +64,9 @@ class FlxQuadView extends FlxCameraView
 	
 	var _flashOffset:FlxPoint = FlxPoint.get();
 	
+	var _renderer(get, never):FlxQuadRenderer;
+	inline function get__renderer() return cast (FlxG.renderer, FlxQuadRenderer);
+	
 	@:allow(flixel.system.render.FlxCameraView)
 	function new(camera:FlxCamera)
 	{
