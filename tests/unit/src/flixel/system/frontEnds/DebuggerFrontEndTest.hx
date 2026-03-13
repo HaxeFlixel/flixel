@@ -1,7 +1,8 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
-import flixel.system.debug.watch.Tracker.TrackerProfile;
+import flixel.system.debug.watch.Tracker;
+import flixel.system.debug.watch.TrackerProfile;
 import flixel.util.FlxSignal;
 import massive.munit.Assert;
 
