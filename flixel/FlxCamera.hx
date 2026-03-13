@@ -1813,26 +1813,37 @@ class FlxCamera extends FlxBasic
 	}
 	
 	@:noCompletion
-	@:deprecated("camera.clearDrawStack() is deprecated, use FlxG.renderer.render() instead.") // 6.2.0
+	@:deprecated("camera.clearDrawStack() is deprecated, use camera.viewQuad.render() instead.") // 6.2.0
 	function clearDrawStack():Void
 	{
 		viewQuad.clearDrawStack();
 	}
 	
 	@:noCompletion
-	@:deprecated("camera.drawPixels() is deprecated, use FlxG.renderer.drawPixels() instead.") // 6.2.0
+	@:deprecated("camera.drawPixels() is deprecated, use camera.view.drawPixels or drawFrame instead.") // 6.2.0
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false,
 			?shader:FlxShader):Void
 	{
-		view.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+		if (pixels != null)
+			view.drawPixels(pixels, matrix, transform, blend, smoothing, shader);
+		else if (frame != null)
+			view.drawFrame(frame, matrix, transform, blend, smoothing, shader);
+		else
+			FlxG.log.error("camera.drawPixels must have either the frame or pixels arg");
 	}
 	
 	@:noCompletion
-	@:deprecated("camera.copyPixels() is deprecated, use camera.view.copyPixels instead.") // 6.2.0
+	@:deprecated("camera.copyPixels() is deprecated, use camera.view.copyPixels or copyFrame instead.") // 6.2.0
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
 			?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
-		view.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+		if (pixels != null)
+			view.copyPixels(pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+		else if (frame != null)
+			view.copyFrame(frame, destPoint, transform, blend, smoothing, shader);
+		else
+			FlxG.log.error("camera.copyPixels must have either the frame or pixels arg");
+		
 	}
 	
 	@:noCompletion

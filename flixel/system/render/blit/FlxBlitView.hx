@@ -192,10 +192,9 @@ class FlxBlitView extends FlxCameraView
 	
 	@:noCompletion
 	static final _helperMatrix = new FlxMatrix();
-	override function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
-			?shader:FlxShader)
+	override function drawPixels(pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false, ?shader:FlxShader)
 	{
-		// super.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+		// super.drawPixels(pixels, matrix, transform, blend, smoothing, shader);
 		
 		_helperMatrix.copyFrom(matrix);
 		
@@ -213,32 +212,34 @@ class FlxBlitView extends FlxCameraView
 	
 	@:noCompletion
 	static final _helperPoint:Point = new Point();
-	override function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
-			smoothing:Bool = false, ?shader:FlxShader)
+	override function copyPixels(pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false, ?shader)
 	{
-		// super.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+		// super.copyPixels(pixels, sourceRect, destPoint, transform, blend, smoothing);
 		
-		if (pixels != null)
+		if (_useBlitMatrix)
 		{
-			if (_useBlitMatrix)
-			{
-				_helperMatrix.identity();
-				_helperMatrix.translate(destPoint.x, destPoint.y);
-				_helperMatrix.concat(_blitMatrix);
-				buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || antialiasing));
-			}
-			else
-			{
-				_helperPoint.x = destPoint.x - Std.int(camera.viewMarginLeft);
-				_helperPoint.y = destPoint.y - Std.int(camera.viewMarginTop);
-				buffer.copyPixels(pixels, sourceRect, _helperPoint, null, null, true);
-			}
+			_helperMatrix.identity();
+			_helperMatrix.translate(destPoint.x, destPoint.y);
+			_helperMatrix.concat(_blitMatrix);
+			buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || antialiasing));
 		}
-		else if (frame != null)
+		else
 		{
-			// TODO: fix this case for zoom less than initial zoom...
-			frame.paint(buffer, destPoint, true);
+			_helperPoint.x = destPoint.x - Std.int(camera.viewMarginLeft);
+			_helperPoint.y = destPoint.y - Std.int(camera.viewMarginTop);
+			buffer.copyPixels(pixels, sourceRect, _helperPoint, null, null, true);
 		}
+	}
+	
+	override function drawFrame(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false, ?shader:FlxShader)
+	{
+		throw "Not Implemented on blit";
+	}
+	
+	override function copyFrame(frame:FlxFrame, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false, ?shader:FlxShader)
+	{
+		// TODO: fix this case for zoom less than initial zoom...
+		frame.paint(buffer, destPoint, true);
 	}
 	
 	@:noCompletion

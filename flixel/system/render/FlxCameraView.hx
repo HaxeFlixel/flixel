@@ -22,6 +22,7 @@ import openfl.geom.Rectangle;
 
 /**
  * A `FlxCameraView` is a helper added to cameras, that holds some rendering-related objects
+ * @since 6.2.0
  */
 @:allow(flixel.FlxCamera)
 @:access(flixel.FlxCamera)
@@ -106,40 +107,71 @@ abstract class FlxCameraView implements IFlxDestroyable
 	}
 	
 	/**
-	 * Draws `frame` or `pixels` (depends on the renderer backend) onto the current render target.
+	 * Draws the pixels onto the current render target.
 	 * 
-	 * @param   frame       The frame to draw (used only with the DRAW_TILES renderer).
-	 * @param   pixels      The pixels to draw (used only with the BLITTING renderer).
-	 * @param   matrix      The transformation matrix to use.
-	 * @param   transform   The color transform to use, optional.
-	 * @param   blend       The blend mode to use, optional.
+	 * @param   pixels      The pixels to draw.
+	 * @param   transform   The color transform to use.
+	 * @param   blend       The blend mode to use.
 	 * @param   smoothing   Whether to use smoothing (anti-aliasing) when drawing.
-	 * @param   shader      The shader to use, optional (used only with the DRAW_TILES renderer).
+	 * @param   shader      The shader to use.
 	 */
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
-		?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false, ?shader:FlxShader)
+	public function drawPixels(pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false, ?shader:FlxShader)
 	{
 		throw "Not implemented";
 		// Note: Abstract methods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
 	}
 	
 	/**
-	 * Draws `frame` or `pixels` (depends on the renderer backend) onto the current render target.
+	 * Draws the pixels onto the current render target.
 	 * 
 	 * Unlike `drawPixels()`, this method does not use a matrix. This means that complex transformations
 	 * are not supported with this method. The `destPoint` argument is used to determine the position to draw to.
 	 * 
-	 * @param   frame       The frame to draw (used only with the DRAW_TILES renderer).
-	 * @param   pixels      The pixels to draw (used only with the BLITTING renderer).
-	 * @param   sourceRect  A rectangle that defines the area of the pixels to use (used only with the BLITTING renderer).
+	 * @param   pixels      The pixels to draw.
+	 * @param   sourceRect  A rectangle that defines the area of the pixels to use.
 	 * @param   destPoint   A point representing the top-left position to draw to.
-	 * @param   transform   The color transform to use, optional.
-	 * @param   blend       The blend mode to use, optional.
+	 * @param   transform   The color transform to use.
+	 * @param   blend       The blend mode to use.
 	 * @param   smoothing   Whether to use smoothing (anti-aliasing) when drawing.
-	 * @param   shader      The shader to use, optional (used only with the DRAW_TILES renderer).
+	 * @param   shader      The shader to use.
 	 */
-	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
+	public function copyPixels(pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
 		smoothing:Bool = false, ?shader:FlxShader)
+	{
+		throw "Not implemented";
+		// Note: Abstract methods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
+	}
+	
+	/**
+	 * Draws the frame onto the current render target.
+	 * 
+	 * @param   frame       The frame to draw.
+	 * @param   matrix      The transformation matrix to use.
+	 * @param   transform   The color transform to use.
+	 * @param   blend       The blend mode to use.
+	 * @param   smoothing   Whether to use smoothing (anti-aliasing) when drawing.
+	 * @param   shader      The shader to use.
+	 */
+	public function drawFrame(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false, ?shader:FlxShader)
+	{
+		throw "Not implemented";
+		// Note: Abstract methods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
+	}
+	
+	/**
+	 * Draws the frame onto the current render target.
+	 * 
+	 * Unlike `drawFrame()`, this method does not use a matrix. This means that complex transformations
+	 * are not supported with this method. The `destPoint` argument is used to determine the position to draw to.
+	 * 
+	 * @param   frame       The frame to draw
+	 * @param   destPoint   A point representing the top-left position to draw to.
+	 * @param   transform   The color transform to use.
+	 * @param   blend       The blend mode to use.
+	 * @param   smoothing   Whether to use smoothing (anti-aliasing) when drawing.
+	 * @param   shader      The shader to use
+	 */
+	public function copyFrame(frame:FlxFrame, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false, ?shader:FlxShader)
 	{
 		throw "Not implemented";
 		// Note: Abstract methods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666

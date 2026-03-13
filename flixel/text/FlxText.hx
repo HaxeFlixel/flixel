@@ -245,7 +245,7 @@ class FlxText extends FlxSprite
 		allowCollisions = NONE;
 		moves = false;
 
-		drawFrame();
+		drawFrame(); // TODO: drawFrame(FlxG.renderer.blit);
 	}
 
 	/**

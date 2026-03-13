@@ -190,10 +190,21 @@ class FlxQuadView extends FlxCameraView
 		canvas.graphics.endFill();
 	}
 	
-	override function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false,
-		?shader)
+	override function drawPixels(pixels, matrix, ?transform, ?blend, smoothing = false, ?shader)
 	{
-		// super.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+		// super.drawPixels(frame, matrix, transform, blend, smoothing, shader);
+		throw "Not implemented";
+	}
+	
+	override function copyPixels(pixels, ?sourceRect, destPoint, ?transform, ?blend, smoothing = false, ?shader)
+	{
+		// super.copyPixels(pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+		throw "Not implemented";
+	}
+	
+	override function drawFrame(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false, ?shader)
+	{
+		// super.drawFrame(frame, matrix, transform, blend, smoothing, shader);
 		
 		var isColored = (transform != null #if !html5 && transform.hasRGBMultipliers() #end);
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
@@ -208,10 +219,9 @@ class FlxQuadView extends FlxCameraView
 	
 	@:noCompletion
 	static final _helperMatrix = new FlxMatrix();
-	override function copyPixels(?frame:FlxFrame, ?_:BitmapData, ?_:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend,
-			smoothing = false, ?shader)
+	override function copyFrame(frame:FlxFrame, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false, ?shader:FlxShader)
 	{
-		// super.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+		// super.copyFrame(frame, destPoint, transform, blend, smoothing, shader);
 		
 		_helperMatrix.identity();
 		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
