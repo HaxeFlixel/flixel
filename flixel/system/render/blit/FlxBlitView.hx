@@ -249,8 +249,8 @@ class FlxBlitView extends FlxCameraView
 	static final _trianglesSprite = new Sprite();
 	
 	@:noCompletion
-	static final drawVertices = new DrawData<Float>();
-	override function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
+	static final drawVertices = new FlxVector2d<Float>();
+	override function drawTriangles(graphic:FlxGraphic, vertices:FlxVector2d<Float>, indices:FlxVector2d<Int>, uvtData:FlxVector2d<Float>, ?colors:FlxVector2d<Int>,
 			?position, ?blend, repeat = false, smoothing = false, ?transform, ?shader)
 	{
 		// super.drawTriangles(graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing, transform, shader);
@@ -260,18 +260,15 @@ class FlxBlitView extends FlxCameraView
 		if (position == null)
 			position = FlxPoint.weak();
 		
-		final verticesLength:Int = vertices.length >> 1;
-		
 		final bounds = FlxRect.get();
-		drawVertices.splice(0, drawVertices.length);
+		drawVertices.clear();
 		
-		for (i in 0...verticesLength)
+		for (i in 0...vertices.length)
 		{
-			final tempX = position.x + vertices[(i << 1) + 0];
-			final tempY = position.y + vertices[(i << 1) + 1];
+			final tempX = position.x + vertices.getX(i);
+			final tempY = position.y + vertices.getY(i);
 			
-			drawVertices.push(tempX);
-			drawVertices.push(tempY);
+			drawVertices.push(tempX, tempY);
 			
 			if (i == 0)
 			{
@@ -290,7 +287,7 @@ class FlxBlitView extends FlxCameraView
 		
 		if (!overlaps)
 		{
-			drawVertices.splice(drawVertices.length - verticesLength, verticesLength);
+			drawVertices.clear();
 			return;
 		}
 		

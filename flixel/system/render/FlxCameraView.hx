@@ -192,7 +192,7 @@ abstract class FlxCameraView implements IFlxDestroyable
 	 * @param   transform  The color transform to use, optional.
 	 * @param   shader     The shader to use, optional (used only with the DRAW_TILES renderer).
 	 */
-	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
+	public function drawTriangles(graphic:FlxGraphic, vertices:FlxVector2d<Float>, indices:FlxVector2d<Int>, uvtData:FlxVector2d<Float>, ?colors:FlxVector2d<Int>,
 		?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader)
 	{
 		throw "Not implemented";
