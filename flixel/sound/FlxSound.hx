@@ -728,12 +728,13 @@ class FlxSound extends FlxBasic
 	{
 		_transform.volume = calcTransformVolume();
 		
+		if (_channel != null)
+			_channel.soundTransform = _transform;
+		
 		if (_transform.volume > 0)
 		{
 			if (_channel != null)
 			{
-				_channel.soundTransform = _transform;
-				
 				amplitudeLeft = _channel.leftPeak * volume;
 				amplitudeRight = _channel.rightPeak * volume;
 				amplitude = (amplitudeLeft + amplitudeRight) * 0.5;
