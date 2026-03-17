@@ -13,16 +13,10 @@ import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
 /**
- * `FlxRenderer` is the base class for all rendering functionality.
+ * `FlxRenderer` is a global, base class that handles rendering.
  * It does not contain any rendering logic by itself, rather it is extended by the various renderer implementations.
  * 
  * You can access a global renderer instance via `FlxG.renderer`.
- * 
- * The `FlxRenderer` API replaces the previous renderer implementation in `FlxCamera`.
- * Because it's not tied to a camera, it also works slightly differently.
- * Before any drawing commands are executed, `FlxG.renderer.begin(camera);` is called to use the camera as a render target.
- * This is called internally by Flixel during a sprite's draw phase, so you shouldn't worry about calling it yourself unless
- * you have a reason to.
  */
 typedef FlxRenderer = FlxTypedRenderer<FlxCameraView>;
 
@@ -59,9 +53,15 @@ abstract class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	 */
 	public var method(default, null):FlxRenderMethod;
 	
+	/**
+	 * Convenience shortcut for `FlxG.renderer.method == BLITTING`
+	 */
 	public var blit(get, never):Bool;
 	inline function get_blit() return method.match(BLITTING);
 	
+	/**
+	 * Convenience shortcut for `FlxG.renderer.method == DRAW_TILES`
+	 */
 	public var tile(get, never):Bool;
 	inline function get_tile() return method.match(DRAW_TILES);
 	
@@ -101,8 +101,8 @@ abstract class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	function new() {}
 	
 	/**
-	 * Initializes and global fields that are dependant on the global rendering method.
-	 * Called automatically by `FlxG.init`
+	 * Initializes any global fields that are dependant on the global rendering method.
+	 * Called automatically by `FlxG.init()`
 	 */
 	public function initGlobals() {}
 	

@@ -22,6 +22,8 @@ import openfl.geom.Rectangle;
 
 /**
  * A `FlxCameraView` is a helper added to cameras, that holds some rendering-related objects
+ * It does not contain any rendering logic by itself, rather it is extended by the various renderer implementations.
+ * 
  * @since 6.2.0
  */
 @:allow(flixel.FlxCamera)

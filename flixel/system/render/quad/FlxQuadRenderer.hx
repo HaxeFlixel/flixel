@@ -7,7 +7,6 @@ using flixel.util.FlxColorTransformUtil;
 import lime.graphics.opengl.GL;
 #end
 
-
 @:access(flixel.FlxCamera)
 @:access(flixel.system.render.quad)
 class FlxQuadRenderer extends FlxTypedRenderer<FlxQuadView>
