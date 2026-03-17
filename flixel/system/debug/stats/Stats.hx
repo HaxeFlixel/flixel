@@ -267,7 +267,7 @@ class Stats extends Window
 			}
 			visibleCount = Std.int(divide(visibleCount, _visibleObjectMarker));
 
-			if (FlxG.renderer.blit)
+			if (FlxG.renderer.tile)
 			{
 				for (i in 0..._drawCallsMarker)
 				{
