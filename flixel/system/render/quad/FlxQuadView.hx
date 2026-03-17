@@ -341,7 +341,7 @@ class FlxQuadView extends FlxCameraView
 	
 	override function set_alpha(value:Float):Float
 	{
-		canvas.alpha = alpha;
+		canvas.alpha = value;
 		return super.set_alpha(value);
 	}
 	
