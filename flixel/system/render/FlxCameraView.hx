@@ -236,7 +236,7 @@ abstract class FlxCameraView implements IFlxDestroyable
 	
 	#if FLX_DEBUG
 	
-	abstract public function getDebugBuffer():FlxVertexBuffer;
+	abstract public function getDebugBuffer():FlxCanvas;
 	
 	abstract function worldToDebugX(worldX:Float):Float;//TODO: find out what "debug space" actually is, rename and make public
 	abstract function worldToDebugY(worldY:Float):Float;//TODO: find out what "debug space" actually is, rename and make public

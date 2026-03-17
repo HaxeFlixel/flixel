@@ -11,7 +11,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
-import flixel.system.render.FlxVertexBuffer;
+import flixel.system.render.FlxCanvas;
 import flixel.system.render.blit.FlxBlitRenderer;
 import flixel.system.render.blit.FlxBlitView;
 import flixel.system.render.quad.FlxQuadRenderer;
@@ -1802,7 +1802,7 @@ class FlxCamera extends FlxBasic
 		if (useTargetGraphic)
 		{
 			graphics.overrideBlendMode(null);
-			final buffer:FlxVertexBuffer = cast graphics;
+			final buffer:FlxCanvas = cast graphics;
 			// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 			// which could appear while cameras fading
 			buffer.drawFilledRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2, color);

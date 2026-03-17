@@ -417,7 +417,7 @@ class FlxBlitView extends FlxCameraView
 	
 	#if FLX_DEBUG
 	
-	function getDebugBuffer():FlxVertexBuffer
+	function getDebugBuffer():FlxCanvas
 	{
 		return debugSprite.graphics;
 	}

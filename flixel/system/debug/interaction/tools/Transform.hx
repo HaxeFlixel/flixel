@@ -7,7 +7,7 @@ import flixel.math.FlxRect;
 import flixel.system.debug.Icon;
 import flixel.system.debug.Tooltip;
 import flixel.system.debug.interaction.Interaction;
-import flixel.system.render.FlxVertexBuffer;
+import flixel.system.render.FlxCanvas;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BitmapData;
@@ -245,7 +245,7 @@ class Transform extends Tool
 		view.endDrawDebug();
 	}
 
-	function drawSelection(buffer:FlxVertexBuffer, camera:FlxCamera)
+	function drawSelection(buffer:FlxCanvas, camera:FlxCamera)
 	{
 		// draw lines
 		final scroll = camera.scroll;
@@ -300,7 +300,7 @@ private class Marker
 		rot.put();
 	}
 
-	public static function draw(buffer:FlxVertexBuffer, screenX:Float, screenY:Float, circle:Bool)
+	public static function draw(buffer:FlxCanvas, screenX:Float, screenY:Float, circle:Bool)
 	{
 		if (circle)
 			buffer.drawFilledCircle(screenX, screenY, CIRCLE_RADIUS, FlxColor.MAGENTA);

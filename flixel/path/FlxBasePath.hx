@@ -5,7 +5,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
 import flixel.system.render.FlxCameraView;
-import flixel.system.render.FlxVertexBuffer;
+import flixel.system.render.FlxCanvas;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -387,7 +387,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		return result;
 	}
 	
-	inline function drawNode(buffer:FlxVertexBuffer, node:FlxPoint, size:Int, color:FlxColor)
+	inline function drawNode(buffer:FlxCanvas, node:FlxPoint, size:Int, color:FlxColor)
 	{
 		final offset = Math.floor(size * 0.5);
 		buffer.drawFilledRect(node.x - offset, node.y - offset, size, size, color);
@@ -399,7 +399,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		drawLink(gfx, node1, node2);
 	}
 	
-	function drawLink(buffer:FlxVertexBuffer, node1:FlxPoint, node2:FlxPoint)
+	function drawLink(buffer:FlxCanvas, node1:FlxPoint, node2:FlxPoint)
 	{
 		final lineOffset = debugDrawData.lineSize / 2;
 		buffer.drawLine(node1.x + lineOffset, node1.y + lineOffset, node2.x + lineOffset, node2.y + lineOffset, debugDrawData.lineColor);

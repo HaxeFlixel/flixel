@@ -526,7 +526,7 @@ class FlxQuadView extends FlxCameraView
 	
 	#if FLX_DEBUG
 	
-	public function getDebugBuffer():FlxVertexBuffer
+	public function getDebugBuffer():FlxCanvas
 	{
 		return debugLayer.graphics;
 	}

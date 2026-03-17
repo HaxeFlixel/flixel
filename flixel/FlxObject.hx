@@ -6,7 +6,7 @@ import flixel.math.FlxRect;
 import flixel.math.FlxVelocity;
 import flixel.path.FlxPath;
 import flixel.system.render.FlxCameraView;
-import flixel.system.render.FlxVertexBuffer;
+import flixel.system.render.FlxCanvas;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
@@ -1338,7 +1338,7 @@ class FlxObject extends FlxBasic
 	}
 	
 	@:haxe.warning("-WDeprecated")
-	function drawDebugBoundingBoxTo(buffer:FlxVertexBuffer, rect:FlxRect)
+	function drawDebugBoundingBoxTo(buffer:FlxCanvas, rect:FlxRect)
 	{
 		drawDebugBoundingBox(buffer, rect, allowCollisions, immovable);
 	}
@@ -1362,7 +1362,7 @@ class FlxObject extends FlxBasic
 	@:deprecated("beginDrawDebug(gfx) is deprecated, drawDebugBoundingBoxTo instead")
 	function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
 	{
-		final buffer:FlxVertexBuffer = gfx;
+		final buffer:FlxCanvas = gfx;
 		buffer.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0, color, 1);
 	}
 	
