@@ -5,6 +5,8 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.math.FlxVelocity;
 import flixel.path.FlxPath;
+import flixel.system.render.FlxCameraView;
+import flixel.system.render.FlxVertexBuffer;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
@@ -1306,9 +1308,11 @@ class FlxObject extends FlxBasic
 	{
 		if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			return;
-
+		
 		final rect = getBoundingBox(camera);
-		if (FlxG.renderer.method != BLITTING)
+		
+		// TODO: Remove and handle this in the view via drawDebugRect
+		if (FlxG.renderer.tile)
 		{
 			final view = camera.getViewMarginRect();
 			view.pad(2);
@@ -1318,26 +1322,25 @@ class FlxObject extends FlxBasic
 		
 		if (rect.width > 0 && rect.height > 0)
 		{
-			FlxG.renderer.beginDrawDebug(camera);
-			drawDebugBoundingBox(rect, allowCollisions);
-			FlxG.renderer.endDrawDebug();
+			camera.view.beginDrawDebug();
+			drawDebugBoundingBoxTo(camera.view.getDebugBuffer(), rect);
+			camera.view.endDrawDebug();
 		}
 	}
 
-	@:deprecated("drawDebugBoundingBox(gfx, rect, allowCollisions, partial) is deprecated. Use drawDebugBoundingBox(rect, allowCollisions) instead.")
-	overload extern inline function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:FlxDirectionFlags, partial:Bool)
+	// TODO: throw warning on overrides
+	@:deprecated("drawDebugBoundingBox is deprecated, use drawDebugBoundingBoxTo instead") // 6.2.0
+	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:FlxDirectionFlags, partial:Bool)
 	{
 		// Find the color to use
 		final color = getDebugBoundingBoxColor(allowCollisions);
 		drawDebugBoundingBoxColor(gfx, rect, color);
 	}
-
-	overload extern inline function drawDebugBoundingBox(rect:FlxRect, allowCollisions:FlxDirectionFlags)
+	
+	@:haxe.warning("-WDeprecated")
+	function drawDebugBoundingBoxTo(buffer:FlxVertexBuffer, rect:FlxRect)
 	{
-		// Find the color to use
-		var color = getDebugBoundingBoxColor(allowCollisions);
-		color.alphaFloat = 0.75;
-		drawDebugBoundingBoxColor(rect, color);
+		drawDebugBoundingBox(buffer, rect, allowCollisions, immovable);
 	}
 	
 	function getDebugBoundingBoxColor(allowCollisions:FlxDirectionFlags)
@@ -1355,38 +1358,31 @@ class FlxObject extends FlxBasic
 		
 	}
 	
-	@:deprecated("drawDebugBoundingBoxColor(gfx, rect, color) is deprecated, use drawDebugBoundingBoxColor(rect, color) instead")
-	overload extern inline function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
+	// TODO: throw warning on overrides
+	@:deprecated("beginDrawDebug(gfx) is deprecated, drawDebugBoundingBoxTo instead")
+	function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
 	{
-		// fill static graphics object with square shape
-		gfx.lineStyle(1, color, 0.75, false, null, null, MITER, 255);
-		gfx.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0);
+		final buffer:FlxVertexBuffer = gfx;
+		buffer.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0, color, 1);
 	}
-
-	overload extern inline function drawDebugBoundingBoxColor(rect:FlxRect, color:FlxColor)
+	
+	@:haxe.warning("-WDeprecated")
+	function drawDebugBoundingBoxColorTo(view:FlxCameraView, bounds:FlxRect, color:FlxColor)
 	{
-		FlxG.renderer.drawDebugRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0, color);
+		drawDebugBoundingBoxColor(view.getDebugBuffer(), bounds, color);
 	}
-
-	@:deprecated("use object.beginDrawDebug(camera) is deprecated, FlxG.renderer.beginDrawDebug(camera) instead")
+	
+	@:deprecated("beginDrawDebug(camera) is deprecated, use camera.view.beginDrawDebug() instead")
 	inline function beginDrawDebug(camera:FlxCamera):Graphics
 	{
-		FlxG.renderer.beginDrawDebug(camera);
-
-		if (FlxG.renderer.method == BLITTING)
-		{
-			return FlxSpriteUtil.flashGfx;
-		}
-		else
-		{
-			return camera.viewQuad.debugLayer.graphics;
-		}
+		camera.view.beginDrawDebug();
+		return camera.view.getDebugBuffer();
 	}
 
-	@:deprecated("use object.endDrawDebug(camera) is deprecated, FlxG.renderer.endDrawDebug() instead")
+	@:deprecated("endDrawDebug(camera) is deprecated, use camera.view.endDrawDebug() instead")
 	inline function endDrawDebug(camera:FlxCamera)
 	{
-		FlxG.renderer.endDrawDebug();
+		camera.view.endDrawDebug();
 	}
 	#end
 

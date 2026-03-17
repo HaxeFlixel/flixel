@@ -1,7 +1,7 @@
 package flixel;
 
-import flixel.system.render.FlxRenderer;
 import flixel.system.FlxSplash;
+import flixel.system.render.FlxRenderer;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.typeLimit.NextState;
@@ -803,7 +803,7 @@ class FlxGame extends Sprite
 
 		FlxG.signals.preDraw.dispatch();
 
-		FlxRenderer.totalDrawCalls = 0;
+		FlxG.renderer.totalDrawCalls = 0;
 
 		FlxG.cameras.clear();
 
@@ -820,10 +820,10 @@ class FlxGame extends Sprite
 
 		FlxG.cameras.render();
 
-		if (FlxG.renderer.method != BLITTING)
+		if (FlxG.renderer.tile)
 		{
 			#if FLX_DEBUG
-			debugger.stats.drawCalls(FlxRenderer.totalDrawCalls);
+			debugger.stats.drawCalls(FlxG.renderer.totalDrawCalls);
 			#end
 		}
 

@@ -53,7 +53,7 @@ class FlxSubState extends FlxState
 		closeCallback = null;
 		openCallback = null;
 
-		if (FlxG.renderer.method != BLITTING)
+		if (FlxG.renderer.tile)
 		{
 			_bgSprite = new FlxBGSprite();
 		}
@@ -63,21 +63,18 @@ class FlxSubState extends FlxState
 	override public function draw():Void
 	{
 		// Draw background
-		if (FlxG.renderer.method == BLITTING)
+		switch FlxG.renderer.method
 		{
-			for (camera in getCamerasLegacy())
-			{
-				FlxG.renderer.begin(camera);
-				FlxG.renderer.fill(bgColor);
-			}
-		}
-		else // FlxG.renderer.method != BLITTING
-		{
-			if (_bgSprite != null && _bgSprite.visible)
-			{
-				_bgSprite.cameras = getCameras();
-				_bgSprite.draw();
-			}
+			case BLITTING:
+				for (camera in getCamerasLegacy())
+					camera.view.fill(bgColor);
+			case DRAW_TILES:
+				if (_bgSprite != null && _bgSprite.visible)
+				{
+					_bgSprite.cameras = getCameras();
+					_bgSprite.draw();
+				}
+			case CUSTOM:
 		}
 
 		// Now draw all children
@@ -111,7 +108,7 @@ class FlxSubState extends FlxState
 	@:noCompletion
 	override function set_bgColor(value:FlxColor):FlxColor
 	{
-		if (FlxG.renderer.method != BLITTING && _bgSprite != null)
+		if (FlxG.renderer.tile && _bgSprite != null)
 		{
 			_bgSprite.alpha = value.alphaFloat;
 			_bgSprite.visible = _bgSprite.alpha > 0;

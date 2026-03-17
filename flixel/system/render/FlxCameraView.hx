@@ -1,38 +1,33 @@
 package flixel.system.render;
 
-import openfl.display.DisplayObjectContainer;
-import openfl.display.DisplayObject;
-import flixel.math.FlxRect;
-import flixel.FlxG;
 import flixel.FlxCamera;
-import flixel.util.FlxDestroyUtil;
+import flixel.FlxG;
+import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.tile.FlxDrawTrianglesItem;
+import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
+import openfl.display.BitmapData;
+import openfl.display.BlendMode;
+import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
+import openfl.display.Graphics;
+import openfl.geom.ColorTransform;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 /**
  * A `FlxCameraView` is a helper added to cameras, that holds some rendering-related objects
+ * @since 6.2.0
  */
 @:allow(flixel.FlxCamera)
-class FlxCameraView implements IFlxDestroyable
-{	
-	/**
-	 * Creates a `FlxCameraView` object tied to a camera, based on the target and project configuration.
-	 * This function is dynamic, which means that you can change the return value yourself.
-	 * 
-	 * @param   camera   The camera to create the view for
-	 */
-	public static dynamic function create(camera:FlxCamera):FlxCameraView
-	{
-		if (!FlxG.renderer.isHardware)
-		{
-			return cast new flixel.system.render.blit.FlxBlitView(camera);
-		}
-		else
-		{
-			return cast new flixel.system.render.quad.FlxQuadView(camera);
-		}
-	}
-
+@:access(flixel.FlxCamera)
+abstract class FlxCameraView implements IFlxDestroyable
+{
 	/**
 	 * Display object which is used as a container for all of the camera's graphics.
 	 * This object is added to the display tree.
@@ -45,66 +40,219 @@ class FlxCameraView implements IFlxDestroyable
 	public var camera(default, null):FlxCamera;
 	
 	/**
-	 * A shortcut for `camera.antialiasing`. Used so implementations can listen to changes.
+	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
+	 * Default behavior is chunky-style.
 	 */
-	public var antialiasing(get, set):Bool;
+	public var antialiasing(default, set):Bool;
 
 	/**
 	 * A shortcut for `camera.angle`. Used so implementations can listen to changes.
 	 */
-	public var angle(get, set):Float;
+	public var angle(default, set):Float;
 
 	/**
 	 * A shortcut for `camera.alpha`. Used so implementations can listen to changes.
 	 */
-	public var alpha(get, set):Float;
+	public var alpha(default, set):Float;
 
 	/**
 	 * A shortcut for `camera.color`. Used so implementations can listen to changes.
 	 */
-	public var color(get, set):FlxColor;
+	public var color(default, set):FlxColor;
 
 	/**
 	 * A shortcut for `camera.visible`. Used so implementations can listen to changes.
 	 */
-	public var visible(get, set):Bool;
-	
-	var _flashOffset:FlxPoint = FlxPoint.get();
+	public var visible(default, set):Bool;
 	
 	function new(camera:FlxCamera)
 	{
 		this.camera = camera;
 	}
 	
-	public function destroy():Void
+	public function destroy():Void {}
+	
+	// =============================================================================
+	//{ region                             RENDERING
+	// =============================================================================
+	
+	/**
+	 * Flushes any remaining graphics and renders everything to the screen.
+	 */
+	public function render()
 	{
-		_flashOffset = FlxDestroyUtil.put(_flashOffset);
+		throw "Not implemented";
+		// Note: Abstract methods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
 	}
 	
-	public function offsetView(x:Float, y:Float):Void {}
-
-	function updateScale():Void
+	/**
+	 * Called before a new rendering frame, clears all previously drawn graphics.
+	 */
+	public function clear()
 	{
-		camera.calcMarginX();
-		camera.calcMarginY();
+		throw "Not implemented";
+		// Note: Abstract methods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
 	}
 	
-	function updatePosition():Void {}
-	
-	function updateInternals():Void {}
-	
-	function updateOffset():Void
+	/**
+	 * Fills the current render target with `color`.
+	 * 
+	 * @param   color        The color (in 0xAARRGGBB format) to fill the screen with.
+	 * @param   blendAlpha   Whether to blend the alpha value or just wipe the previous contents.
+	 */
+	public function fill(color:FlxColor, blendAlpha:Bool = true)
 	{
-		_flashOffset.x = camera.width * 0.5 * FlxG.scaleMode.scale.x * camera.initialZoom;
-		_flashOffset.y = camera.height * 0.5 * FlxG.scaleMode.scale.y * camera.initialZoom;
+		throw "Not implemented";
+		// Note: Abstract methods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
 	}
 	
-	function updateScrollRect():Void {}
+	/**
+	 * Draws the pixels onto the current render target.
+	 * 
+	 * @param   pixels      The pixels to draw.
+	 * @param   transform   The color transform to use.
+	 * @param   blend       The blend mode to use.
+	 * @param   smoothing   Whether to use smoothing (anti-aliasing) when drawing.
+	 * @param   shader      The shader to use.
+	 */
+	public function drawPixels(pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false, ?shader:FlxShader)
+	{
+		throw "Not implemented";
+		// Note: Abstract methods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
+	}
+	
+	/**
+	 * Draws the pixels onto the current render target.
+	 * 
+	 * Unlike `drawPixels()`, this method does not use a matrix. This means that complex transformations
+	 * are not supported with this method. The `destPoint` argument is used to determine the position to draw to.
+	 * 
+	 * @param   pixels      The pixels to draw.
+	 * @param   sourceRect  A rectangle that defines the area of the pixels to use.
+	 * @param   destPoint   A point representing the top-left position to draw to.
+	 * @param   transform   The color transform to use.
+	 * @param   blend       The blend mode to use.
+	 * @param   smoothing   Whether to use smoothing (anti-aliasing) when drawing.
+	 * @param   shader      The shader to use.
+	 */
+	public function copyPixels(pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
+		smoothing:Bool = false, ?shader:FlxShader)
+	{
+		throw "Not implemented";
+		// Note: Abstract methods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
+	}
+	
+	/**
+	 * Draws the frame onto the current render target.
+	 * 
+	 * @param   frame       The frame to draw.
+	 * @param   matrix      The transformation matrix to use.
+	 * @param   transform   The color transform to use.
+	 * @param   blend       The blend mode to use.
+	 * @param   smoothing   Whether to use smoothing (anti-aliasing) when drawing.
+	 * @param   shader      The shader to use.
+	 */
+	public function drawFrame(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false, ?shader:FlxShader)
+	{
+		throw "Not implemented";
+		// Note: Abstract methods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
+	}
+	
+	/**
+	 * Draws the frame onto the current render target.
+	 * 
+	 * Unlike `drawFrame()`, this method does not use a matrix. This means that complex transformations
+	 * are not supported with this method. The `destPoint` argument is used to determine the position to draw to.
+	 * 
+	 * @param   frame       The frame to draw
+	 * @param   destPoint   A point representing the top-left position to draw to.
+	 * @param   transform   The color transform to use.
+	 * @param   blend       The blend mode to use.
+	 * @param   smoothing   Whether to use smoothing (anti-aliasing) when drawing.
+	 * @param   shader      The shader to use
+	 */
+	public function copyFrame(frame:FlxFrame, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false, ?shader:FlxShader)
+	{
+		throw "Not implemented";
+		// Note: Abstract methods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
+	}
+	
+	/**
+	 * Draws a set of triangles onto the current render target.
+	 * 
+	 * @param   graphic    The graphic to use for the triangles.
+	 * @param   vertices   A vector where each element is a coordinate location. 2 elements make up an (x, y) pair.
+	 * @param   indices    A vector where each element is an index to a vertex (x, y) pair. 3 indices make up a triangle.
+	 * @param   uvtData    A vector where each element is a normalized coordinate (from 0.0 to 1.0), per vertex, used to apply texture mapping.
+	 * @param   colors     A vector containing the colors to use per vertex. Currently does not work with any renderer.
+	 * @param   position   A point representing the top-left position to draw to.
+	 * @param   blend      The blend mode to use, optional.
+	 * @param   repeat     Whether the graphic should repeat.
+	 * @param   smoothing  Whether to use smoothing (anti-aliasing) when drawing.
+	 * @param   transform  The color transform to use, optional.
+	 * @param   shader     The shader to use, optional (used only with the DRAW_TILES renderer).
+	 */
+	public function drawTriangles(graphic:FlxGraphic, vertices:FlxVector2d<Float>, indices:FlxVector2d<Int>, uvtData:FlxVector2d<Float>, ?colors:FlxVector2d<Int>,
+		?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader)
+	{
+		throw "Not implemented";
+		// Note: Abstract methods with default values are broken on cpp in haxe 4.3. https://github.com/HaxeFoundation/haxe/issues/11666
+	}
+	
+	// =============================================================================
+	//} endregion                          RENDERING
+	// =============================================================================
+	
+	abstract public function offsetView(x:Float, y:Float):Void;
+	
+	abstract function updateScale():Void;
+	
+	abstract function updatePosition():Void;
+	
+	abstract function updateInternals():Void;
+	
+	abstract function updateOffset():Void;
+	
+	abstract function updateScrollRect():Void;
+	
+	// =============================================================================
+	//{ region                             DEBUG DRAW
+	// =============================================================================
+	
+	/**
+	 * Begins debug draw on the current (or optionally specified) camera.
+	 * Any debug drawing commands will be executed on the camera.
+	 * 
+	 * @param camera Optional, the camera to draw to.
+	 */
+	abstract public function beginDrawDebug():Void;
+	
+	/**
+	 * Cleans up and finalizes the debug draw.
+	 */
+	abstract public function endDrawDebug():Void;
+	
+	#if FLX_DEBUG
+	
+	abstract public function getDebugBuffer():FlxVertexBuffer;
+	
+	abstract function worldToDebugX(worldX:Float):Float;//TODO: find out what "debug space" actually is, rename and make public
+	abstract function worldToDebugY(worldY:Float):Float;//TODO: find out what "debug space" actually is, rename and make public
+	
+	#end
+	
+	// =============================================================================
+	//} endregion                          DEBUG DRAW
+	// =============================================================================
+	
+	// =============================================================================
+	//{ region                             HELPERS
+	// =============================================================================
 	
 	/**
 	 * Helper method preparing debug rectangle for rendering in blit render mode
-	 * @param	rect	rectangle to prepare for rendering
-	 * @return	transformed rectangle with respect to camera's zoom factor
+	 * @param   rect  Rectangle to prepare for rendering
+	 * @return  Transformed rectangle with respect to camera's zoom factor
 	 */
 	function transformRect(rect:FlxRect):FlxRect
 	{
@@ -113,8 +261,8 @@ class FlxCameraView implements IFlxDestroyable
 	
 	/**
 	 * Helper method preparing debug point for rendering in blit render mode (for debug path rendering, for example)
-	 * @param	point		point to prepare for rendering
-	 * @return	transformed point with respect to camera's zoom factor
+	 * @param   point  Point to prepare for rendering
+	 * @return  Transformed point with respect to camera's zoom factor
 	 */
 	function transformPoint(point:FlxPoint):FlxPoint
 	{
@@ -123,87 +271,63 @@ class FlxCameraView implements IFlxDestroyable
 	
 	/**
 	 * Helper method preparing debug vectors (relative positions) for rendering in blit render mode
-	 * @param	vector	relative position to prepare for rendering
-	 * @return	transformed vector with respect to camera's zoom factor
+	 * @param   vector  Relative position to prepare for rendering
+	 * @return  Transformed vector with respect to camera's zoom factor
 	 */
 	function transformVector(vector:FlxPoint):FlxPoint
 	{
 		return vector;
 	}
 	
-	/**
-	 * Helper method for applying transformations (scaling and offsets)
-	 * to specified display objects which has been added to the camera display list.
-	 * For example, debug sprite for nape debug rendering.
-	 * @param	object	display object to apply transformations to.
-	 * @return	transformed object.
-	 */
-	function transformObject(object:DisplayObject):DisplayObject
+	// =============================================================================
+	//} endregion                          HELPERS
+	// =============================================================================
+	
+	// =============================================================================
+	//{ region                             GETTERS
+	// =============================================================================
+	
+	abstract function get_display():DisplayObjectContainer;
+	
+	@:haxe.warning("-WDeprecated")
+	function set_antialiasing(value:Bool):Bool
 	{
-		object.scaleX *= camera.totalScaleX;
-		object.scaleY *= camera.totalScaleY;
-		
-		object.x -= camera.scroll.x * camera.totalScaleX;
-		object.y -= camera.scroll.y * camera.totalScaleY;
-		
-		object.x -= 0.5 * camera.width * (camera.scaleX - camera.initialZoom) * FlxG.scaleMode.scale.x;
-		object.y -= 0.5 * camera.height * (camera.scaleY - camera.initialZoom) * FlxG.scaleMode.scale.y;
-		
-		return object;
+		camera.setAntialiasingBypass(value);
+		return this.antialiasing = value;
 	}
 	
-	function get_display():DisplayObjectContainer
+	function set_color(value:FlxColor):FlxColor
 	{
-		return null;
+		camera.setColorBypass(value);
+		return this.color = value;
 	}
 	
-	function get_color():FlxColor
+	function set_angle(value:Float):Float
 	{
-		return camera.color;
+		camera.setAngleBypass(value);
+		return this.angle = value;
 	}
 	
-	function set_color(color:FlxColor):FlxColor
+	function set_visible(value:Bool):Bool
 	{
-		return color;
+		camera.setVisibleBypass(value);
+		return this.visible = value;
 	}
 	
-	function get_antialiasing():Bool
+	function set_alpha(value:Float):Float
 	{
-		return camera.antialiasing;
+		camera.setAlphaBypass(value);
+		return this.alpha = value;
 	}
 	
-	function set_antialiasing(antialiasing:Bool):Bool
-	{
-		return antialiasing;
-	}
+	// @:bypassAccess doesn't work from external classes in haxe 4. So call this when needed
+	@:noCompletion inline function setColorBypass       (value:FlxColor):FlxColor return @:bypassAccessor this.color = value;
+	@:noCompletion inline function setAlphaBypass       (value:Float   ):Float    return @:bypassAccessor this.alpha = value;
+	@:noCompletion inline function setAngleBypass       (value:Float   ):Float    return @:bypassAccessor this.angle = value;
+	@:noCompletion inline function setAntialiasingBypass(value:Bool    ):Bool     return @:bypassAccessor this.antialiasing = value;
+	@:noCompletion inline function setVisibleBypass     (value:Bool    ):Bool     return @:bypassAccessor this.visible = value;
 	
-	function get_angle():Float
-	{
-		return camera.angle;
-	}
-	
-	function set_angle(angle:Float):Float
-	{
-		return angle;
-	}
-	
-	function get_visible():Bool
-	{
-		return camera.visible;
-	}
-	
-	function set_visible(visible:Bool):Bool
-	{
-		return visible;
-	}
-	
-	function get_alpha():Float
-	{
-		return camera.alpha;
-	}
-	
-	function set_alpha(alpha:Float):Float
-	{
-		return alpha;
-	}
+	// =============================================================================
+	//} endregion                          GETTERS
+	// =============================================================================
 }

@@ -3,18 +3,24 @@ package flixel.system.render.quad;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.graphics.tile.FlxDrawQuadsItem;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
+import flixel.math.FlxMatrix;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
 import openfl.geom.ColorTransform;
+import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
 using flixel.util.FlxColorTransformUtil;
@@ -55,8 +61,11 @@ class FlxQuadView extends FlxCameraView
 	 * Its position is modified by `updateScrollRect()` method, which is called on camera's resize and scale events.
 	 */
 	var _scrollRect:Sprite = new Sprite();
-
-	var targetGraphics:Graphics;
+	
+	var _flashOffset:FlxPoint = FlxPoint.get();
+	
+	var _renderer(get, never):FlxQuadRenderer;
+	inline function get__renderer() return cast (FlxG.renderer, FlxQuadRenderer);
 	
 	@:allow(flixel.system.render.FlxCameraView)
 	function new(camera:FlxCamera)
@@ -73,8 +82,6 @@ class FlxQuadView extends FlxCameraView
 		debugLayer = new Sprite();
 		_scrollRect.addChild(debugLayer);
 		#end
-
-		targetGraphics = canvas.graphics;
 	}
 	
 	override function destroy():Void
@@ -104,15 +111,164 @@ class FlxQuadView extends FlxCameraView
 		
 		flashSprite = null;
 		_scrollRect = null;
+		_flashOffset = FlxDestroyUtil.put(_flashOffset);
 	}
 	
-	override function offsetView(x:Float, y:Float):Void
+	// =============================================================================
+	//{ region                            RENDERING
+	// =============================================================================
+	
+	override function render()
+	{
+		// super.render();
+		
+		flashSprite.filters = camera.filtersEnabled ? camera.filters : null;
+		
+		var currItem:FlxDrawBaseItem<Dynamic> = _headOfDrawStack;
+		while (currItem != null)
+		{
+			currItem.render(camera);
+			currItem = currItem.next;
+		}
+
+		camera.drawFX();
+	}
+	
+	override function clear()
+	{
+		// super.clear();
+		
+		clearDrawStack();
+		
+		canvas.graphics.clear();
+		#if FLX_DEBUG
+		// Clearing camera's debug sprite
+		debugLayer.graphics.clear();
+		#end
+		
+		fill(camera.bgColor, camera.useBgAlphaBlending);
+	}
+	
+	function clearDrawStack():Void
+	{
+		var currTiles = _headTiles;
+		var newTilesHead;
+		
+		while (currTiles != null)
+		{
+			newTilesHead = currTiles.nextTyped;
+			currTiles.reset();
+			currTiles.nextTyped = _storageTilesHead;
+			_storageTilesHead = currTiles;
+			currTiles = newTilesHead;
+		}
+		
+		var currTriangles:FlxDrawTrianglesItem = _headTriangles;
+		var newTrianglesHead:FlxDrawTrianglesItem;
+		
+		while (currTriangles != null)
+		{
+			newTrianglesHead = currTriangles.nextTyped;
+			currTriangles.reset();
+			currTriangles.nextTyped = _storageTrianglesHead;
+			_storageTrianglesHead = currTriangles;
+			currTriangles = newTrianglesHead;
+		}
+		
+		_currentDrawItem = null;
+		_headOfDrawStack = null;
+		_headTiles = null;
+		_headTriangles = null;
+	}
+	
+	override function fill(color:FlxColor, blendAlpha:Bool = true)
+	{
+		// super.fill(color, blendAlpha);
+		
+		canvas.graphics.overrideBlendMode(null);
+		canvas.graphics.beginFill(color.rgb, color.alphaFloat);
+		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
+		// which could appear while cameras fading
+		canvas.graphics.drawRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2);
+		canvas.graphics.endFill();
+	}
+	
+	override function drawPixels(pixels, matrix, ?transform, ?blend, smoothing = false, ?shader)
+	{
+		// super.drawPixels(frame, matrix, transform, blend, smoothing, shader);
+		throw "Not implemented";
+	}
+	
+	override function copyPixels(pixels, ?sourceRect, destPoint, ?transform, ?blend, smoothing = false, ?shader)
+	{
+		// super.copyPixels(pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+		throw "Not implemented";
+	}
+	
+	override function drawFrame(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false, ?shader)
+	{
+		// super.drawFrame(frame, matrix, transform, blend, smoothing, shader);
+		
+		var isColored = (transform != null #if !html5 && transform.hasRGBMultipliers() #end);
+		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+		
+		#if FLX_RENDER_TRIANGLE
+		final drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend, hasColorOffsets, shader);
+		#else
+		final drawItem:FlxDrawQuadsItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
+		#end
+		drawItem.addQuad(frame, matrix, transform);
+	}
+	
+	@:noCompletion
+	static final _helperMatrix = new FlxMatrix();
+	override function copyFrame(frame:FlxFrame, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, smoothing = false, ?shader:FlxShader)
+	{
+		// super.copyFrame(frame, destPoint, transform, blend, smoothing, shader);
+		
+		_helperMatrix.identity();
+		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
+		
+		var isColored = (transform != null && transform.hasRGBMultipliers());
+		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+		
+		#if FLX_RENDER_TRIANGLE
+		final drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend, hasColorOffsets, shader);
+		#else
+		final drawItem:FlxDrawQuadsItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
+		#end
+		drawItem.addQuad(frame, _helperMatrix, transform);
+	}
+	
+	override function drawTriangles(graphic:FlxGraphic, vertices:FlxVector2d<Float>, indices:FlxVector2d<Int>, uvtData:FlxVector2d<Float>, ?colors:FlxVector2d<Int>,
+			?position:FlxPoint, ?blend:BlendMode, repeat = false, smoothing = false, ?transform:ColorTransform, ?shader:FlxShader)
+	{
+		// super.drawTriangles(graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing, transform, shader);
+		
+		final cameraBounds = FlxRect.weak(camera.viewMarginLeft, camera.viewMarginTop, camera.viewWidth, camera.viewHeight);
+		
+		final isColored = (colors != null && colors.length != 0) || (transform != null && transform.hasRGBMultipliers());
+		final hasColorOffsets = (transform != null && transform.hasRGBAOffsets());
+		
+		final drawItem = startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
+		drawItem.addTriangles(vertices, indices, uvtData, colors, position, cameraBounds, transform);
+	}
+	
+	// =============================================================================
+	//} endregion                         RENDERING
+	// =============================================================================
+	
+	// =============================================================================
+	//{ region                            INTERNALS
+	// =============================================================================
+	
+	function offsetView(x:Float, y:Float)
 	{
 		flashSprite.x += x;
 		flashSprite.y += y;
 	}
 	
-	override function updatePosition():Void
+	function updatePosition()
 	{
 		if (flashSprite != null)
 		{
@@ -121,9 +277,15 @@ class FlxQuadView extends FlxCameraView
 		}
 	}
 	
-	override function updateScrollRect():Void
+	function updateOffset()
 	{
-		var rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
+		_flashOffset.x = camera.width * 0.5 * FlxG.scaleMode.scale.x * camera.initialZoom;
+		_flashOffset.y = camera.height * 0.5 * FlxG.scaleMode.scale.y * camera.initialZoom;
+	}
+	
+	function updateScrollRect()
+	{
+		final rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
 		
 		if (rect != null)
 		{
@@ -139,7 +301,9 @@ class FlxQuadView extends FlxCameraView
 		}
 	}
 	
-	override function updateInternals():Void
+	function updateScale() {}
+	
+	function updateInternals()
 	{
 		if (canvas != null)
 		{
@@ -162,36 +326,38 @@ class FlxQuadView extends FlxCameraView
 		}
 	}
 	
-	override function set_color(color:FlxColor):FlxColor
+	override function set_color(value:FlxColor):FlxColor
 	{
 		final colorTransform:ColorTransform = canvas.transform.colorTransform;
 		
-		colorTransform.redMultiplier = color.redFloat;
-		colorTransform.greenMultiplier = color.greenFloat;
-		colorTransform.blueMultiplier = color.blueFloat;
+		colorTransform.redMultiplier = value.redFloat;
+		colorTransform.greenMultiplier = value.greenFloat;
+		colorTransform.blueMultiplier = value.blueFloat;
 		
 		canvas.transform.colorTransform = colorTransform;
 		
-		return color;
+		return super.set_color(value);
 	}
 	
-	override function set_alpha(alpha:Float):Float
+	override function set_alpha(value:Float):Float
 	{
-		return canvas.alpha = alpha;
+		canvas.alpha = value;
+		return super.set_alpha(value);
 	}
 	
-	override function set_angle(angle:Float):Float
+	override function set_angle(value:Float):Float
 	{
-		return flashSprite.rotation = angle;
+		flashSprite.rotation = value;
+		return super.set_angle(value);
 	}
 	
-	override function set_visible(visible:Bool):Bool
+	override function set_visible(value:Bool):Bool
 	{
-		flashSprite.visible = visible;
-		return visible;
+		flashSprite.visible = value;
+		return super.set_visible(value);
 	}
 	
-	override function get_display():DisplayObjectContainer
+	function get_display():DisplayObjectContainer
 	{
 		return flashSprite;
 	}
@@ -226,8 +392,7 @@ class FlxQuadView extends FlxCameraView
 	 */
 	static var _storageTrianglesHead:FlxDrawTrianglesItem;
 	
-	@:noCompletion
-	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, ?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
+	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets = false, ?blend:BlendMode, smooth = false, ?shader:FlxShader)
 	{
 		#if FLX_RENDER_TRIANGLE
 		return startTrianglesBatch(graphic, smooth, colored, blend);
@@ -288,8 +453,7 @@ class FlxQuadView extends FlxCameraView
 		#end
 	}
 	
-	@:noCompletion
-	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
+	public function startTrianglesBatch(graphic:FlxGraphic, smoothing = false, isColored = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
 			?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		if (_currentDrawItem != null
@@ -307,8 +471,7 @@ class FlxQuadView extends FlxCameraView
 		return getNewDrawTrianglesItem(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
 	}
 	
-	@:noCompletion
-	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
+	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing = false, isColored = false, ?blend:BlendMode, ?hasColorOffsets:Bool,
 			?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
@@ -350,36 +513,38 @@ class FlxQuadView extends FlxCameraView
 		return itemToReturn;
 	}
 	
-	@:noCompletion
-	public function clearDrawStack():Void
+	//} endregion                         INTERNALS
+	// =============================================================================
+	
+	// =============================================================================
+	//{ region                            DEBUG DRAW
+	// =============================================================================
+	
+	public function beginDrawDebug() {}
+	
+	public function endDrawDebug() {}
+	
+	#if FLX_DEBUG
+	
+	public function getDebugBuffer():FlxVertexBuffer
 	{
-		var currTiles = _headTiles;
-		var newTilesHead;
-		
-		while (currTiles != null)
-		{
-			newTilesHead = currTiles.nextTyped;
-			currTiles.reset();
-			currTiles.nextTyped = _storageTilesHead;
-			_storageTilesHead = currTiles;
-			currTiles = newTilesHead;
-		}
-		
-		var currTriangles:FlxDrawTrianglesItem = _headTriangles;
-		var newTrianglesHead:FlxDrawTrianglesItem;
-		
-		while (currTriangles != null)
-		{
-			newTrianglesHead = currTriangles.nextTyped;
-			currTriangles.reset();
-			currTriangles.nextTyped = _storageTrianglesHead;
-			_storageTrianglesHead = currTriangles;
-			currTriangles = newTrianglesHead;
-		}
-		
-		_currentDrawItem = null;
-		_headOfDrawStack = null;
-		_headTiles = null;
-		_headTriangles = null;
+		return debugLayer.graphics;
 	}
+	
+	static final toDebugHelper = new openfl.geom.Point();
+	function worldToDebugX(worldX:Float)//TODO: rename?
+	{
+		toDebugHelper.setTo(worldX, 0);
+		return canvas.localToGlobal(toDebugHelper).x;
+	}
+	
+	function worldToDebugY(worldY:Float)//TODO: rename?
+	{
+		toDebugHelper.setTo(worldY, 0);
+		return canvas.localToGlobal(toDebugHelper).y;
+	}
+	#end
+	
+	//} endregion                         DEBUG DRAW
+	// =============================================================================
 }

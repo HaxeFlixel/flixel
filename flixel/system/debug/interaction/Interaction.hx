@@ -14,9 +14,9 @@ import flixel.system.debug.interaction.tools.ToggleBounds;
 import flixel.system.debug.interaction.tools.Tool;
 import flixel.system.debug.interaction.tools.TrackObject;
 import flixel.system.debug.interaction.tools.Transform;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
-import flixel.util.FlxColor;
 import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
 import openfl.display.Graphics;
@@ -381,14 +381,14 @@ class Interaction extends Window
 	@:deprecated("getDebugGraphics() is deprecated. Use the debug draw functions from FlxCamera instead.")
 	public function getDebugGraphics():Graphics
 	{
-		if (FlxG.renderer.method == BLITTING)
+		if (FlxG.renderer.blit)
 		{
 			FlxSpriteUtil.flashGfx.clear();
 			return FlxSpriteUtil.flashGfx;
 		}
 
 		#if FLX_DEBUG
-		return FlxG.camera.debugLayer.graphics;
+		return FlxG.camera.view.getDebugBuffer();
 		#end
 
 		return null;
@@ -396,23 +396,27 @@ class Interaction extends Window
 
 	function drawItemsSelection():Void
 	{
-		final camera = FlxG.camera;
-		FlxG.renderer.beginDrawDebug(camera);
+		#if FLX_DEBUG
+		final view = FlxG.camera.view;
+		view.beginDrawDebug();
+		final buffer = view.getDebugBuffer();
 
 		for (member in selectedItems)
 		{
 			if (member != null && member.scrollFactor != null && member.isOnScreen())
 			{
-				final margin = 0.5;
-				final scroll = camera.scroll;
+				final scroll = FlxG.camera.scroll;
 				// Render a white rectangle centered at the selected item
 
 				final color:FlxColor = FlxColor.fromRGBFloat(1, 1, 1, 0.75);
-				FlxG.renderer.drawDebugRect(member.x - scroll.x - margin, member.y - scroll.y - margin, member.width + margin*2, member.height + margin*2, color);
+				final MARGIN = 0.5;
+				final MARGIN_2 = MARGIN * 2;
+				buffer.drawRect(member.x - scroll.x - MARGIN, member.y - scroll.y - MARGIN, member.width + MARGIN_2, member.height + MARGIN_2, color);
 			}
 		}
 
-		FlxG.renderer.endDrawDebug();
+		view.endDrawDebug();
+		#end
 	}
 
 	/**
@@ -790,19 +794,21 @@ class Interaction extends Window
 	
 	public function toDebugX(worldX:Float, camera:FlxCamera)
 	{
-		if (FlxG.renderer.method != BLITTING)
-			return camera.viewQuad.canvas.localToGlobal(new Point(worldX, 0)).x;
-		else
-			@:privateAccess
-			return camera.viewBlit._flashBitmap.localToGlobal(new Point(worldX, 0)).x;
+		#if FLX_DEBUG
+		@:privateAccess
+		return camera.view.worldToDebugX(worldX);
+		#else
+		return worldX;
+		#end
 	}
 	
 	public function toDebugY(worldY:Float, camera:FlxCamera)
 	{
-		if (FlxG.renderer.method != BLITTING)
-			return camera.viewQuad.canvas.localToGlobal(new Point(0, worldY)).y;
-		else
-			@:privateAccess
-			return camera.viewBlit._flashBitmap.localToGlobal(new Point(0, worldY)).y;
+		#if FLX_DEBUG
+		@:privateAccess
+		return camera.view.worldToDebugY(worldY);
+		#else
+		return worldY;
+		#end
 	}
 }

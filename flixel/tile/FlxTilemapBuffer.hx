@@ -1,16 +1,16 @@
 package flixel.tile;
 
-import openfl.display.BitmapData;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.math.FlxMatrix;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 /**
  * A helper object to keep tilemap drawing performance decent across the new multi-camera system.
@@ -117,7 +117,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		updateColumns(tileWidth, widthInTiles, scaleX, camera);
 		updateRows(tileHeight, heightInTiles, scaleY, camera);
 
-		if (FlxG.renderer.method == BLITTING)
+		if (FlxG.renderer.blit)
 		{
 			final newWidth = Std.int(columns * tileWidth);
 			final newHeight = Std.int(rows * tileHeight);
@@ -144,7 +144,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
-		if (FlxG.renderer.method == BLITTING)
+		if (FlxG.renderer.blit)
 		{
 			pixels = FlxDestroyUtil.dispose(pixels);
 			blend = null;
@@ -161,7 +161,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public function fill(color = FlxColor.TRANSPARENT):Void
 	{
-		if (FlxG.renderer.method == BLITTING)
+		if (FlxG.renderer.blit)
 		{
 			pixels.fillRect(_flashRect, color);
 		}
@@ -180,19 +180,17 @@ class FlxTilemapBuffer implements IFlxDestroyable
 			flashPoint.x = Math.floor(flashPoint.x);
 			flashPoint.y = Math.floor(flashPoint.y);
 		}
-	
-		FlxG.renderer.begin(camera);
 
 		if (isPixelPerfectRender(camera) && (scaleX == 1.0 && scaleY == 1.0) && blend == null)
 		{
-			FlxG.renderer.copyPixels(pixels, _flashRect, flashPoint, null, null, true);
+			camera.view.copyPixels(pixels, _flashRect, flashPoint, null, null, true);
 		}
 		else
 		{
 			_matrix.identity();
 			_matrix.scale(scaleX, scaleY);
 			_matrix.translate(flashPoint.x, flashPoint.y);
-			FlxG.renderer.drawPixels(pixels, _matrix, null, blend, antialiasing);
+			camera.view.drawPixels(pixels, _matrix, null, blend, antialiasing);
 		}
 	}
 	

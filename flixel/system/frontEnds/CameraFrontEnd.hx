@@ -1,12 +1,12 @@
 package flixel.system.frontEnds;
 
-import flixel.system.render.blit.FlxBlitRenderer;
-import openfl.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.system.render.blit.FlxBlitRenderer;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxSignal.FlxTypedSignal;
+import openfl.geom.Rectangle;
 
 using flixel.util.FlxArrayUtil;
 
@@ -136,7 +136,7 @@ class CameraFrontEnd
 			return;
 		}
 
-		if (FlxG.renderer.method != BLITTING)
+		if (FlxG.renderer.tile)
 		{
 			for (i in 0...list.length)
 			{
@@ -272,10 +272,7 @@ class CameraFrontEnd
 		for (camera in list)
 		{
 			if ((camera != null) && camera.exists && camera.visible)
-			{
-				FlxG.renderer.begin(camera);
-				FlxG.renderer.clear();
-			}
+				camera.view.clear();
 		}
 	}
 
@@ -288,10 +285,7 @@ class CameraFrontEnd
 		for (camera in list)
 		{
 			if ((camera != null) && camera.exists && camera.visible)
-			{
-				FlxG.renderer.begin(camera);
-				FlxG.renderer.render();
-			}
+				camera.view.render();
 		}
 	}
 
@@ -349,16 +343,16 @@ class CameraFrontEnd
 
 	function get_useBufferLocking():Bool 
 	{
-		if (FlxG.renderer.method == BLITTING)
-			return FlxBlitRenderer.useBufferLocking;
+		if (FlxG.renderer.blit)
+			return cast(FlxG.renderer, FlxBlitRenderer).useBufferLocking;
 
 		return false;
 	}
 
 	function set_useBufferLocking(value:Bool):Bool
 	{
-		if (FlxG.renderer.method == BLITTING)
-			return FlxBlitRenderer.useBufferLocking = value;
+		if (FlxG.renderer.blit)
+			return cast(FlxG.renderer, FlxBlitRenderer).useBufferLocking = value;
 
 		return value;
 	}

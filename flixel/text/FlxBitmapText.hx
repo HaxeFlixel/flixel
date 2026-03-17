@@ -379,8 +379,6 @@ class FlxBitmapText extends FlxSprite
 					continue;
 				}
 
-				FlxG.renderer.begin(camera);
-
 				getScreenPosition(screenPos, camera).subtract(offset);
 
 				if (isPixelPerfectRender(camera))
@@ -407,11 +405,13 @@ class FlxBitmapText extends FlxSprite
 					matrix.translate(screenPos.x + originX, screenPos.y + originY);
 					final colorTransform = bgColorTransformDrawHelper.reset();
 					colorTransform.setMultipliers(colorHelper).scaleMultipliers(backgroundColor);
-					FlxG.renderer.drawPixels(FlxG.bitmap.whitePixel, null, matrix, colorTransform, blend, antialiasing);
+					camera.view.drawFrame(FlxG.bitmap.whitePixel, matrix, colorTransform, blend, antialiasing);
 				}
 				
 				final hasColorOffsets = (colorTransform != null && colorTransform.hasRGBAOffsets());
-				final drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing, shader);
+				@:privateAccess
+				final view = camera.viewQuad; // TODO: handle better
+				final drawItem = view.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing, shader);
 				function addQuad(charCode:Int, x:Float, y:Float, color:ColorTransform)
 				{
 					var frame = font.getCharFrame(charCode);
