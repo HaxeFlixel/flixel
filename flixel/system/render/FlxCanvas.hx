@@ -16,7 +16,7 @@ import openfl.geom.Rectangle;
 abstract FlxCanvas(Graphics) from Graphics to Graphics
 {
 	/**
-	 * Wipes all drawn graphics from teh canvas
+	 * Wipes all drawn graphics from the canvas
 	 */
 	public inline function clear():Void
 	{
