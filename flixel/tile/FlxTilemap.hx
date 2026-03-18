@@ -1033,7 +1033,6 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		var drawY:Float = 0;
 		var scaledWidth:Float = 0;
 		var scaledHeight:Float = 0;
-		var drawItem = null;
 
 		if (FlxG.renderer.blit)
 		{
@@ -1048,9 +1047,6 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 			scaledWidth = scaledTileWidth;
 			scaledHeight = scaledTileHeight;
-
-			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
-			drawItem = cast (camera.view, FlxQuadView).startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
 		}
 
 		// Copy tile images into the tile buffer
@@ -1133,7 +1129,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 						_matrix.scale(scaleX, scaleY);
 						_matrix.translate(drawX, drawY);
 
-						drawItem.addQuad(frame, _matrix, colorTransform);
+						camera.view.drawFrame(frame, _matrix, colorTransform, blend, antialiasing, shader);
 					}
 				}
 

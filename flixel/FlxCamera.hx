@@ -1765,21 +1765,21 @@ class FlxCamera extends FlxBasic
 	}
 	
 	@:noCompletion
-	@:deprecated("camera.startQuadBatch() is deprecated, use view.startQuadBatch() instead.") // 6.2.0
+	@:deprecated("camera.startQuadBatch() is deprecated, avoid it and use the draw methods from camera.view instead.") // 6.2.0
 	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, ?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
 	{
 		return viewQuad.startQuadBatch(graphic, colored, hasColorOffsets, blend, smooth, shader);
 	}
 
 	@:noCompletion
-	@:deprecated("camera.startTrianglesBatch() is deprecated, use view.startTrianglesBatch() instead.") // 6.2.0
+	@:deprecated("camera.startTrianglesBatch() is deprecated, avoid it and use the draw methods from camera.view instead.") // 6.2.0
 	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool, ?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		return viewQuad.startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
 	}
 
 	@:noCompletion
-	@:deprecated("camera.getNewDrawTrianglesItem() is deprecated, use view.getNewDrawTrianglesItem() instead.") // 6.2.0
+	@:deprecated("camera.getNewDrawTrianglesItem() is deprecated, avoid it and use the draw methods from camera.view instead.") // 6.2.0
 	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool, ?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		return viewQuad.getNewDrawTrianglesItem(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
@@ -1813,7 +1813,7 @@ class FlxCamera extends FlxBasic
 	}
 	
 	@:noCompletion
-	@:deprecated("camera.clearDrawStack() is deprecated, use camera.viewQuad.render() instead.") // 6.2.0
+	@:deprecated("camera.clearDrawStack() is deprecated, use camera.view.clear() instead.") // 6.2.0
 	function clearDrawStack():Void
 	{
 		viewQuad.clearDrawStack();

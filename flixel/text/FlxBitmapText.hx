@@ -408,10 +408,6 @@ class FlxBitmapText extends FlxSprite
 					camera.view.drawFrame(FlxG.bitmap.whitePixel, matrix, colorTransform, blend, antialiasing);
 				}
 				
-				final hasColorOffsets = (colorTransform != null && colorTransform.hasRGBAOffsets());
-				@:privateAccess
-				final view = camera.viewQuad; // TODO: handle better
-				final drawItem = view.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing, shader);
 				function addQuad(charCode:Int, x:Float, y:Float, color:ColorTransform)
 				{
 					var frame = font.getCharFrame(charCode);
@@ -432,7 +428,7 @@ class FlxBitmapText extends FlxSprite
 					}
 					
 					matrix.translate(screenPos.x + originX, screenPos.y + originY);
-					drawItem.addQuad(frame, matrix, color);
+					camera.view.drawFrame(frame, matrix, color, blend, antialiasing, shader);
 				}
 				
 				borderDrawData.forEach(addQuad.bind(_, _, _, borderColorTransform));
