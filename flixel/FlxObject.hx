@@ -1,6 +1,5 @@
 package flixel;
 
-import openfl.display.Graphics;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -13,6 +12,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
+import openfl.display.Graphics;
 
 /**
  * At their core `FlxObjects` are just boxes with positions that can move and collide with other
@@ -46,7 +46,7 @@ import flixel.util.FlxStringUtil;
  * FlxG.overlap(playerGroup, medKitGroup
  *     function onOverlap(player, medKit)
  *     {
- *         player.health = 100;
+ *         player.heal(100);
  *         medKit.kill();
  *     }
  * );
@@ -670,7 +670,9 @@ class FlxObject extends FlxBasic
 	/**
 	 * Handy for storing health percentage or armor points or whatever.
 	 */
-	@:deprecated("object.health is being removed in version 6.0.0")
+	#if FLX_HEALTH_NOT_DEFINED
+	@:deprecated("object.health is deprecated, add <haxedef name=\"FLX_HEALTH\"/> in your project.xml to continue using it")
+	#end
 	public var health:Float = 1;
 	#end
 
@@ -1053,6 +1055,67 @@ class FlxObject extends FlxBasic
 	}
 
 	/**
+	 * Returns the view position of this object
+	 *
+	 * @param   result  Optional arg for the returning poin
+	 * @param   camera  The desired "view" coordinate space. If `null`, `getDefaultCamera()` is used
+	 * @return  The view position of this objects
+	 * @since 6.2.0
+	 */
+	public function getViewPosition(?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	{
+		if (result == null)
+			result = FlxPoint.get();
+		
+		if (camera == null)
+			camera = getDefaultCamera();
+		
+		return result.set(getViewXHelper(camera), getViewYHelper(camera));
+	}
+	
+	/**
+	 * Returns the view position of this object
+	 *
+	 * @param   camera  The desired "view" coordinate space. If `null`, `getDefaultCamera()` is used
+	 * @return  The view position of this object
+	 * @since 6.2.0
+	 */
+	public function getViewX(?camera:FlxCamera)
+	{
+		if (camera == null)
+			camera = getDefaultCamera();
+		
+		return getViewXHelper(camera);
+	}
+	
+	inline function getViewXHelper(camera:FlxCamera)
+	{
+		final x = pixelPerfectPosition ? Math.floor(this.x) : this.x;
+		return (x - (camera.scroll.x * scrollFactor.x) - camera.viewMarginX) * camera.zoom;
+	}
+	
+	/**
+	 * Returns the view position of this object
+	 *
+	 * @param   camera  The desired "view" coordinate space. If `null`, `getDefaultCamera()` is used
+	 * @return  The view position of this object
+	 * @since 6.2.0
+	 */
+	public function getViewY(?camera:FlxCamera)
+	{
+		if (camera == null)
+			camera = getDefaultCamera();
+		
+		return getViewYHelper(camera);
+	}
+	
+	inline function getViewYHelper(camera:FlxCamera)
+	{
+		final y = pixelPerfectPosition ? Math.floor(this.y) : this.y;
+		return (y - (camera.scroll.y * scrollFactor.y) - camera.viewMarginY) * camera.zoom;
+	}
+	
+	/**
 	 * Returns the world position of this object.
 	 * 
 	 * @param   result  Optional arg for the returning point.
@@ -1100,7 +1163,7 @@ class FlxObject extends FlxBasic
 		wasTouching = FlxDirectionFlags.NONE;
 		setPosition(x, y);
 		last.set(this.x, this.y);
-		velocity.set();
+		velocity.zero();
 		revive();
 	}
 
@@ -1160,7 +1223,10 @@ class FlxObject extends FlxBasic
 	 *
 	 * @param   Damage   How much health to take away (use a negative number to give a health bonus).
 	 */
-	@:deprecated("object.health is being removed in version 6.0.0")
+	
+	#if FLX_HEALTH_NOT_DEFINED
+	@:deprecated("object.hurt is deprecated, add <haxedef name=\"FLX_HEALTH\"/> in your project.xml to continue using it")
+	#end
 	public function hurt(damage:Float):Void
 	{
 		health = health - damage;
@@ -1241,10 +1307,21 @@ class FlxObject extends FlxBasic
 		if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			return;
 
-		var rect = getBoundingBox(camera);
-		var gfx:Graphics = beginDrawDebug(camera);
-		drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
-		endDrawDebug(camera);
+		final rect = getBoundingBox(camera);
+		if (FlxG.renderTile)
+		{
+			final view = camera.getViewMarginRect();
+			view.pad(2);
+			rect.clipTo(view);
+			view.put();
+		}
+		
+		if (rect.width > 0 && rect.height > 0)
+		{
+			final gfx = beginDrawDebug(camera);
+			drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
+			endDrawDebug(camera);
+		}
 	}
 
 	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:FlxDirectionFlags, partial:Bool)
@@ -1272,7 +1349,7 @@ class FlxObject extends FlxBasic
 	function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
 	{
 		// fill static graphics object with square shape
-		gfx.lineStyle(1, color, 0.75);
+		gfx.lineStyle(1, color, 0.75, false, null, null, MITER, 255);
 		gfx.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0);
 	}
 

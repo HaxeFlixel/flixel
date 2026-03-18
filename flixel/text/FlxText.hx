@@ -130,7 +130,7 @@ class FlxText extends FlxSprite
 	 * Reference to a `TextField` object used internally for rendering -
 	 * be sure to know what you're doing if messing with its properties!
 	 */
-	public var textField(default, null):TextField;
+	public var textField(default, null):TextField = new TextField();
 
 	/**
 	 * The width of the `TextField` object used for bitmap generation for this `FlxText` object.
@@ -175,7 +175,7 @@ class FlxText extends FlxSprite
 	var _graphicOffset:FlxPoint = FlxPoint.get(0, 0);
 	
 	var _defaultFormat:TextFormat;
-	var _formatAdjusted:TextFormat;
+	var _formatAdjusted = new TextFormat();
 	var _formatRanges:Array<FlxTextFormatRange> = [];
 	var _font:String;
 
@@ -211,36 +211,36 @@ class FlxText extends FlxSprite
 	 * @param   Size           The font size for this text object.
 	 * @param   EmbeddedFont   Whether this text field uses embedded fonts or not.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
+	public function new(x = 0.0, y = 0.0, fieldWidth = 0.0, ?text:String, size = 8, embeddedFont = true)
 	{
-		super(X, Y);
-
-		if (Text == null || Text == "")
-		{
-			// empty texts have a textHeight of 0, need to
-			// prevent initializing with "" before the first calcFrame() call
-			text = "";
-			Text = " ";
-		}
-		else
-		{
-			text = Text;
-		}
-
-		textField = new TextField();
 		textField.selectable = false;
 		textField.multiline = true;
 		textField.wordWrap = true;
-		_defaultFormat = new TextFormat(null, Size, 0xffffff);
+		_defaultFormat = new TextFormat(null, size, 0xffffff);
+		
+		super(x, y);
+
+		if (text == null || text == "")
+		{
+			// empty texts have a textHeight of 0, need to
+			// prevent initializing with "" before the first calcFrame() call
+			text = " ";
+		}
+		else
+		{
+			this.text = text;
+		}
+		
 		letterSpacing = 0;
 		font = FlxAssets.FONT_DEFAULT;
-		_formatAdjusted = new TextFormat();
 		textField.defaultTextFormat = _defaultFormat;
-		textField.text = Text;
-		fieldWidth = FieldWidth;
-		textField.embedFonts = EmbeddedFont;
-		textField.sharpness = 100;
-		textField.height = (Text.length <= 0) ? 1 : 10;
+		textField.text = text;
+		this.fieldWidth = fieldWidth;
+		textField.embedFonts = embeddedFont;
+		textField.height = (text.length <= 0) ? 1 : 10;
+
+		// call this just to set the textfield's properties
+		set_antialiasing(antialiasing);
 
 		allowCollisions = NONE;
 		moves = false;
@@ -569,19 +569,20 @@ class FlxText extends FlxSprite
 
 		if (value <= 0)
 		{
-			wordWrap = false;
 			autoSize = true;
+			wordWrap = false;
 			// auto width always implies auto height
+			_regen = _regen || !_autoHeight;
 			_autoHeight = true;
 		}
 		else
 		{
 			autoSize = false;
 			wordWrap = true;
+			_regen = _regen || textField.width != value;
 			textField.width = value;
 		}
 
-		_regen = true;
 		return value;
 	}
 
@@ -597,29 +598,38 @@ class FlxText extends FlxSprite
 
 	function set_fieldHeight(value:Float):Float
 	{
+		// TODO: Remove if and let it crash on 7.0.0
 		if (textField == null)
+		{
+			FlxG.log.error("Cannot set fieldHeight of destroyed FlxText");
 			return value;
+		}
 
 		if (value <= 0)
 		{
+			_regen = _regen || !_autoHeight;
 			_autoHeight = true;
 		}
 		else
 		{
+			_regen = _regen || _autoHeight || textField.height != value;
 			_autoHeight = false;
 			textField.height = value;
 		}
-		_regen = true;
 		return value;
 	}
 
 	function set_autoSize(value:Bool):Bool
 	{
+		// TODO: Remove if and let it crash on 7.0.0
 		if (textField != null)
 		{
-			textField.autoSize = value ? TextFieldAutoSize.LEFT : TextFieldAutoSize.NONE;
-			_regen = true;
+			final newValue = value ? TextFieldAutoSize.LEFT : TextFieldAutoSize.NONE;
+			_regen = _regen || textField.autoSize != newValue;
+			textField.autoSize = newValue;
 		}
+		else
+			FlxG.log.error("Cannot set autosize of destroyed FlxText");
 
 		return value;
 	}
@@ -629,16 +639,18 @@ class FlxText extends FlxSprite
 		return (textField != null) ? (textField.autoSize != TextFieldAutoSize.NONE) : false;
 	}
 
-	function set_text(Text:String):String
+	function set_text(value:String):String
 	{
-		text = Text;
+		// TODO: Remove if and let it crash on 7.0.0
 		if (textField != null)
 		{
-			var ot:String = textField.text;
-			textField.text = Text;
-			_regen = (textField.text != ot) || _regen;
+			_regen = _regen || (this.text != value);
+			textField.text = value;
 		}
-		return Text;
+		else
+			FlxG.log.error("Cannot set text of destroyed FlxText");
+		
+		return this.text = value;
 	}
 
 	inline function get_size():Int
@@ -646,11 +658,15 @@ class FlxText extends FlxSprite
 		return Std.int(_defaultFormat.size);
 	}
 
-	function set_size(Size:Int):Int
+	function set_size(value:Int):Int
 	{
-		_defaultFormat.size = Size;
-		updateDefaultFormat();
-		return Size;
+		if (_defaultFormat.size != value)
+		{
+			_defaultFormat.size = value;
+			updateDefaultFormat();
+		}
+		
+		return value;
 	}
 
 	inline function get_letterSpacing():Float
@@ -658,23 +674,34 @@ class FlxText extends FlxSprite
 		return _defaultFormat.letterSpacing;
 	}
 
-	function set_letterSpacing(LetterSpacing:Float):Float
+	function set_letterSpacing(value:Float):Float
 	{
-		_defaultFormat.letterSpacing = LetterSpacing;
+		if (_defaultFormat.letterSpacing != value)
+		{
+			_defaultFormat.letterSpacing = value;
+			updateDefaultFormat();
+		}
+		
+		return value;
+	}
+	
+	override function setColorTransform(redMultiplier = 1.0, greenMultiplier = 1.0, blueMultiplier = 1.0, alphaMultiplier = 1.0, redOffset = 0.0, greenOffset = 0.0, blueOffset = 0.0, alphaOffset = 0.0)
+	{
+		super.setColorTransform(1, 1, 1, 1, redOffset, greenOffset, blueOffset, alphaOffset);
+		_defaultFormat.color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier, 0);
 		updateDefaultFormat();
-		return LetterSpacing;
 	}
 
-	override function set_color(Color:FlxColor):Int
+	override function set_color(value:FlxColor):Int
 	{
-		if (_defaultFormat.color == Color.to24Bit())
+		if (_defaultFormat.color == value.rgb)
 		{
-			return Color;
+			return value;
 		}
-		_defaultFormat.color = Color.to24Bit();
-		color = Color;
+		_defaultFormat.color = value.rgb;
+		color = value;
 		updateDefaultFormat();
-		return Color;
+		return value;
 	}
 
 	inline function get_font():String
@@ -682,27 +709,33 @@ class FlxText extends FlxSprite
 		return _font;
 	}
 
-	function set_font(Font:String):String
+	function set_font(value:String):String
 	{
+		final newFont = getFontHelper(value);
+		
+		_regen = _regen || !textField.embedFonts;
 		textField.embedFonts = true;
-
-		if (Font != null)
+		
+		if (_defaultFormat.font != newFont)
 		{
-			var newFontName:String = Font;
-			if (FlxG.assets.exists(Font, FONT))
-			{
-				newFontName = FlxG.assets.getFontUnsafe(Font).fontName;
-			}
-
-			_defaultFormat.font = newFontName;
+			_defaultFormat.font = newFont;
+			updateDefaultFormat();
 		}
-		else
+		
+		return _font = newFont;
+	}
+	
+	static function getFontHelper(font:String)
+	{
+		if (font != null)
 		{
-			_defaultFormat.font = FlxAssets.FONT_DEFAULT;
+			if (FlxG.assets.exists(font, FONT))
+				return FlxG.assets.getFontUnsafe(font).fontName;
+			
+			return font;
 		}
-
-		updateDefaultFormat();
-		return _font = _defaultFormat.font;
+		
+		return FlxAssets.FONT_DEFAULT;
 	}
 
 	inline function get_embedded():Bool
@@ -715,12 +748,18 @@ class FlxText extends FlxSprite
 		return _defaultFormat.font;
 	}
 
-	function set_systemFont(Font:String):String
+	function set_systemFont(value:String):String
 	{
+		_regen = _regen || textField.embedFonts;
 		textField.embedFonts = false;
-		_defaultFormat.font = Font;
-		updateDefaultFormat();
-		return Font;
+		
+		if (_defaultFormat.font != value)
+		{
+			_defaultFormat.font = value;
+			updateDefaultFormat();
+		}
+		
+		return value;
 	}
 
 	inline function get_bold():Bool
@@ -855,19 +894,7 @@ class FlxText extends FlxSprite
 
 	override function updateColorTransform():Void
 	{
-		if (colorTransform == null)
-			colorTransform = new ColorTransform();
-
-		if (alpha != 1)
-		{
-			colorTransform.alphaMultiplier = alpha;
-			useColorTransform = true;
-		}
-		else
-		{
-			colorTransform.alphaMultiplier = 1;
-			useColorTransform = false;
-		}
+		colorTransform.alphaMultiplier = alpha;
 
 		dirty = true;
 	}
@@ -876,6 +903,8 @@ class FlxText extends FlxSprite
 	{
 		if (textField == null || !_regen)
 			return;
+		
+		_regen = false;
 		
 		final oldWidth:Int = graphic != null ? graphic.width : 0;
 		final oldHeight:Int = graphic != null ? graphic.height : VERTICAL_GUTTER;
@@ -958,8 +987,7 @@ class FlxText extends FlxSprite
 
 			drawTextFieldTo(graphic.bitmap);
 		}
-
-		_regen = false;
+		
 		resetFrame();
 	}
 
@@ -1028,45 +1056,11 @@ class FlxText extends FlxSprite
 		super.draw();
 	}
 	
-	override function drawSimple(camera:FlxCamera):Void
+	override function getScreenPosition(?result:FlxPoint, ?camera:FlxCamera):FlxPoint
 	{
-		// same as super but checks _graphicOffset
-		getScreenPosition(_point, camera).subtract(offset).subtract(_graphicOffset);
-		if (isPixelPerfectRender(camera))
-			_point.floor();
-		
-		_point.copyTo(_flashPoint);
-		camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
+		return super.getScreenPosition(result, camera).subtract(_graphicOffset);
 	}
 	
-	override function drawComplex(camera:FlxCamera):Void
-	{
-		_frame.prepareMatrix(_matrix, ANGLE_0, checkFlipX(), checkFlipY());
-		_matrix.translate(-origin.x, -origin.y);
-		_matrix.scale(scale.x, scale.y);
-		
-		if (bakedRotationAngle <= 0)
-		{
-			updateTrig();
-			
-			if (angle != 0)
-				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-		}
-		
-		// same as super but checks _graphicOffset
-		getScreenPosition(_point, camera).subtract(offset).subtract(_graphicOffset);
-		_point.add(origin.x, origin.y);
-		_matrix.translate(_point.x, _point.y);
-		
-		if (isPixelPerfectRender(camera))
-		{
-			_matrix.tx = Math.floor(_matrix.tx);
-			_matrix.ty = Math.floor(_matrix.ty);
-		}
-		
-		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing, shader);
-	}
-
 	/**
 	 * Internal function to update the current animation frame.
 	 *
@@ -1232,7 +1226,7 @@ class FlxText extends FlxSprite
 	{
 		// Apply the default format
 		copyTextFormat(_defaultFormat, FormatAdjusted, false);
-		FormatAdjusted.color = UseBorderColor ? borderColor.to24Bit() : _defaultFormat.color;
+		FormatAdjusted.color = UseBorderColor ? borderColor.rgb : _defaultFormat.color;
 		textField.setTextFormat(FormatAdjusted);
 
 		// Apply other formats
@@ -1247,7 +1241,7 @@ class FlxText extends FlxSprite
 			{
 				var textFormat:TextFormat = formatRange.format.format;
 				copyTextFormat(textFormat, FormatAdjusted, false);
-				FormatAdjusted.color = UseBorderColor ? formatRange.format.borderColor.to24Bit() : textFormat.color;
+				FormatAdjusted.color = UseBorderColor ? formatRange.format.borderColor.rgb : textFormat.color;
 			}
 
 			textField.setTextFormat(FormatAdjusted, formatRange.range.start, Std.int(Math.min(formatRange.range.end, textField.text.length)));
@@ -1290,6 +1284,24 @@ class FlxText extends FlxSprite
 		super.set_frames(Frames);
 		_regen = false;
 		return Frames;
+	}
+
+	override function set_antialiasing(value:Bool):Bool
+	{
+		_regen = _regen || this.antialiasing != value;
+		
+		if (value)
+		{
+			textField.antiAliasType = NORMAL;
+			textField.sharpness = 100;
+		}
+		else
+		{
+			textField.antiAliasType = ADVANCED;
+			textField.sharpness = 400;
+		}
+		
+		return antialiasing = value;
 	}
 }
 

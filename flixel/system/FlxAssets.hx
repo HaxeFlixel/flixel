@@ -1,5 +1,6 @@
 package flixel.system;
 
+import haxe.io.Path;
 import haxe.macro.Expr;
 #if !macro
 import flixel.FlxG;
@@ -9,8 +10,8 @@ import flixel.graphics.atlas.TexturePackerAtlas;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.system.frontEnds.AssetFrontEnd;
 import flixel.graphics.frames.bmfont.BMFont;
+import flixel.system.frontEnds.AssetFrontEnd;
 import flixel.util.typeLimit.OneOfFour;
 import flixel.util.typeLimit.OneOfThree;
 import flixel.util.typeLimit.OneOfTwo;
@@ -35,17 +36,37 @@ class VirtualInputData extends #if nme ByteArray #else ByteArrayData #end {}
 
 typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerAtlas>;
 typedef FlxAsepriteJsonAsset = FlxJsonAsset<AseAtlas>;
-typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
-typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
 typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
-abstract FlxGraphicSource(OneOfThree<BitmapData, Class<Dynamic>, String>) from BitmapData from Class<Dynamic> from String
+
+abstract FlxGraphicAsset(OneOfFour<FlxGraphic, BitmapData, String, Class<Dynamic>>) from FlxGraphic to FlxGraphic from BitmapData to BitmapData from String to String from Class<Dynamic> to Class<Dynamic>
 {
-	public function resolveBitmapData()
+	public inline function resolveBitmapData(?log, ?pos):Null<BitmapData>
 	{
-		return FlxAssets.resolveBitmapData(cast this);
+		return FlxAssets.resolveBitmapData(cast this, log, pos);
+	}
+	
+	public inline function assertBitmapData():BitmapData
+	{
+		return FlxAssets.assertBitmapData(cast this);
 	}
 }
+
+abstract FlxSoundAsset(OneOfFour<String, Sound, Class<Sound>, ByteArray>) from String from Sound from Class<Sound> from ByteArray
+{
+	public inline function assertSound(allowCache = true, addExt = false):Sound
+	{
+		return FlxAssets.assertSound(cast this, allowCache, addExt);
+	}
+	
+	public inline function resolveSound(allowCache = true, addExt = false, ?log, ?pos):Sound
+	{
+		return FlxAssets.resolveSound(cast this, allowCache, addExt, log, pos);
+	}
+}
+
+@:deprecated("`FlxGraphicSource` is deprecated, use `FlxGraphicAsset` instead")
+typedef FlxGraphicSource = FlxGraphicAsset;
 
 abstract FlxAngelCodeAsset(OneOfThree<Xml, String, Bytes>) from Xml from String from Bytes
 {
@@ -54,7 +75,6 @@ abstract FlxAngelCodeAsset(OneOfThree<Xml, String, Bytes>) from Xml from String 
 		return BMFont.parse(cast this);
 	}
 }
-
 
 @:deprecated("`FlxAngelCodeXmlAsset` is deprecated, use `FlxAngelCodeAsset` instead")// 5.6.0
 typedef FlxAngelCodeXmlAsset = FlxAngelCodeAsset;
@@ -304,9 +324,25 @@ class FlxAssets
 	 * @param   graphic  input data to get BitmapData object for.
 	 * @return  BitmapData for specified Dynamic object.
 	 */
-	public static function resolveBitmapData(graphic:FlxGraphicSource):BitmapData
+	public static function assertBitmapData(graphic:FlxGraphicAsset):BitmapData
 	{
-		if ((graphic is BitmapData))
+		if (graphic == null)
+			throw 'Cannot resolve null graphic asset, expected String, FlxGraphic, Class<Bitmap> or BitmapData';
+		
+		final data = resolveBitmapData(graphic, null);
+		if (data != null)
+			return data;
+		
+		throw 'Invalid graphic asset, expected String, FlxGraphic, Class<Bitmap> or BitmapData';
+	}
+	
+	public static function resolveBitmapData(graphic:FlxGraphicAsset, ?log, ?pos):Null<BitmapData>
+	{
+		if ((graphic is FlxGraphic))
+		{
+			return cast(graphic, FlxGraphic).bitmap;
+		}
+		else if ((graphic is BitmapData))
 		{
 			return cast graphic;
 		}
@@ -318,10 +354,62 @@ class FlxAssets
 		{
 			return FlxG.assets.getBitmapData(cast graphic);
 		}
-
+		
+		if (log != null)
+			FlxG.log.advanced('Invalid graphic asset, expected String, FlxGraphic, Class<Bitmap> or BitmapData', log, pos);
+		
 		return null;
 	}
-
+	
+	public static function resolveSound(sound:FlxSoundAsset, allowCache = true, addExt = false, ?log, ?pos):Null<Sound>
+	{
+		if ((sound is Sound))
+		{
+			return cast sound;
+		}
+		else if ((sound is Class))
+		{
+			return Type.createInstance((cast sound:Class<Sound>), []);
+		}
+		else if ((sound is String))
+		{
+			final id:String = (addExt ? FlxG.assets.addSoundExt(cast sound) : cast sound);
+			return FlxG.assets.getSound(id, allowCache, FlxG.log.styles.error);
+			// NOTE: can't pull ID3 info from embedded sound currently
+		}
+		else if ((sound is ByteArrayData))
+		{
+			final bytes:ByteArray = cast sound;
+			final result = new Sound();
+			result.loadCompressedDataFromByteArray(bytes, bytes.length);
+			return result;
+		}
+		
+		if (log != null)
+		{
+			if (sound == null)
+				FlxG.log.advanced('Cannot resolve null sound asset, expected String, Sound, Class<Sound> or ByteArray', log, pos);
+			else
+				FlxG.log.advanced('Invalid sound asset, expected String, Sound, Class<Sound> or ByteArray, found: $sound', log, pos);
+		}
+		
+		return null;
+	}
+	
+	public static function assertSound(sound:FlxSoundAsset, allowCache = true, addExt = false):Sound
+	{
+		if (sound == null)
+		{
+			throw 'Cannot resolve null sound asset, expected String, Sound, Class<Sound> or ByteArray';
+		}
+		
+		final data = resolveSound(sound, allowCache, addExt);
+		if (data != null)
+			return data;
+		
+		throw 'Invalid sound asset, expected String, Sound, Class<Sound> or ByteArray, found: $sound';
+	}
+	
 	/**
 	 * Takes Dynamic object as a input and tries to find appropriate key String for its BitmapData:
 	 * 1) if the input is BitmapData, then it will return second (optional) argument (the Key);
@@ -333,12 +421,16 @@ class FlxAssets
 	 * @param   key      optional key string.
 	 * @return  Key String for specified Graphic object.
 	 */
-	public static function resolveKey(graphic:FlxGraphicSource, ?key:String):String
+	public static function resolveKey(graphic:FlxGraphicAsset, ?key:String):String
 	{
 		if (key != null)
 			return key;
 		
-		if ((graphic is BitmapData))
+		if ((graphic is FlxGraphic))
+		{
+			return cast(graphic, FlxGraphic).key;
+		}
+		else if ((graphic is BitmapData))
 		{
 			return key;
 		}
@@ -378,7 +470,8 @@ class FlxAssets
 	 */
 	public static function getSoundAddExtension(id:String, useCache = true):Sound
 	{
-		if (!id.endsWith(".mp3") && !id.endsWith(".ogg") && !id.endsWith(".wav"))
+		final needsExt = Path.extension(id).length == 0;
+		if (needsExt)
 			id += "." + defaultSoundExtension;
 
 		return FlxG.assets.getSoundUnsafe(id, useCache);
