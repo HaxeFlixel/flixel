@@ -220,6 +220,19 @@ class FlxTimer implements IFlxDestroyable
 		}
 	}
 
+    /***
+    * Ends a loop early and runs onComplete(), regardless of how much time is left. 
+    */
+    public function completeEarly():Void
+    {
+		if (active && !finished){
+            _timeCounter -= time;
+		    _loopsCounter++;
+
+		    onLoopFinished();        
+        }
+    }
+
 	@:allow(flixel.util.FlxTimerManager)
 	function onLoopFinished():Void
 	{
