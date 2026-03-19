@@ -11,13 +11,20 @@ import flixel.util.FlxDestroyUtil;
 
 /**
  * Applies 9-slicing to a FlxSprite, for an example of use this, look at `FlxSliceSprite`
- * @since 6.1.0
+ * @since 6.2.0
  */
 class FlxSpriteSlicer implements IFlxDestroyable
 {
 	final target:FlxSprite;
+	
 	var targetFrame(get, never):FlxFrame;
 	inline function get_targetFrame() @:privateAccess return target._frame;
+	
+	var targetFrameWidth(get, never):Int;
+	inline function get_targetFrameWidth() @:privateAccess return Std.int(target._frame.sourceSize.x);
+	
+	var targetFrameHeight(get, never):Int;
+	inline function get_targetFrameHeight() @:privateAccess return Std.int(target._frame.sourceSize.y);
 	
 	/**
 	 * The 9-slicing rect to apply to the target where the top, left, bottom and right
@@ -43,14 +50,15 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	var destRects:FlxSectionList<FlxRect>;
 	
 	/**
-	 * How large to draw the sliced sprite, relative to the frameWidth
+	 * How large to draw the sliced sprite
 	 */
 	public var displayWidth:Float = 0.0;
 	
 	/**
-	 * How large to draw the sliced sprite, relative to the frameHeight
+	 * How large to draw the sliced sprite
 	 */
 	public var displayHeight:Float = 0.0;
+	
 	var lastDisplayWidth:Float = 0.0;
 	var lastDisplayHeight:Float = 0.0;
 	
@@ -78,6 +86,18 @@ class FlxSpriteSlicer implements IFlxDestroyable
 		return (rect != null || targetFrame.slice != null) && (displayHeight > 0 && displayWidth > 0);
 	}
 	
+	public function setDisplaySize(width:Float, height:Float)
+	{
+		displayWidth = width;
+		displayHeight = height;
+	}
+	
+	public function setScaledDisplaySize(width:Float, height:Float)
+	{
+		displayWidth = width / target.scale.x;
+		displayHeight = height / target.scale.y;
+	}
+	
 	function getValidRect(rect:FlxRect)
 	{
 		return clipValidRect(FlxRect.getCopy(rect));
@@ -85,10 +105,10 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	
 	function clipValidRect(rect:FlxRect)
 	{
-		rect.left   = FlxMath.bound(rect.left  , 0, target.frameWidth );
-		rect.top    = FlxMath.bound(rect.top   , 0, target.frameHeight);
-		rect.right  = FlxMath.bound(rect.right , rect.left, target.frameWidth );
-		rect.bottom = FlxMath.bound(rect.bottom, rect.top , target.frameHeight);
+		rect.left   = FlxMath.bound(rect.left  , 0, targetFrameWidth );
+		rect.top    = FlxMath.bound(rect.top   , 0, targetFrameHeight);
+		rect.right  = FlxMath.bound(rect.right , rect.left, targetFrameWidth );
+		rect.bottom = FlxMath.bound(rect.bottom, rect.top , targetFrameHeight);
 		return rect;
 	}
 	
@@ -97,8 +117,8 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	 */
 	public function updateTargetHitbox()
 	{
-		final frameWidth = displayWidth > 0 ? displayWidth : target.frameWidth;
-		final frameHeight = displayHeight > 0 ? displayHeight : target.frameHeight;
+		final frameWidth = targetFrameWidth;
+		final frameHeight = targetFrameHeight;
 		target.width = Math.abs(target.scale.x) * frameWidth;
 		target.height = Math.abs(target.scale.y) * frameHeight;
 		target.offset.set(-0.5 * (target.width - frameWidth), -0.5 * (target.height - frameHeight));
@@ -121,12 +141,12 @@ class FlxSpriteSlicer implements IFlxDestroyable
 			rect.floor();
 		
 		updateCache();
-		final sliceOrigin = FlxPoint.get(transformSourceXUnsafe(target.origin.x), transformSourceYUnsafe(target.origin.y));
+		final sliceOrigin = FlxPoint.get(frameToDisplayXUnsafe(target.origin.x), frameToDisplayYUnsafe(target.origin.y));
 		final scaledOrigin = FlxPoint.get(sliceOrigin.x * target.scale.x, sliceOrigin.y * target.scale.y);
 		rect.x += sliceOrigin.x - target.offset.x - scaledOrigin.x;
 		rect.y += sliceOrigin.y - target.offset.y - scaledOrigin.y;
-		final frameWidth = displayWidth > 0 ? displayWidth : target.frameWidth;
-		final frameHeight = displayHeight > 0 ? displayHeight : target.frameHeight;
+		final frameWidth = displayWidth > 0 ? displayWidth : targetFrameWidth;
+		final frameHeight = displayHeight > 0 ? displayHeight : targetFrameHeight;
 		rect.setSize(frameWidth * target.scale.x, frameHeight * target.scale.y);
 		
 		if (target.angle % 360 != 0)
@@ -172,7 +192,7 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	function drawSectionComplex(frame:FlxFrame, camera:FlxCamera, rect:FlxRect):Void
 	{
 		final matrix = globalDrawMatrix;
-		final sliceOrigin = FlxPoint.get(transformSourceXUnsafe(target.origin.x), transformSourceYUnsafe(target.origin.y));
+		final sliceOrigin = FlxPoint.get(frameToDisplayXUnsafe(target.origin.x), frameToDisplayYUnsafe(target.origin.y));
 		frame.prepareMatrix(matrix, FlxFrameAngle.ANGLE_0, target.checkFlipX(), target.checkFlipY());
 		if (target.clipRect != null)
 			matrix.translate(-Math.max(0, target.clipRect.x), -Math.max(0, target.clipRect.y));
@@ -238,7 +258,7 @@ class FlxSpriteSlicer implements IFlxDestroyable
 		currentRect.copyFrom(rect);
 		frameDirty = false;
 		
-		final srcBounds = FlxRect.get(0, 0, target.frameWidth, target.frameHeight);
+		final srcBounds = FlxRect.get(0, 0, targetFrameWidth, targetFrameHeight);
 		final srcSlice = getValidRect(rect);
 		if (target.clipRect != null)
 		{
@@ -290,7 +310,7 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	
 	function updateDestRects()
 	{
-		final srcBounds = FlxRect.get(0, 0, target.frameWidth, target.frameHeight);
+		final srcBounds = FlxRect.get(0, 0, targetFrameWidth, targetFrameHeight);
 		final srcSlice = getValidRect(currentRect);
 		
 		if (target.clipRect != null)
@@ -301,16 +321,16 @@ class FlxSpriteSlicer implements IFlxDestroyable
 		}
 		
 		final x =
-			[ transformSourceXUnsafe(srcBounds.x)
-			, transformSourceXUnsafe(srcSlice.x)
-			, transformSourceXUnsafe(srcSlice.right)
-			, transformSourceXUnsafe(srcBounds.right)
+			[ frameToDisplayXUnsafe(srcBounds.x)
+			, frameToDisplayXUnsafe(srcSlice.x)
+			, frameToDisplayXUnsafe(srcSlice.right)
+			, frameToDisplayXUnsafe(srcBounds.right)
 			];
 		final y =
-			[ transformSourceYUnsafe(srcBounds.y)
-			, transformSourceYUnsafe(srcSlice.y)
-			, transformSourceYUnsafe(srcSlice.bottom)
-			, transformSourceYUnsafe(srcBounds.bottom)
+			[ frameToDisplayYUnsafe(srcBounds.y)
+			, frameToDisplayYUnsafe(srcSlice.y)
+			, frameToDisplayYUnsafe(srcSlice.bottom)
+			, frameToDisplayYUnsafe(srcBounds.bottom)
 			];
 		
 		srcBounds.put();
@@ -331,47 +351,115 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	}
 	
 	/**
-	 * Transforms the given position from the source frame to where it will be
+	 * Transforms the given position from the original frame to where it will be
 	 * drawn, relative to the target's position
-	 * @param   x  A position on the source frame
+	 * @param   x  A position on the original frame
 	 */
-	public function transformSourceX(x:Float)
+	public function frameToDisplayX(x:Float)
 	{
-		return hasValidSlicing() ? transformSourceXUnsafe(x) : x;
+		return hasValidSlicing() ? frameToDisplayXUnsafe(x) : x;
 	}
 	
 	/**
-	 * Transforms the given position from the source frame to where it will be
+	 * Transforms the given position from the original frame to where it will be
 	 * drawn, relative to the target's position
-	 * @param   y  A position on the source frame
+	 * @param   y  A position on the original frame
 	 */
-	public function transformSourceY(y:Float)
+	public function frameToDisplayY(y:Float)
 	{
-		return hasValidSlicing() ? transformSourceYUnsafe(y) : y;
+		return hasValidSlicing() ? frameToDisplayYUnsafe(y) : y;
 	}
 	
-	function transformSourceXUnsafe(x:Float)
+	function frameToDisplayXUnsafe(x:Float)
 	{
 		if (x < currentRect.x)
 			return x;
 		
 		if (x > currentRect.right)
-			return displayWidth - target.frameWidth + x;
+			return displayWidth - targetFrameWidth + x;
 		
-		final middleScaleX = (displayWidth - target.frameWidth + currentRect.width) / currentRect.width;
+		final middleScaleX = (displayWidth - targetFrameWidth + currentRect.width) / currentRect.width;
 		return currentRect.x + (x - currentRect.x) * middleScaleX;
 	}
 	
-	function transformSourceYUnsafe(y:Float)
+	function frameToDisplayYUnsafe(y:Float)
 	{
 		if (y < currentRect.y)
 			return y;
 		
 		if (y > currentRect.bottom)
-			return displayHeight - target.frameHeight + y;
+			return displayHeight - targetFrameHeight + y;
 		
-		final middleScaleY = (displayHeight - target.frameHeight + currentRect.height) / currentRect.height;
+		final middleScaleY = (displayHeight - targetFrameHeight + currentRect.height) / currentRect.height;
 		return currentRect.y + (y - currentRect.y) * middleScaleY;
+	}
+	
+	overload public inline extern function displayToFrame(display:FlxPoint, ?result:FlxPoint):FlxPoint
+	{
+		return displayToFrameHelper(display.x, display.y, result);
+	}
+	
+	overload public inline extern function displayToFrame(displayX:Float, displayY:Float, ?result:FlxPoint):FlxPoint
+	{
+		return displayToFrameHelper(displayX, displayY, result);
+	}
+	
+	function displayToFrameHelper(displayX:Float, displayY:Float, ?result:FlxPoint):FlxPoint
+	{
+		if (hasValidSlicing())
+		{
+			result.x = displayToFrameXUnsafe(displayX);
+			result.y = displayToFrameYUnsafe(displayY);
+		}
+		else
+		{
+			result.x = displayX;
+			result.y = displayY;
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Transforms the given position from the stretched display to the original frame
+	 * @param   x  A position on the stretched display
+	 */
+	public function displayToFrameX(x:Float)
+	{
+		return hasValidSlicing() ? displayToFrameXUnsafe(x) : x;
+	}
+	
+	/**
+	 * Transforms the given position from the stretched display to the original frame
+	 * @param   y  A position on the stretched display
+	 */
+	public function displayToFrameY(y:Float)
+	{
+		return hasValidSlicing() ? displayToFrameYUnsafe(y) : y;
+	}
+	
+	function displayToFrameXUnsafe(x:Float)
+	{
+		if (x < rect.x)
+			return x;
+		
+		if (x > displayWidth - (targetFrameWidth - rect.right))
+			return x - displayWidth + targetFrameWidth;
+		
+		final middleScaleX = (displayWidth - targetFrameWidth + rect.width) / rect.width;
+		return (x - rect.x) / middleScaleX + rect.x;
+	}
+	
+	function displayToFrameYUnsafe(y:Float)
+	{
+		if (y < rect.y)
+			return y;
+		
+		if (y > displayHeight - (targetFrameHeight - rect.bottom))
+			return y - displayHeight + targetFrameHeight;
+		
+		final middleScaleY = (displayHeight - targetFrameHeight + rect.height) / rect.height;
+		return (y - rect.y) / middleScaleY + rect.y;
 	}
 	
 	/**

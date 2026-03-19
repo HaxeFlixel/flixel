@@ -14,7 +14,7 @@ import flixel.util.FlxDestroyUtil;
  * **Note:** All of the slicing functionality is done via `FlxSpriteSlicer`, making it easy to
  * add to any other class that extends FlxSprite
  * 
- * @since 6.1.0
+ * @since 6.2.0
  */
 class FlxSliceSprite extends flixel.FlxSprite
 {
@@ -31,7 +31,11 @@ class FlxSliceSprite extends flixel.FlxSprite
 	 */
 	public var displayWidth(get, set):Float;
 	inline function get_displayWidth() { return slicer.displayWidth; }
-	inline function set_displayWidth(value) { return slicer.displayWidth = value; }
+	inline function set_displayWidth(value)
+	{
+		frameWidth = Std.int(value);
+		return slicer.displayWidth = value;
+	}
 	
 	/**
 	 * How large to draw the sliced sprite, relative to the `frameHeight`
@@ -39,7 +43,11 @@ class FlxSliceSprite extends flixel.FlxSprite
 	 */
 	public var displayHeight(get, set):Float;
 	inline function get_displayHeight() { return slicer.displayHeight; }
-	inline function set_displayHeight(value) { return slicer.displayHeight = value; }
+	inline function set_displayHeight(value)
+	{
+		frameHeight = Std.int(value);
+		return slicer.displayHeight = value;
+	}
 	
 	/**
 	 * The sprite's 9-slicing data
@@ -77,4 +85,39 @@ class FlxSliceSprite extends flixel.FlxSprite
 		else
 			super.drawComplex(camera);
 	}
+	
+	override function viewToFrameHelper(viewX:Float, viewY:Float, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	{
+		result = super.viewToFrameHelper(viewX, viewY, camera, result);
+		
+		if (slicer.hasValidSlicing())
+			slicer.displayToFrame(result, result);
+		
+		return result;
+	}
+	
+	override function worldToFrameSimpleHelper(worldX:Float, worldY:Float, ?result:FlxPoint):FlxPoint
+	{
+		result = super.worldToFrameSimpleHelper(worldX, worldY, result);
+		
+		if (slicer.hasValidSlicing())
+			slicer.displayToFrame(result, result);
+		
+		return result;
+	}
+	
+	// override function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
+	// {
+	// 	newRect = super.getScreenBounds(newRect, camera);
+		
+	// 	// if (slicer.hasValidSlicing())
+	// 	// {
+	// 	// 	newRect.x = slicer.displayToFrameX(newRect.x);
+	// 	// 	newRect.y = slicer.displayToFrameX(newRect.y);
+	// 	// 	newRect.width = slicer.displayToFrameX(newRect.width);
+	// 	// 	newRect.height = slicer.displayToFrameX(newRect.height);
+	// 	// }
+		
+	// 	return newRect;
+	// }
 }
