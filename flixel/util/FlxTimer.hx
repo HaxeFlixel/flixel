@@ -226,7 +226,7 @@ class FlxTimer implements IFlxDestroyable
     public function complete():Void
     {
 		if (active && !finished){
-            _timeCounter -= time;
+            _timeCounter = 0;
 		    _loopsCounter++;
 
 		    onLoopFinished();        
