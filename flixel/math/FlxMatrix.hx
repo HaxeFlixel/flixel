@@ -1,5 +1,6 @@
 package flixel.math;
 
+import flixel.util.FlxPool;
 import flixel.util.FlxStringUtil;
 import openfl.geom.Matrix;
 
@@ -8,8 +9,65 @@ import openfl.geom.Matrix;
  * It mostly copies Matrix class, but with some additions for
  * faster rotation by 90 degrees.
  */
-class FlxMatrix extends Matrix
+class FlxMatrix extends Matrix implements IFlxPooled
 {
+	static var pool:FlxPool<FlxMatrix> = new FlxPool(FlxMatrix.new.bind(1, 0, 0, 1, 0, 0));
+	
+	var _weak:Bool = false;
+	var _inPool:Bool = false;
+	
+	/**
+	 * Recycle or create new FlxMatrix.
+	 * Be sure to put() them back into the pool after you're done with them!
+	 */
+	public static inline function get(a:Float = 1, b:Float = 0, c:Float = 0, d:Float = 1, tx:Float = 0, ty:Float = 0):FlxMatrix
+	{
+		var matrix = pool.get();
+		matrix.setTo(a, b, c, d, tx, ty);
+		matrix._inPool = false;
+		return matrix;
+	}
+	
+	/**
+	 * Recycle or create a new FlxMatrix which will automatically be released
+	 * to the pool when passed into a flixel function.
+	 */
+	public static inline function weak(a:Float = 1, b:Float = 0, c:Float = 0, d:Float = 1, tx:Float = 0, ty:Float = 0):FlxMatrix
+	{
+		var matrix = get(a, b, c, d, tx, ty);
+		matrix._weak = true;
+		return matrix;
+	}
+	
+	/**
+	 * Add this FlxMatrix to the recycling pool.
+	 */
+	public inline function put():Void
+	{
+		if (!_inPool)
+		{
+			_inPool = true;
+			_weak = false;
+			pool.putUnsafe(this);
+		}
+	}
+	
+	/**
+	 * Add this FlxMatrix to the recycling pool if it's a weak reference (allocated via weak()).
+	 */
+	public inline function putWeak():Void
+	{
+		if (_weak)
+		{
+			put();
+		}
+	}
+	
+	/**
+	 * Necessary for IFlxDestroyable.
+	 */
+	public function destroy() {}
+	
 	/**
 	 * Whether this matrix is `[1, 0, 0, 1, 0, 0]` which would have no effect
 	 * 
