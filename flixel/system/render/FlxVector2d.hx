@@ -23,12 +23,12 @@ abstract FlxVector2d<T>(Vector<T>) from Vector<T>
 	
 	public inline function set(index:Int, x:T, y:T)
 	{
-		this[index << 1 + 0] = x;
-		this[index << 1 + 1] = y;
+		this[index << 1] = x;
+		this[(index << 1) + 1] = y;
 	}
 	
-	public inline function getX(index:Int) return this[index << 1 + 0];
-	public inline function getY(index:Int) return this[index << 1 + 1];
+	public inline function getX(index:Int) return this[index << 1];
+	public inline function getY(index:Int) return this[(index << 1) + 1];
 	
 	public inline function push(x:T, y:T)
 	{
