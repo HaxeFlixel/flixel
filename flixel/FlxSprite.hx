@@ -404,8 +404,8 @@ class FlxSprite extends FlxObject
 		origin = FlxPoint.get();
 		scale = FlxPoint.get(1, 1);
 		_halfSize = FlxPoint.get();
-		_matrix = new FlxMatrix();
-		_scaledOrigin = new FlxPoint();
+		_matrix = FlxMatrix.get();
+		_scaledOrigin = FlxPoint.get();
 	}
 
 	/**
@@ -428,6 +428,7 @@ class FlxSprite extends FlxObject
 		origin = FlxDestroyUtil.put(origin);
 		scale = FlxDestroyUtil.put(scale);
 		_halfSize = FlxDestroyUtil.put(_halfSize);
+		_matrix = FlxDestroyUtil.put(_matrix);
 		_scaledOrigin = FlxDestroyUtil.put(_scaledOrigin);
 		_lastClipRect = FlxDestroyUtil.put(_lastClipRect);
 
@@ -437,7 +438,6 @@ class FlxSprite extends FlxObject
 		_flashRect = null;
 		_flashRect2 = null;
 		_flashPointZero = null;
-		_matrix = null;
 		blend = null;
 
 		frames = null;
@@ -1018,11 +1018,10 @@ class FlxSprite extends FlxObject
 		drawFrameComplex(_frame, camera);
 	}
 	
-	@:noCompletion
-	static final drawComplexMatrix = new FlxMatrix();
+
 	function drawFrameComplex(frame:FlxFrame, camera:FlxCamera):Void
 	{
-		final matrix = drawComplexMatrix; // TODO: Just use local?
+		final matrix = this._matrix;
 		prepareComplexMatrix(matrix, frame, camera);
 		
 		camera.drawPixels(frame, framePixels, matrix, colorTransform, blend, antialiasing, shader);
