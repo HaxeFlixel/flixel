@@ -26,4 +26,15 @@ class FlxQuadRenderer extends FlxTypedRenderer<FlxQuadView>
 	{
 		return new FlxQuadView(camera);
 	}
+
+	public inline function startFrame():Void
+	{
+		FlxG.renderer.totalDrawCalls = 0;
+		FlxG.cameras.clear();
+	}
+
+	public inline function endFrame():Void
+	{
+		FlxG.cameras.render();
+	}
 }

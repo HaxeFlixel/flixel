@@ -46,7 +46,18 @@ class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 		
 		FlxObject.defaultPixelPerfectPosition = true;
 	}
-	
+
+	public inline function startFrame():Void
+	{
+		FlxG.renderer.totalDrawCalls = 0;
+		FlxG.cameras.clear();
+	}
+
+	public inline function endFrame():Void
+	{
+		FlxG.cameras.render();
+	}
+
 	public function createCameraView(camera:FlxCamera)
 	{
 		return new FlxBlitView(camera);

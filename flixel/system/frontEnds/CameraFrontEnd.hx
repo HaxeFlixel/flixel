@@ -266,7 +266,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to clear all the camera buffers for the next draw pass.
 	 */
-	@:allow(flixel.FlxGame)
+	@:allow(flixel.system.render)
 	inline function clear():Void
 	{
 		for (camera in list)
@@ -279,7 +279,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to draw everything onto the screen.
 	 */
-	@:allow(flixel.FlxGame)
+	@:allow(flixel.system.render)
 	inline function render():Void
 	{
 		for (camera in list)

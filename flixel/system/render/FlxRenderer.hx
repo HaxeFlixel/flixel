@@ -107,6 +107,18 @@ abstract class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	public function initGlobals() {}
 	
 	public function destroy():Void {}
+
+	/**
+	 * Called at the start of a rendering frame. Does whatever needs to be done 
+	 * by the renderer backend (e.g. clears stats, clears the screen ...)
+	 */
+	abstract public function startFrame():Void;
+
+	/**
+	 * Called at the end of a rendering frame. Does whatever needs to be done
+	 * by the renderer backend (e.g. finally draws everything to the screen)
+	 */
+	abstract public function endFrame():Void;
 	
 	abstract function createCameraView(camera:FlxCamera):TView;
 }

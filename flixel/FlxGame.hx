@@ -803,9 +803,7 @@ class FlxGame extends Sprite
 
 		FlxG.signals.preDraw.dispatch();
 
-		FlxG.renderer.totalDrawCalls = 0;
-
-		FlxG.cameras.clear();
+		FlxG.renderer.startFrame();
 
 		if (FlxG.plugins.drawOnTop)
 		{
@@ -818,7 +816,7 @@ class FlxGame extends Sprite
 			_state.draw();
 		}
 
-		FlxG.cameras.render();
+		FlxG.renderer.endFrame();
 
 		if (FlxG.renderer.tile)
 		{
