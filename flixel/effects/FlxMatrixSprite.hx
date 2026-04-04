@@ -1,5 +1,6 @@
 package flixel.effects;
 
+import flixel.util.FlxDestroyUtil;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
@@ -17,14 +18,20 @@ class FlxMatrixSprite extends FlxSprite
 	 */
 	public final renderMatrix:FlxMatrix;
 	
-	public function new (x = 0.0, y = 0.0, ?simpleGraphic)
+	public function new(x:Float = 0.0, y:Float = 0.0, ?simpleGraphic:FlxGraphicAsset)
 	{
-		renderMatrix = new FlxMatrix();
+		renderMatrix = FlxMatrix.get();
 		
 		super(x, y, simpleGraphic);
 		
 		if (FlxG.renderBlit)
 			FlxG.log.warn("FlxMatrixSprites do not work on blit targets");
+	}
+	override function destroy():Void
+	{
+		renderMatrix = FlxDestroyUtil.put(renderMatrix);
+		
+		super.destroy();
 	}
 	
 	override function isSimpleRenderBlit(?cam)
