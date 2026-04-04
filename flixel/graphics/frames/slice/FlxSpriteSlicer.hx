@@ -42,12 +42,17 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	/**
 	 * Internal frames used to draw each of the 9 sections
 	 */
-	var subframes:FlxSectionList<FlxFrame>;
+	var subframes:FlxSliceSectionList<FlxFrame>;
 	
 	/**
 	 * Internal rects that define where each section will be drawn
 	 */
-	var destRects:FlxSectionList<FlxRect>;
+	var destRects:FlxSliceSectionList<FlxRect>;
+	
+	/**
+	 * Whether to stretch or tile each section, only affects edges and the center
+	 */
+	final drawModes = new FlxSliceSectionList<FlxSliceDisplayMode>(()->STRETCH);
 	
 	/**
 	 * How large to draw the sliced sprite
@@ -83,7 +88,11 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	 */
 	public function hasValidSlicing()
 	{
-		return (rect != null || targetFrame.slice != null) && (displayHeight > 0 && displayWidth > 0);
+		// The frame before the clipRect was applied, compared to targetFrame which is clipped
+		final rect = target.frame.frame;
+		return (rect != null || targetFrame.slice != null)
+			&& displayWidth > 0 && displayHeight > 0
+			&& (displayWidth != rect.width || displayHeight != rect.height);
 	}
 	
 	public function setDisplaySize(width:Float, height:Float)
@@ -117,11 +126,9 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	 */
 	public function updateTargetHitbox()
 	{
-		final frameWidth = targetFrameWidth;
-		final frameHeight = targetFrameHeight;
-		target.width = Math.abs(target.scale.x) * frameWidth;
-		target.height = Math.abs(target.scale.y) * frameHeight;
-		target.offset.set(-0.5 * (target.width - frameWidth), -0.5 * (target.height - frameHeight));
+		target.width = Math.abs(target.scale.x) * displayWidth;
+		target.height = Math.abs(target.scale.y) * displayHeight;
+		target.offset.set(-0.5 * (target.width - displayWidth), -0.5 * (target.height - displayHeight));
 		target.centerOrigin();
 	}
 	
@@ -165,10 +172,9 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	{
 		updateCache();
 		
-		for (section=>frame in subframes)
+		for (section in FlxSliceSection)
 		{
-			if (frame.frame.width > 0 && frame.frame.height > 0)
-				drawSectionComplex(frame, camera, destRects[section]);
+			drawSectionComplex(section, camera);
 		}
 	}
 	
@@ -189,15 +195,29 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	
 	static final globalDrawMatrix = new FlxMatrix();
 	@:access(flixel.FlxSprite)
-	function drawSectionComplex(frame:FlxFrame, camera:FlxCamera, rect:FlxRect):Void
+	function drawSectionComplex(section:FlxSliceSection, camera:FlxCamera):Void
 	{
+		final frame = subframes[section];
+		if (frame.frame.width <= 0 || frame.frame.height <= 0)
+			return;
+		
+		final rect = destRects[section];
+		final mode = drawModes[section];
+		
 		final matrix = globalDrawMatrix;
-		final sliceOrigin = FlxPoint.get(frameToDisplayXUnsafe(target.origin.x), frameToDisplayYUnsafe(target.origin.y));
 		frame.prepareMatrix(matrix, FlxFrameAngle.ANGLE_0, target.checkFlipX(), target.checkFlipY());
 		if (target.clipRect != null)
 			matrix.translate(-Math.max(0, target.clipRect.x), -Math.max(0, target.clipRect.y));
-		matrix.scale(rect.width / frame.frame.width, rect.height / frame.frame.height);
-		matrix.translate(-sliceOrigin.x, -sliceOrigin.y);
+		
+		switch mode
+		{
+			case STRETCH:
+				matrix.scale(rect.width / frame.frame.width, rect.height / frame.frame.height);
+			case REPEAT:
+				throw "REPEAT is not implemented, yet";
+				// TODO: draw one quad with repeat enabled?
+		}
+		matrix.translate(-target.origin.x, -target.origin.y);
 		matrix.translate(rect.x, rect.y);
 		matrix.scale(target.scale.x, target.scale.y);
 		
@@ -210,9 +230,8 @@ class FlxSpriteSlicer implements IFlxDestroyable
 		}
 		
 		final point = target.getScreenPosition(camera).subtract(target.offset);
-		point.add(sliceOrigin.x, sliceOrigin.y);
+		point.add(target.origin.x, target.origin.y);
 		matrix.translate(point.x, point.y);
-		sliceOrigin.put();
 		point.put();
 		
 		if (target.isPixelPerfectRender(camera))
@@ -513,4 +532,17 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	{
 		return !rectsMatch(a, b);
 	}
+}
+
+enum abstract FlxSliceDisplayMode(Int)
+{
+	/**
+	 * The pattern will repeat to fit the destinatio
+	 */
+	var REPEAT;
+	
+	/**
+	 * The pattern will stretch to fit the destinatio
+	 */
+	var STRETCH;
 }

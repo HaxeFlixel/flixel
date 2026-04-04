@@ -106,18 +106,8 @@ class FlxSliceSprite extends flixel.FlxSprite
 		return result;
 	}
 	
-	// override function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
-	// {
-	// 	newRect = super.getScreenBounds(newRect, camera);
-		
-	// 	// if (slicer.hasValidSlicing())
-	// 	// {
-	// 	// 	newRect.x = slicer.displayToFrameX(newRect.x);
-	// 	// 	newRect.y = slicer.displayToFrameX(newRect.y);
-	// 	// 	newRect.width = slicer.displayToFrameX(newRect.width);
-	// 	// 	newRect.height = slicer.displayToFrameX(newRect.height);
-	// 	// }
-		
-	// 	return newRect;
-	// }
+	override function prepareComplexMatrix(matrix, frame, camera)
+	{
+		super.prepareComplexMatrix(matrix, frame, camera);
+	}
 }

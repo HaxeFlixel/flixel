@@ -20,7 +20,7 @@ class FlxFrameSlices implements IFlxDestroyable
 	function get_rect() return sections != null ? sections[CC] : null;
 	
 	final parent:FlxFrame;
-	var sections:Null<FlxSectionList<FlxRect>> = null;
+	var sections:Null<FlxSliceSectionList<FlxRect>> = null;
 	
 	public function new (parent:FlxFrame)
 	{
@@ -96,7 +96,7 @@ class FlxFrameSlices implements IFlxDestroyable
 	
 	static function createSourceRects(rect:FlxRect, parentRect:FlxRect)
 	{
-		final sections = [for (i in FlxSliceSection) null];
+		final sections:FlxSliceSectionList<FlxRect> = [for (i in FlxSliceSection) null];
 		
 		final x = [0, rect.x, rect.right, parentRect.width];
 		final y = [0, rect.y, rect.bottom, parentRect.height];

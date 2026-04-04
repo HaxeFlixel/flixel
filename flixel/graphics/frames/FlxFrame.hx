@@ -195,7 +195,7 @@ class FlxFrame implements IFlxDestroyable
 	 * Fills the target frame sections with this frame's slice data, for rendering
 	 * @param list 
 	 */
-	public function initSliceSections(frames:FlxSectionList<FlxFrame>)
+	public function initSliceSections(frames:FlxSliceSectionList<FlxFrame>)
 	{
 		if (slice != null)
 		{

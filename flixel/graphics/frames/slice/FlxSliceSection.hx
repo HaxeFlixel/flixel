@@ -1,67 +1,72 @@
 package flixel.graphics.frames.slice;
 
-enum abstract FlxSliceSection(Int) from Int to Int
+import flixel.util.FlxBits;
+
+@:build(flixel.system.macros.FlxBitFlagMacro.buildBits())
+enum abstract FlxSliceSection(Int)
 {
-	static inline var COLUMNS = 3;
-	static inline var ROWS = 3;
-	
 	var TL; var TC; var TR;
 	var CL; var CC; var CR;
 	var BL; var BC; var BR;
 	
-	public var column(get, never):Int;
-	inline function get_column() return this % ROWS;
+	static final LOG2 = Math.log(2);
+	static inline var COLUMNS = 3;
+	static inline var ROWS = 3;
+	
+	var index(get, never):Int;
+	inline function get_index() return Std.int(Math.log(this) / LOG2);
+	
 	public var row(get, never):Int;
-	inline function get_row() return Std.int(this / ROWS);
+	inline function get_row() return Std.int(index / 3);
 	
-	static public function createAll():Array<FlxSliceSection>
-	{
-		return [for (i in iterator()) i];
-	}
+	public var column(get, never):Int;
+	inline function get_column() return index % 3;
 	
-	static public inline function iterator()
-	{
-		return new SectionIterator();
-	}
-	
-	/**
-	 * [Description]
-	 * @param column 
-	 * @param row 
-	 * @return FlxSliceSection
-	 */
-	static public inline function fromXY(column:Int, row:Int):FlxSliceSection
-	{
-		return column + row * ROWS;
-	}
 }
 
-class SectionIterator
+@:forward
+@:forward.new
+@:forward.static
+abstract FlxSliceSectionFlags(FlxBits<FlxSliceSection>) from FlxBits<FlxSliceSection> to FlxBits<FlxSliceSection>
 {
-	static inline var LENGTH = 9;
-	var iter:IntIterator;
+	public function toString()
+	{
+		final bits = [];
+		for (bit in FlxSliceSection.iterator())
+		{
+			if (this.has(bit))
+				bits.push(bit.toString());
+		}
+		
+		return bits.join(" | ");
+	}
 	
-	public inline function new() { this.iter = 0...LENGTH; }
+	@:op(A | B) static function or<T>(a:FlxSliceSectionFlags, b:FlxSliceSectionFlags):FlxSliceSectionFlags;
 	
-	public inline function hasNext() { return iter.hasNext(); }
-	
-	public inline function next():FlxSliceSection { return iter.next(); }
+	@:commutative
+	@:op(A | B) static function orBits<T>(a:FlxSliceSectionFlags, b:FlxSliceSection):FlxSliceSectionFlags;
 }
 
+@:access(flixel.graphics.frames.slice.FlxSliceSection)
 @:forward(length)
 @:forward.variance
-abstract FlxSectionList<T>(Array<T>) from Array<T>
+abstract FlxSliceSectionList<T>(Array<T>) from Array<T>
 {
+	public function new(defaultValue:()->T)
+	{
+		this = [for (i in FlxSliceSection) defaultValue()];
+	}
+	
 	@:arrayAccess
 	public inline function get(section:FlxSliceSection)
 	{
-		return this[section];
+		return this[intFromBit(section)];
 	}
 	
 	@:arrayAccess
 	public inline function set(section:FlxSliceSection, value:T)
 	{
-		return this[section] = value;
+		return this[intFromBit(section)] = value;
 	}
 	
 	public inline function iterator()
@@ -71,19 +76,24 @@ abstract FlxSectionList<T>(Array<T>) from Array<T>
 	
 	public inline function keys()
 	{
-		return new SectionIterator();
+		return FlxSliceSection.iterator();
 	}
 	
 	public inline function keyValueIterator()
 	{
 		return new SectionListKeyValueIterator(this);
 	}
+	
+	static inline function intFromBit(bit:FlxSliceSection)
+	{
+		return bit.index;
+	}
 }
 
 class SectionListKeyValueIterator<T>
 {
-	final list:FlxSectionList<T>;
-	var current:Int = 0;
+	final list:FlxSliceSectionList<T>;
+	var iter = FlxSliceSection.iterator();
 
 	public inline function new(list)
 	{
@@ -92,12 +102,12 @@ class SectionListKeyValueIterator<T>
 
 	public inline function hasNext():Bool
 	{
-		return current < list.length;
+		return iter.hasNext();
 	}
 
 	public inline function next()
 	{
-		final key:FlxSliceSection = current++;
+		final key:FlxSliceSection = iter.next();
 		final value = list[key];
 		return { value: value, key: key };
 	}
