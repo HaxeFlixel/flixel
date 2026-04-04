@@ -77,8 +77,8 @@ abstract class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	/**
 	 * Returns whether OpenGL access is available for the current renderer.
 	 */
-	public var isGL(get, never):Bool;
-	@:noCompletion inline function get_isGL():Bool
+	public var hasGL(get, never):Bool;
+	@:noCompletion inline function get_hasGL():Bool
 	{
 		#if FLX_OPENGL_AVAILABLE
 		return FlxG.stage.window.context.type == OPENGL

@@ -330,7 +330,7 @@ class FlxCamera extends FlxBasic
 	 * Default behavior is chunky-style.
 	 */
 	@:noCompletion
-	@:deprecated("camera.antialiasing is deprecated, use camera.view.anstialiasing instead")
+	@:deprecated("camera.antialiasing is deprecated, use camera.view.antialiasing instead")
 	public var antialiasing(default, set):Bool = false;
 
 	/**

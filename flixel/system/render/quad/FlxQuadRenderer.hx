@@ -16,8 +16,8 @@ class FlxQuadRenderer extends FlxTypedRenderer<FlxQuadView>
 		super();
 		method = DRAW_TILES;
 		
-		#if FLX_OPENGL_AVAILBLE
-		if (isGL)
+		#if FLX_OPENGL_AVAILABLE
+		if (hasGL)
 			maxTextureSize = cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
 		#end
 	}
