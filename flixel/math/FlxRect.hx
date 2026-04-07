@@ -15,15 +15,21 @@ class FlxRect implements IFlxPooled
 	// With the version below, this caused weird CI issues when FLX_NO_POINT_POOL is defined
 	// static var _pool = new FlxPool<FlxRect>(FlxRect);
 	
+	static inline function getPooled(weak = false):FlxRect
+	{
+		final rect = _pool.get();
+		rect._inPool = false;
+		rect._weak = weak;
+		return rect;
+	}
+	
 	/**
 	 * Recycle or create new FlxRect.
 	 * Be sure to put() them back into the pool after you're done with them!
 	 */
 	public static inline function get(x = 0.0, y = 0.0, width = 0.0, height = 0.0):FlxRect
 	{
-		var rect = _pool.get().set(x, y, width, height);
-		rect._inPool = false;
-		return rect;
+		return getPooled().set(x, y, width, height);
 	}
 	
 	/**
@@ -32,20 +38,16 @@ class FlxRect implements IFlxPooled
 	 */
 	public static inline function getCopy(rect:FlxRect):FlxRect
 	{
-		var rect = _pool.get().copyFrom(rect);
-		rect._inPool = false;
-		return rect;
+		return rect.copyTo(getPooled());
 	}
 
 	/**
 	 * Recycle or create a new FlxRect which will automatically be released
 	 * to the pool when passed into a flixel function.
 	 */
-	public static inline function weak(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
+	public static inline function weak(x = 0.0, y = 0.0, width = 0.0, height = 0.0):FlxRect
 	{
-		var rect = get(X, Y, Width, Height);
-		rect._weak = true;
-		return rect;
+		return getPooled(true).set(x, y, width, height);
 	}
 
 	public var x:Float;
@@ -95,7 +97,6 @@ class FlxRect implements IFlxPooled
 		if (!_inPool)
 		{
 			_inPool = true;
-			_weak = false;
 			_pool.putUnsafe(this);
 		}
 	}
@@ -231,46 +232,56 @@ class FlxRect implements IFlxPooled
 	{
 		return setAbs(x1, y1, x2 - x1, y2 - y1);
 	}
-
+	
 	/**
 	 * Helper function, just copies the values from the specified rectangle.
 	 *
-	 * @param	Rect	Any FlxRect.
-	 * @return	A reference to itself.
+	 * @param   rect  Any FlxRect.
+	 * @return  A reference to itself.
 	 */
-	public inline function copyFrom(Rect:FlxRect):FlxRect
+	public inline function copyFrom(rect:FlxRect):FlxRect
 	{
-		x = Rect.x;
-		y = Rect.y;
-		width = Rect.width;
-		height = Rect.height;
-
-		Rect.putWeak();
+		x = rect.x;
+		y = rect.y;
+		width = rect.width;
+		height = rect.height;
+		
+		rect.putWeak();
 		return this;
 	}
-
+	
 	/**
 	 * Helper function, just copies the values from this rectangle to the specified rectangle.
 	 *
-	 * @param	Point	Any FlxRect.
-	 * @return	A reference to the altered rectangle parameter.
+	 * @param   point  Any FlxRect.
+	 * @return  A reference to the altered rectangle parameter.
 	 */
-	public inline function copyTo(Rect:FlxRect):FlxRect
+	public inline function copyTo(rect:FlxRect):FlxRect
 	{
-		Rect.x = x;
-		Rect.y = y;
-		Rect.width = width;
-		Rect.height = height;
-
-		Rect.putWeak();
-		return Rect;
+		rect.x = x;
+		rect.y = y;
+		rect.width = width;
+		rect.height = height;
+		
+		putWeak();
+		return rect;
 	}
 
 	/**
+	 * Copies this rect's data into a new instance (from the pool)
+	 *
+	 * @return  A new rectangle
+	 */
+	public inline function clone():FlxRect
+	{
+		return getCopy(this);
+	}
+	
+	/**
 	 * Helper function, just copies the values from the specified Flash rectangle.
 	 *
-	 * @param	FlashRect	Any Rectangle.
-	 * @return	A reference to itself.
+	 * @param   flashRect	Any Rectangle.
+	 * @return  A reference to itself.
 	 */
 	public inline function copyFromFlash(FlashRect:Rectangle):FlxRect
 	{
