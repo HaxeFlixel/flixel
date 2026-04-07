@@ -36,7 +36,7 @@ class FlxFrameSlices implements IFlxDestroyable
 	{
 		clear();
 		if (slice.sections != null)
-			sections = [for (rect in slice.sections) FlxRect.getCopy(rect)];
+			sections = [for (rect in slice.sections) rect.clone()];
 	}
 	
 	/**

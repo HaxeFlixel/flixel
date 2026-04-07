@@ -31,15 +31,6 @@ class FlxRect implements IFlxPooled
 	{
 		return getPooled().set(x, y, width, height);
 	}
-	
-	/**
-	 * Recycle or create new FlxRect that matches the given rect.
-	 * Be sure to put() them back into the pool after you're done with them!
-	 */
-	public static inline function getCopy(rect:FlxRect):FlxRect
-	{
-		return rect.copyTo(getPooled());
-	}
 
 	/**
 	 * Recycle or create a new FlxRect which will automatically be released
@@ -274,7 +265,7 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function clone():FlxRect
 	{
-		return getCopy(this);
+		return copyTo(getPooled());
 	}
 	
 	/**

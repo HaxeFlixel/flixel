@@ -109,7 +109,7 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	
 	function getValidRect(rect:FlxRect)
 	{
-		return clipValidRect(FlxRect.getCopy(rect));
+		return clipValidRect(rect.clone());
 	}
 	
 	function clipValidRect(rect:FlxRect)
