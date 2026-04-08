@@ -36,7 +36,7 @@ abstract AtlasRect(AtlasPos & AtlasSize) from AtlasPos & AtlasSize
 	public var t(get, never):Float; inline function get_t() return this.y;
 	public var b(get, never):Float; inline function get_b() return this.y + this.h;
 	
-	overload public inline extern function toFlxRect(rect:FlxRect)
+	overload public inline extern function toFlxRect(rect:flixel.math.FlxRect)
 	{
 		return rect.set(this.x, this.y, this.w, this.h);
 	}
