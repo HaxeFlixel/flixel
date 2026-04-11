@@ -156,7 +156,7 @@ class FlxGame extends Sprite
 	 * Mouse cursor.
 	 */
 	@:allow(flixel.FlxG)
-	@:allow(flixel.system.frontEnds.CameraFrontEnd)
+	@:allow(flixel.system.render)
 	var _inputContainer:Sprite;
 
 	#if FLX_SOUND_TRAY

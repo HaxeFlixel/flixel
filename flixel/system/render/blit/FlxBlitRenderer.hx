@@ -62,4 +62,20 @@ class FlxBlitRenderer extends FlxTypedRenderer<FlxBlitView>
 	{
 		return new FlxBlitView(camera);
 	}
+
+	public function addCameraView(view:FlxBlitView):Void
+	{
+		FlxG.game.addChildAt(view.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
+	}
+
+	public function addCameraViewAt(view:FlxBlitView, index:Int):Void
+	{
+		final childIndex = FlxG.game.getChildIndex(FlxG.cameras.list[index].viewBlit.flashSprite);
+        FlxG.game.addChildAt(view.flashSprite, childIndex);
+	}
+
+	public function removeCameraView(view:FlxBlitView):Void
+	{
+		FlxG.game.removeChild(view.flashSprite);
+	}
 }

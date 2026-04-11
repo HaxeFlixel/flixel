@@ -37,4 +37,20 @@ class FlxQuadRenderer extends FlxTypedRenderer<FlxQuadView>
 	{
 		FlxG.cameras.render();
 	}
+
+	public function addCameraView(view:FlxQuadView):Void
+	{
+		FlxG.game.addChildAt(view.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
+	}
+
+	public function addCameraViewAt(view:FlxQuadView, index:Int):Void
+	{
+		final childIndex = FlxG.game.getChildIndex(FlxG.cameras.list[index].viewQuad.flashSprite);
+        FlxG.game.addChildAt(view.flashSprite, childIndex);
+	}
+
+	public function removeCameraView(view:FlxQuadView):Void
+	{
+		FlxG.game.removeChild(view.flashSprite);
+	}
 }

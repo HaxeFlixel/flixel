@@ -99,7 +99,7 @@ abstract class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	public var maxTextureSize(default, null):Int = -1;
 	
 	function new() {}
-	
+
 	/**
 	 * Initializes any global fields that are dependant on the global rendering method.
 	 * Called automatically by `FlxG.init()`
@@ -119,6 +119,10 @@ abstract class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	 * by the renderer backend (e.g. finally draws everything to the screen)
 	 */
 	abstract public function endFrame():Void;
+
+	abstract public function addCameraView(view:TView):Void;
+	abstract public function addCameraViewAt(view:TView, index:Int):Void;
+	abstract public function removeCameraView(view:TView):Void;
 	
 	abstract function createCameraView(camera:FlxCamera):TView;
 }

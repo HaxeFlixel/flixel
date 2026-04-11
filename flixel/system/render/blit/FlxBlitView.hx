@@ -511,11 +511,6 @@ class FlxBlitView extends FlxCameraView
 	//{ region                             GETTERS
 	// =============================================================================
 	
-	function get_display():DisplayObjectContainer
-	{
-		return flashSprite;
-	}
-	
 	override function set_color(value:FlxColor):FlxColor
 	{
 		if (_flashBitmap != null)

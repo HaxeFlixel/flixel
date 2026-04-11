@@ -31,12 +31,6 @@ import openfl.geom.Rectangle;
 abstract class FlxCameraView implements IFlxDestroyable
 {
 	/**
-	 * Display object which is used as a container for all of the camera's graphics.
-	 * This object is added to the display tree.
-	 */
-	public var display(get, never):DisplayObjectContainer;
-
-	/**
 	 * The parent camera for this view.
 	 */
 	public var camera(default, null):FlxCamera;
@@ -288,8 +282,6 @@ abstract class FlxCameraView implements IFlxDestroyable
 	// =============================================================================
 	//{ region                             GETTERS
 	// =============================================================================
-	
-	abstract function get_display():DisplayObjectContainer;
 	
 	@:haxe.warning("-WDeprecated")
 	function set_antialiasing(value:Bool):Bool

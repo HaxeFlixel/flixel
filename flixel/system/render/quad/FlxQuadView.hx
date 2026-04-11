@@ -357,11 +357,6 @@ class FlxQuadView extends FlxCameraView
 		return super.set_visible(value);
 	}
 	
-	function get_display():DisplayObjectContainer
-	{
-		return flashSprite;
-	}
-	
 	/**
 	 * Currently used draw stack item
 	 */
