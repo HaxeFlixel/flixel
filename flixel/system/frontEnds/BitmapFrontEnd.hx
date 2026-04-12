@@ -66,6 +66,7 @@ class BitmapFrontEnd
 	 * @param   key  The key identifying the bitmap.
 	 * @return  Whether or not this file can be found in the cache.
 	 */
+	@:deprecated("checkCache is deprecated, use exists, instead")
 	public inline function checkCache(key:String):Bool
 	{
 		return get(key) != null;
@@ -201,7 +202,7 @@ class BitmapFrontEnd
 		if (baseKey == null)
 			baseKey = "pixels";
 
-		if (!checkCache(baseKey))
+		if (!exists(baseKey))
 			return baseKey;
 
 		var i:Int = _lastUniqueKeyIndex;
@@ -211,7 +212,7 @@ class BitmapFrontEnd
 			i++;
 			uniqueKey = baseKey + i;
 		}
-		while (checkCache(uniqueKey));
+		while (exists(uniqueKey));
 
 		_lastUniqueKeyIndex = i;
 		return uniqueKey;

@@ -1,8 +1,5 @@
 package flixel.ui;
 
-import openfl.display.BitmapData;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
@@ -15,6 +12,9 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxGradient;
 import flixel.util.FlxStringUtil;
+import openfl.display.BitmapData;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 // TODO: better handling bars with borders (don't take border into account while drawing its front).
 
@@ -358,7 +358,7 @@ class FlxBar extends FlxSprite
 			if (showBorder)
 				emptyKey += ",border: " + border.toHexString() + "borderSize: " + borderSize;
 
-			if (!FlxG.bitmap.checkCache(emptyKey))
+			if (!FlxG.bitmap.exists(emptyKey))
 			{
 				var emptyBar:BitmapData = null;
 
@@ -412,7 +412,7 @@ class FlxBar extends FlxSprite
 			if (showBorder)
 				filledKey += ",border: " + border.toHexString() + "borderSize: " + borderSize;
 
-			if (!FlxG.bitmap.checkCache(filledKey))
+			if (!FlxG.bitmap.exists(filledKey))
 			{
 				var filledBar:BitmapData = null;
 
@@ -498,7 +498,7 @@ class FlxBar extends FlxSprite
 				emptyKey += ",border: " + border.toHexString() + "borderSize: " + borderSize;
 			}
 
-			if (!FlxG.bitmap.checkCache(emptyKey))
+			if (!FlxG.bitmap.exists(emptyKey))
 			{
 				var emptyBar:BitmapData = null;
 
@@ -566,7 +566,7 @@ class FlxBar extends FlxSprite
 				filledKey += ",border: " + border.toHexString() + "borderSize: " + borderSize;
 			}
 
-			if (!FlxG.bitmap.checkCache(filledKey))
+			if (!FlxG.bitmap.exists(filledKey))
 			{
 				var filledBar:BitmapData = null;
 
