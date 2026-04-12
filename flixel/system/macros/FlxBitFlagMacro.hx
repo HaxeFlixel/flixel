@@ -297,7 +297,11 @@ class FlxBitFlagMacro
 			// 	def.fields.push(field);
 		}
 		
+		#if (haxe >= version("4.3.2"))
 		def.kind = TDAbstract((macro: Int), null, [], []);
+		#else
+		def.kind = TDAbstract((macro: Int), [], []);
+		#end
 		Context.defineType(def);
 		return path;
 	}
