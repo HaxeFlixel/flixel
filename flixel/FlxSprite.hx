@@ -1289,7 +1289,10 @@ class FlxSprite extends FlxObject
 	public function getPixelAt(worldPoint:FlxPoint, ?camera:FlxCamera):Null<FlxColor>
 	{
 		final point = worldToFramePosition(worldPoint, camera, FlxPoint.weak());
-		final overlaps = point.x >= 0 && point.x <= frameWidth && point.y >= 0 && point.y <= frameHeight;
+		
+		final overlaps = point.x >= 0 && point.x <= frameWidth && point.y >= 0 && point.y <= frameHeight
+			&& (clipRect == null || clipRect.containsPoint(point));
+		
 		if (!overlaps)
 		{
 			point.put();
