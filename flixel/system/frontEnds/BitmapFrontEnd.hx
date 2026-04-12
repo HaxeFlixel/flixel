@@ -130,7 +130,18 @@ class BitmapFrontEnd
 	{
 		return _cache.get(key);
 	}
-
+	
+	/**
+	 * Checks whether a bitmap exists with the given key.
+	 * 
+	 * @param   key  The FlxGraphics key (or name).
+	 * @since 6.2.0
+	 */
+	public inline function exists(key:String):Bool
+	{
+		return _cache.exists(key);
+	}
+	
 	/**
 	 * Gets a key from a cached BitmapData.
 	 *
