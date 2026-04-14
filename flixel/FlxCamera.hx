@@ -1823,10 +1823,10 @@ class FlxCamera extends FlxBasic
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false,
 			?shader:FlxShader):Void
 	{
-		if (pixels != null)
-			view.drawPixels(pixels, matrix, transform, blend, smoothing, shader);
-		else if (frame != null)
+		if (frame != null)
 			view.drawFrame(frame, matrix, transform, blend, smoothing, shader);
+		else if (pixels != null)
+			view.drawPixels(pixels, matrix, transform, blend, smoothing, shader);
 		else
 			FlxG.log.error("camera.drawPixels must have either the frame or pixels arg");
 	}
@@ -1836,10 +1836,10 @@ class FlxCamera extends FlxBasic
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
 			?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
-		if (pixels != null)
-			view.copyPixels(pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
-		else if (frame != null)
+		if (frame != null)
 			view.copyFrame(frame, destPoint, transform, blend, smoothing, shader);
+		else if (pixels != null)
+			view.copyPixels(pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
 		else
 			FlxG.log.error("camera.copyPixels must have either the frame or pixels arg");
 		
