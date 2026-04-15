@@ -59,7 +59,7 @@ class BitmapFrontEnd
 	{
 		for (key => obj in _cache)
 		{
-			if (obj.canBeRefreshed)
+			if (obj != null && obj.canBeRefreshed)
 				obj.onAssetsReload();
 		}
 	}
@@ -188,7 +188,12 @@ class BitmapFrontEnd
 	 * @param   baseKey  key's prefix.
 	 * @return  unique key.
 	 */
-	public function getUniqueKey(baseKey = "pixels"):String
+	public function getUniqueKey(?baseKey:String):String
+	{
+		return getUniqueKeyHelper(baseKey != null ? baseKey : "pixels");
+	}
+	
+	function getUniqueKeyHelper(baseKey = "pixels"):String
 	{
 		if (!checkCache(baseKey))
 			return baseKey;
