@@ -244,9 +244,9 @@ class FlxTimer implements IFlxDestroyable
 	 */
 	public function completeLoops():Void
 	{
-		while (!finished)
+		while (!finished && loops > 0)
 		{
-			if (loops > 0 && (_loopsCounter >= loops))
+			if (_loopsCounter >= loops)
 			{
 				finished = true;
 			}
