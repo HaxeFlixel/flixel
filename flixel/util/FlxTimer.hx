@@ -232,7 +232,7 @@ class FlxTimer implements IFlxDestroyable
 			
 			onLoopFinished();
 			
-			if (_loopsCounter >= loops)
+			if (loops > 0 && (_loopsCounter >= loops))
 			{
 				finished = true;
 			}
