@@ -458,7 +458,7 @@ class FlxSpriteUtil
 	 * @param	sprite		The FlxSprite to manipulate
 	 * @param	X 			X coordinate of the circle's center (automatically centered on the bitmap if -1)
 	 * @param	Y 			Y coordinate of the circle's center (automatically centered on the bitmap if -1)
-	 * @param	Radius 		Radius of the circle (makes sure the circle fully fits on the sprite's graphic if < 1, assuming and and y are centered)
+	 * @param	Radius 		Radius of the circle (makes sure the circle fully fits on the sprite's graphic if < 1, assuming x and y are centered)
 	 * @param	FillColor 		The ARGB color to fill this circle with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
 	 * @param	drawStyle	A DrawStyle typedef containing the params of BitmapData.draw()
