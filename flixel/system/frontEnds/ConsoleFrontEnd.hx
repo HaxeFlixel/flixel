@@ -1,12 +1,38 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
+import flixel.system.debug.console.IFlxConsoleHandler;
+import flixel.util.FlxSignal;
 
 /**
  * Accessed via `FlxG.console`.
  */
 class ConsoleFrontEnd
 {
+	@:haxe.warning("-WDeprecated")
+	static function getDefaultHandler():IFlxConsoleHandler
+	{
+		#if hscript
+		flixel.system.debug.console.ConsoleUtil.init();
+		@:privateAccess
+		return flixel.system.debug.console.ConsoleUtil.handler;
+		#else
+		return new flixel.system.debug.console.EmptyConsoleHandler();
+		#end
+	}
+	
+	/**
+	 * The manager for the evaluation of expressions and console commands
+	 */
+	public var handler(default, null) = getDefaultHandler();
+	
+	/**
+	 * Called whenever the handler changes
+	 * 
+	 * @since 6.2.0
+	 */
+	public final onHandlerChange = new FlxTypedSignal<(IFlxConsoleHandler)->Void>();
+	
 	/**
 	 * Whether the console should auto-pause or not when it's focused.
 	 */
@@ -19,7 +45,24 @@ class ConsoleFrontEnd
 	 * @since 4.2.0
 	 */
 	public var stepAfterCommand:Bool = true;
-
+	
+	/**
+	 * Changes the current handler, useful for overriding the evaluation of expressions used by
+	 * various debugging features. Will automatically register any objects registered to
+	 * the previous handler
+	 * 
+	 * @since 6.2.0
+	 */
+	public function setHandler(handler:IFlxConsoleHandler)
+	{
+		this.handler = handler;
+		#if FLX_DEBUG
+		@:privateAccess
+		FlxG.game.debugger.console.onHandlerChange();
+		#end
+		onHandlerChange.dispatch(handler);
+	}
+	
 	/**
 	 * Register a new function to use in any command.
 	 *

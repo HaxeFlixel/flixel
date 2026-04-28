@@ -1,15 +1,15 @@
 package flixel.system.debug.console;
 
 #if FLX_DEBUG
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxCamera;
-import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.util.FlxStringUtil;
 import flixel.system.debug.FlxDebugger.FlxDebuggerLayout;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxStringUtil;
 
 using StringTools;
 
@@ -130,31 +130,31 @@ class ConsoleCommands
 		FlxG.state.add(obj);
 
 		if (Params.length == 0)
-			ConsoleUtil.log("create: New " + ObjClass + " created at X = " + obj.x + " Y = " + obj.y);
+			log("create: New " + ObjClass + " created at X = " + obj.x + " Y = " + obj.y);
 		else
-			ConsoleUtil.log("create: New " + ObjClass + " created at X = " + obj.x + " Y = " + obj.y + " with params " + Params);
+			log("create: New " + ObjClass + " created at X = " + obj.x + " Y = " + obj.y + " with params " + Params);
 
 		_console.objectStack.push(obj);
 
 		var name = "Object_" + _console.objectStack.length;
 		_console.registerObject(name, obj);
 
-		ConsoleUtil.log("create: " + ObjClass + " registered as '" + name + "'");
+		log("create: " + ObjClass + " registered as '" + name + "'");
 	}
 
 	function fields(Object:Dynamic):String
 	{
-		return 'Fields of ${Type.getClassName(Object)}:\n' + ConsoleUtil.getFields(Object).join("\n").trim();
+		return 'Fields of ${Type.getClassName(Object)}:\n' + FlxG.console.handler.getFields(Object).join("\n").trim();
 	}
 
 	function listObjects():Void
 	{
-		ConsoleUtil.log("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects));
+		log("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects));
 	}
 
 	function listFunctions():Void
 	{
-		ConsoleUtil.log("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions));
+		log("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions));
 	}
 
 	function watchMouse():Void
@@ -162,12 +162,12 @@ class ConsoleCommands
 		if (!_watchingMouse)
 		{
 			FlxG.watch.addMouse();
-			ConsoleUtil.log("watchMouse: Mouse position added to watch window");
+			log("watchMouse: Mouse position added to watch window");
 		}
 		else
 		{
 			FlxG.watch.removeMouse();
-			ConsoleUtil.log("watchMouse: Mouse position removed from watch window");
+			log("watchMouse: Mouse position removed from watch window");
 		}
 
 		_watchingMouse = !_watchingMouse;
@@ -178,12 +178,12 @@ class ConsoleCommands
 		if (FlxG.vcr.paused)
 		{
 			FlxG.vcr.resume();
-			ConsoleUtil.log("pause: Game unpaused");
+			log("pause: Game unpaused");
 		}
 		else
 		{
 			FlxG.vcr.pause();
-			ConsoleUtil.log("pause: Game paused");
+			log("pause: Game paused");
 		}
 	}
 
@@ -191,6 +191,11 @@ class ConsoleCommands
 	{
 		if (FlxG.vcr.paused)
 			FlxG.game.debugger.vcr.onStep();
+	}
+	
+	function log(message:String)
+	{
+		FlxG.log.advanced([message], FlxG.log.styles.console);
 	}
 }
 #end

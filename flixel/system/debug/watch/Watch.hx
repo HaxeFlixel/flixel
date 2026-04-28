@@ -4,8 +4,8 @@ import flixel.FlxG;
 import flixel.system.debug.FlxDebugger;
 import flixel.system.debug.ScrollSprite;
 
-using flixel.util.FlxStringUtil;
 using flixel.util.FlxArrayUtil;
+using flixel.util.FlxStringUtil;
 
 /**
  * A Visual Studio-style "watch" window, for use in the debugger overlay.
@@ -80,6 +80,8 @@ class WatchBase<TEntry:WatchEntry> extends Window
 			case QUICK(value):
 				displayName.isNullOrEmpty();
 			case EXPRESSION(expression, _):
+				expression.isNullOrEmpty();
+			case EXPR(expression, _):
 				expression.isNullOrEmpty();
 			case FUNCTION(func):
 				func == null;

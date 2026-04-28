@@ -1,37 +1,35 @@
 package flixel.system.debug.console;
 
-import flixel.FlxG;
-import flixel.system.debug.log.LogStyle;
-
 using StringTools;
-using flixel.util.FlxArrayUtil;
-using flixel.util.FlxStringUtil;
 
 #if hscript
 import hscript.Expr;
 import hscript.Parser;
+
+using flixel.util.FlxArrayUtil;
 #end
 
-/** 
- * A set of helper functions used by the console.
+/**
+ * The default debug console manager used by `FlxG.console` and the Console debug window
+ * 
+ * @since 6.2.0
  */
-class ConsoleUtil
+class LegacyConsoleHandler implements IFlxConsoleHandler
 {
 	#if hscript
-	/**
-	 * The hscript parser to make strings into haxe code.
-	 */
-	static var parser:Parser;
+	var parser:Parser;
 
 	/**
 	 * The custom hscript interpreter to run the haxe code from the parser.
 	 */
-	public static var interp:Interp;
+	public var interp:Interp;
 
 	/**
 	 * Sets up the hscript parser and interpreter.
 	 */
-	public static function init():Void
+	public function new() {}
+	
+	public function init()
 	{
 		parser = new Parser();
 		parser.allowJSON = true;
@@ -39,29 +37,29 @@ class ConsoleUtil
 
 		interp = new Interp();
 	}
-
+	
 	/**
-	 * Converts the input string into its AST form to be executed.
-	 *
-	 * @param   input  The user's input command.
-	 * @return  The parsed out AST.
+	 * Converts a string into a runnable command
+	 * 
+	 * @param   input  A string of code
+	 * @return  An exectutable expression
 	 */
-	public static function parseCommand(input:String):Expr
+	public function parse(input:String):Expr
 	{
 		if (StringTools.endsWith(input, ";"))
 			input = input.substr(0, -1);
 		return parser.parseString(input);
 	}
-
+	
 	/**
-	 * Parses and runs the input command.
-	 *
-	 * @param   input  The user's input command.
-	 * @return  Whatever the input code evaluates to.
+	 * Converts a string into a runnable command and executes it
+	 * 
+	 * @param   input  A string of code
+	 * @return  The result of running the command
 	 */
-	public static function runCommand(input:String):Dynamic
+	public function evaluate(input:String):Any
 	{
-		return interp.expr(parseCommand(input));
+		return evaluateExpr(parse(input));
 	}
 
 	/**
@@ -69,48 +67,37 @@ class ConsoleUtil
 	 * @param   expr  The expression to run
 	 * @return  Whatever the input code evaluates to.
 	 */
-	public static function runExpr(expr:Expr):Dynamic
+	public function evaluateExpr(expr:Expr):Dynamic
 	{
 		return interp.expr(expr);
 	}
-
+	
 	/**
-	 * Register a new object to use in any command.
-	 *
-	 * @param   alias   The name with which you want to access the object.
-	 * @param   object  The object to register.
+	 * Registers the field to be used in commands
+	 * 
+	 * @param   alias  The name used to access the field
+	 * @param   value  The value of the field
 	 */
-	public static function registerObject(alias:String, object:Dynamic):Void
+	public function register(alias:String, object:Dynamic):Void
 	{
-		if (object == null || Reflect.isObject(object))
-			interp.variables.set(alias, object);
+		interp.variables.set(alias, object);
 	}
-
+	
 	/**
-	 * Register a new function to use in any command.
-	 *
-	 * @param   alias  The name with which you want to access the function.
-	 * @param   func   The function to register.
+	 * Removes the registered field by its alias
+	 * 
+	 * @param   alias  The name used to access the field
 	 */
-	public static function registerFunction(alias:String, func:Dynamic):Void
-	{
-		if (Reflect.isFunction(func))
-			interp.variables.set(alias, func);
-	}
-
-	/**
-	 * Removes an alias from the command registry.
-	 *
-	 * @param   alias  The alias to remove.
-	 * @since 5.4.0
-	 */
-	public static function removeByAlias(alias:String):Void
+	public function remove(alias:String):Void
 	{
 		interp.variables.remove(alias);
 	}
 	#end
-
-	public static function getFields(Object:Dynamic):Array<String>
+	
+	/**
+	 * Creates a list of all fields of the given object
+	 */
+	public function getFields(Object:Dynamic):Array<String>
 	{
 		var fields = [];
 		if ((Object is Class)) // passed a class -> get static fields
@@ -118,11 +105,20 @@ class ConsoleUtil
 		else if ((Object is Enum))
 			fields = Type.getEnumConstructs(Object);
 		else if (Reflect.isObject(Object)) // get instance fields
-			fields = Type.getInstanceFields(Type.getClass(Object));
-
+		{
+			try
+			{
+				fields = Type.getInstanceFields(Type.getClass(Object));
+			}
+			catch(e)
+			{
+				fields = [for (field in Reflect.fields(Object)) field];
+			}
+		}
+		
 		// on Flash, enums are classes, so Std.isOfType(_, Enum) fails
 		fields.remove("__constructs__");
-
+		
 		var filteredFields = [];
 		for (field in fields)
 		{
@@ -137,14 +133,22 @@ class ConsoleUtil
 			else
 				filteredFields.push(field);
 		}
-
+		
 		return sortFields(filteredFields);
 	}
-
+	
+	/**
+	 * Creates a list of all fields available at the top-level
+	 */
+	public function getGlobals():Array<String>
+	{
+		return sortAlphabetically(interp.getGlobals());
+	}
+	
 	static function sortFields(fields:Array<String>):Array<String>
 	{
 		var underscoreList = [];
-
+		
 		fields = fields.filter(function(field)
 		{
 			if (field.startsWith("_"))
@@ -154,22 +158,140 @@ class ConsoleUtil
 			}
 			return true;
 		});
-
-		fields.sortAlphabetically();
-		underscoreList.sortAlphabetically();
-
+		
+		sortAlphabetically(fields);
+		sortAlphabetically(underscoreList);
+		
 		return fields.concat(underscoreList);
 	}
+	
+	static function sortAlphabetically(list:Array<String>):Array<String>
+	{
+		list.sort(function(a, b)
+		{
+			a = a.toLowerCase();
+			b = b.toLowerCase();
+			if (a < b)
+				return -1;
+			if (a > b)
+				return 1;
+			return 0;
+		});
+		return list;
+	}
+}
 
+/** 
+ * A set of helper functions used by the console
+ */
+@:deprecated("ConsoleUtil is deprecated, use FlxG.console, instead")
+class ConsoleUtil
+{
+	#if hscript
+	static var handler:LegacyConsoleHandler;
+	
+	/**
+	 * The hscript parser to make strings into haxe code.
+	 */
+	static var parser:Parser;
+	
+	/**
+	 * The custom hscript interpreter to run the haxe code from the parser.
+	 */
+	public static var interp:Interp;
+	
+	/**
+	 * Sets up the hscript parser and interpreter.
+	 */
+	public static function init():Void
+	{
+		handler = new LegacyConsoleHandler();
+		handler.init();
+		@:privateAccess
+		parser = handler.parser;
+		interp = handler.interp;
+	}
+	
+	/**
+	 * Converts the input string into its AST form to be executed.
+	 *
+	 * @param   input  The user's input command.
+	 * @return  The parsed out AST.
+	 */
+	public static function parse(input:String):Expr
+	{
+		return handler.parse(input);
+	}
+	
+	/**
+	 * Parses and runs the input command.
+	 *
+	 * @param   input  The user's input command.
+	 * @return  Whatever the input code evaluates to.
+	 */
+	public static function evaluate(input:String):Dynamic
+	{
+		return handler.evaluate(input);
+	}
+	
+	/**
+	 * Runs the input expression.
+	 * @param   expr  The expression to run
+	 * @return  Whatever the input code evaluates to.
+	 */
+	public static function evaluateExpr(expr:Expr):Dynamic
+	{
+		return handler.evaluateExpr(expr);
+	}
+	
+	/**
+	 * Register a new object to use in any command.
+	 *
+	 * @param   alias   The name with which you want to access the object.
+	 * @param   object  The object to register.
+	 */
+	public static function registerObject(alias:String, object:Dynamic):Void
+	{
+		if (object == null || Reflect.isObject(object))
+			handler.register(alias, object);
+	}
+	
+	/**
+	 * Register a new function to use in any command.
+	 *
+	 * @param   alias  The name with which you want to access the function.
+	 * @param   func   The function to register.
+	 */
+	public static function registerFunction(alias:String, func:Dynamic):Void
+	{
+		if (Reflect.isFunction(func))
+			handler.register(alias, func);
+	}
+	
+	/**
+	 * Removes an alias from the command registry.
+	 *
+	 * @param   alias  The alias to remove.
+	 * @since 5.4.0
+	 */
+	public static function removeByAlias(alias:String):Void
+	{
+		handler.remove(alias);
+	}
+	#end
+	
+	public static function getFields(object:Dynamic):Array<String>
+	{
+		return handler.getFields(object);
+	}
+	
 	/**
 	 * Shortcut to log a text with the Console LogStyle.
 	 *
 	 * @param   text  The text to log.
 	 */
-	public static inline function log(text:Dynamic):Void
-	{
-		FlxG.log.advanced([text], FlxG.log.styles.console);
-	}
+	@:deprecated("ConsoleUtil.log no longer logs and will be removed")
+	public static inline function log(text:Dynamic):Void {}
 }
 
 /**
