@@ -107,44 +107,9 @@ class LegacyConsoleHandler implements IFlxConsoleHandler
 	/**
 	 * Creates a list of all fields of the given object
 	 */
-	public function getFields(Object:Dynamic):Array<String>
+	public function getFields(object:Dynamic):Array<String>
 	{
-		var fields = [];
-		if ((Object is Class)) // passed a class -> get static fields
-			fields = Type.getClassFields(Object);
-		else if ((Object is Enum))
-			fields = Type.getEnumConstructs(Object);
-		else if (Reflect.isObject(Object)) // get instance fields
-		{
-			try
-			{
-				fields = Type.getInstanceFields(Type.getClass(Object));
-			}
-			catch(e)
-			{
-				fields = [for (field in Reflect.fields(Object)) field];
-			}
-		}
-		
-		// on Flash, enums are classes, so Std.isOfType(_, Enum) fails
-		fields.remove("__constructs__");
-		
-		var filteredFields = [];
-		for (field in fields)
-		{
-			// don't add property getters / setters
-			if (field.startsWith("get_") || field.startsWith("set_"))
-			{
-				var name = field.substr(4);
-				// property without a backing field, needs to be added
-				if (!fields.contains(name) && !filteredFields.contains(name))
-					filteredFields.push(name);
-			}
-			else
-				filteredFields.push(field);
-		}
-		
-		return sortFields(filteredFields);
+		return getFieldsOf(object);
 	}
 	
 	/**
@@ -154,43 +119,83 @@ class LegacyConsoleHandler implements IFlxConsoleHandler
 	{
 		return sortAlphabetically(interp.getGlobals());
 	}
-	
-	static function sortFields(fields:Array<String>):Array<String>
-	{
-		var underscoreList = [];
-		
-		fields = fields.filter(function(field)
-		{
-			if (field.startsWith("_"))
-			{
-				underscoreList.push(field);
-				return false;
-			}
-			return true;
-		});
-		
-		sortAlphabetically(fields);
-		sortAlphabetically(underscoreList);
-		
-		return fields.concat(underscoreList);
-	}
-	
-	static function sortAlphabetically(list:Array<String>):Array<String>
-	{
-		list.sort(function(a, b)
-		{
-			a = a.toLowerCase();
-			b = b.toLowerCase();
-			if (a < b)
-				return -1;
-			if (a > b)
-				return 1;
-			return 0;
-		});
-		return list;
-	}
 }
 #end
+
+function getFieldsOf(object:Dynamic):Array<String>
+{
+	var fields = [];
+	if ((object is Class)) // passed a class -> get static fields
+		fields = Type.getClassFields(object);
+	else if ((object is Enum))
+		fields = Type.getEnumConstructs(object);
+	else if (Reflect.isObject(object)) // get instance fields
+	{
+		try
+		{
+			fields = Type.getInstanceFields(Type.getClass(object));
+		}
+		catch(e)
+		{
+			fields = [for (field in Reflect.fields(object)) field];
+		}
+	}
+	
+	// on Flash, enums are classes, so Std.isOfType(_, Enum) fails
+	fields.remove("__constructs__");
+	
+	var filteredFields = [];
+	for (field in fields)
+	{
+		// don't add property getters / setters
+		if (field.startsWith("get_") || field.startsWith("set_"))
+		{
+			var name = field.substr(4);
+			// property without a backing field, needs to be added
+			if (!fields.contains(name) && !filteredFields.contains(name))
+				filteredFields.push(name);
+		}
+		else
+			filteredFields.push(field);
+	}
+	
+	return sortFields(filteredFields);
+}
+
+function sortFields(fields:Array<String>):Array<String>
+{
+	var underscoreList = [];
+	
+	fields = fields.filter(function(field)
+	{
+		if (field.startsWith("_"))
+		{
+			underscoreList.push(field);
+			return false;
+		}
+		return true;
+	});
+	
+	sortAlphabetically(fields);
+	sortAlphabetically(underscoreList);
+	
+	return fields.concat(underscoreList);
+}
+
+function sortAlphabetically(list:Array<String>):Array<String>
+{
+	list.sort(function(a, b)
+	{
+		a = a.toLowerCase();
+		b = b.toLowerCase();
+		if (a < b)
+			return -1;
+		if (a > b)
+			return 1;
+		return 0;
+	});
+	return list;
+}
 
 /** 
  * A set of helper functions used by the console
@@ -293,7 +298,7 @@ class ConsoleUtil
 	
 	public static function getFields(object:Dynamic):Array<String>
 	{
-		return handler.getFields(object);
+		return getFieldsOf(object);
 	}
 	
 	/**
