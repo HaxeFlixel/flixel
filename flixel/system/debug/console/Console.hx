@@ -80,11 +80,6 @@ class Console extends Window
 		createInputTextField();
 		new CompletionHandler(completionList, input);
 		registerEventListeners();
-		
-		// Install commands
-		#if FLX_DEBUG
-		new ConsoleCommands(this);
-		#end
 	}
 	
 	function createInputTextField()
@@ -321,10 +316,18 @@ class Console extends Window
 	 * @param   func      The function to register.
 	 * @param   helpText  An optional string to trace to the console using the "help" command.
 	 */
+	@:deprecated("registerFunction is deprecated, use FlxG.console.registerObject")
 	public function registerFunction(alias:String, func:Dynamic, ?helpText:String)
 	{
+		registerFunctionHelper(alias, func, helpText);
+		
+		if (Reflect.isFunction(func))
+			FlxG.console.handler.register(alias, func);
+	}
+	
+	function registerFunctionHelper(alias:String, func:Dynamic, ?helpText:String)
+	{
 		registeredFunctions.set(alias, func);
-		FlxG.console.handler.register(alias, func);
 		
 		if (helpText != null)
 			registeredHelp.set(alias, helpText);
@@ -336,10 +339,18 @@ class Console extends Window
 	 * @param   alias   The name with which you want to access the object.
 	 * @param   object  The object to register.
 	 */
+	@:deprecated("registerObject is deprecated, use FlxG.console.registerObject")
 	public function registerObject(alias:String, object:Dynamic)
 	{
+		registerObjectHelper(alias, object);
+		
+		if (object == null || Reflect.isObject(object))
+			FlxG.console.handler.register(alias, object);
+	}
+	
+	function registerObjectHelper(alias:String, object:Dynamic)
+	{
 		registeredObjects.set(alias, object);
-		FlxG.console.handler.register(alias, object);
 	}
 	
 	/**
@@ -348,7 +359,15 @@ class Console extends Window
 	 * @param   alias  The alias to remove.
 	 * @since 5.4.0
 	 */
+	@:deprecated("removeByAlias is deprecated, use FlxG.console.removeByAlias")
 	public function removeByAlias(alias:String)
+	{
+		registeredObjects.remove(alias);
+		registeredFunctions.remove(alias);
+		FlxG.console.handler.remove(alias);
+	}
+	
+	function removeByAliasHelper(alias:String)
 	{
 		registeredObjects.remove(alias);
 		registeredFunctions.remove(alias);
@@ -363,13 +382,27 @@ class Console extends Window
 	 * @param   object  The object to remove.
 	 * @since 5.4.0
 	 */
+	@:deprecated("removeObject is deprecated, use FlxG.console.removeObject")
+	@:haxe.warning("-WDeprecated")
 	public function removeObject(object:Dynamic)
 	{
-		for (alias in registeredObjects.keys())
+		for (alias => value in registeredObjects)
 		{
-			if (registeredObjects[alias] == object)
+			if (value == object)
 			{
 				removeByAlias(alias);
+				break;
+			}
+		}
+	}
+	
+	function removeObjectHelper(object:Dynamic)
+	{
+		for (alias => value in registeredObjects)
+		{
+			if (value == object)
+			{
+				removeByAliasHelper(alias);
 				break;
 			}
 		}
@@ -383,13 +416,26 @@ class Console extends Window
 	 * @param   func  The object to remove.
 	 * @since 5.4.0
 	 */
+	@:deprecated("removeFunction is deprecated, use FlxG.console.removeFunction")
+	@:haxe.warning("-WDeprecated")
 	public function removeFunction(func:Dynamic)
 	{
-		for (alias in registeredFunctions.keys())
+		for (alias => value in registeredFunctions)
 		{
-			if (registeredFunctions[alias] == func)
+			if (value == func)
 			{
 				removeByAlias(alias);
+				break;
+			}
+		}
+	}
+	function removeFunctionHelper(func:Dynamic)
+	{
+		for (alias => value in registeredFunctions)
+		{
+			if (value == func)
+			{
+				removeByAliasHelper(alias);
 				break;
 			}
 		}
@@ -400,6 +446,8 @@ class Console extends Window
 	 *
 	 * @param   c  The class to register.
 	 */
+	@:deprecated("registerClass is deprecated, use FlxG.console.registerClass")
+	@:haxe.warning("-WDeprecated")
 	public inline function registerClass(c:Class<Dynamic>)
 	{
 		registerObject(FlxStringUtil.getClassName(c, true), c);
@@ -411,6 +459,8 @@ class Console extends Window
 	 * @param   c  The class to remove.
 	 * @since 5.4.0
 	 */
+	@:deprecated("removeClass is deprecated, use FlxG.console.removeClass")
+	@:haxe.warning("-WDeprecated")
 	public inline function removeClass(c:Class<Dynamic>)
 	{
 		removeByAlias(FlxStringUtil.getClassName(c, true));
@@ -422,6 +472,8 @@ class Console extends Window
 	 * @param   e  The enum to register.
 	 * @since 4.4.0
 	 */
+	@:deprecated("registerEnum is deprecated, use FlxG.console.registerEnum")
+	@:haxe.warning("-WDeprecated")
 	public inline function registerEnum(e:Enum<Dynamic>)
 	{
 		registerObject(FlxStringUtil.getEnumName(e, true), e);
@@ -433,6 +485,8 @@ class Console extends Window
 	 * @param   e  The enum to remove.
 	 * @since 5.4.0
 	 */
+	@:deprecated("removeEnum is deprecated, use FlxG.console.removeEnum")
+	@:haxe.warning("-WDeprecated")
 	public inline function removeEnum(e:Enum<Dynamic>):Void
 	{
 		removeByAlias(FlxStringUtil.getEnumName(e, true));

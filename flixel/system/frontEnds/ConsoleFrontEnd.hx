@@ -1,18 +1,21 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
+import flixel.system.debug.console.Console;
 import flixel.system.debug.console.IFlxConsoleHandler;
 import flixel.util.FlxSignal;
+import flixel.util.FlxStringUtil;
 
 /**
  * Accessed via `FlxG.console`.
  */
+@:access(flixel.system.debug.console.Console)
 class ConsoleFrontEnd
 {
 	@:haxe.warning("-WDeprecated")
 	static function getDefaultHandler():IFlxConsoleHandler
 	{
-		#if hscript
+		#if (hscript && FLX_DEBUG)
 		flixel.system.debug.console.ConsoleUtil.init();
 		@:privateAccess
 		return flixel.system.debug.console.ConsoleUtil.handler;
@@ -46,6 +49,18 @@ class ConsoleFrontEnd
 	 */
 	public var stepAfterCommand:Bool = true;
 	
+	#if FLX_DEBUG
+	/**
+	 * The console window in the FlxDebugger
+	 */
+	public var window(get, never):Console;
+	
+	inline function get_window()
+	{
+		return FlxG.game.debugger.console;
+	}
+	#end
+	
 	/**
 	 * Changes the current handler, useful for overriding the evaluation of expressions used by
 	 * various debugging features. Will automatically register any objects registered to
@@ -66,13 +81,17 @@ class ConsoleFrontEnd
 	/**
 	 * Register a new function to use in any command.
 	 *
-	 * @param   alias  The name with which you want to access the function.
-	 * @param   func   The function to register.
+	 * @param   alias     The name with which you want to access the function.
+	 * @param   func      The function to register.
+	 * @param   helpText  An optional string to trace to the console using the "help" command.
 	 */
-	public inline function registerFunction(alias:String, func:Dynamic):Void
+	public inline function registerFunction(alias:String, func:Dynamic, ?helpText:String):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.console.registerFunction(alias, func);
+		if (Reflect.isFunction(func))
+			handler.register(alias, func);
+		
+		window.registerFunctionHelper(alias, func, helpText);
 		#end
 	}
 
@@ -85,7 +104,10 @@ class ConsoleFrontEnd
 	public inline function registerObject(alias:String, object:Dynamic):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.console.registerObject(alias, object);
+		if (object == null || Reflect.isObject(object))
+			handler.register(alias, object);
+		
+		window.registerObjectHelper(alias, object);
 		#end
 	}
 
@@ -100,7 +122,11 @@ class ConsoleFrontEnd
 	public inline function removeObject(object:Dynamic)
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.console.removeObject(object);
+		final alias = handler.findAlias(object);
+		if (alias == null)
+			handler.remove(alias);
+		
+		window.removeObjectHelper(object);
 		#end
 	}
 
@@ -115,7 +141,11 @@ class ConsoleFrontEnd
 	public inline function removeFunction(func:Dynamic)
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.console.removeFunction(func);
+		final alias = handler.findAlias(func);
+		if (alias == null)
+			handler.remove(alias);
+		
+		window.removeFunctionHelper(func);
 		#end
 	}
 	
@@ -128,7 +158,8 @@ class ConsoleFrontEnd
 	public inline function removeByAlias(alias:String)
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.console.removeByAlias(alias);
+		handler.remove(alias);
+		window.removeByAliasHelper(alias);
 		#end
 	}
 
@@ -140,7 +171,7 @@ class ConsoleFrontEnd
 	public inline function registerClass(c:Class<Dynamic>):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.console.registerClass(c);
+		registerObject(FlxStringUtil.getClassName(c, true), c);
 		#end
 	}
 
@@ -153,7 +184,7 @@ class ConsoleFrontEnd
 	public inline function removeClass(c:Class<Dynamic>):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.console.removeClass(c);
+		removeByAlias(FlxStringUtil.getClassName(c, true));
 		#end
 	}
 
@@ -166,7 +197,7 @@ class ConsoleFrontEnd
 	public inline function registerEnum(e:Enum<Dynamic>):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.console.registerEnum(e);
+		registerObject(FlxStringUtil.getEnumName(e, true), e);
 		#end
 	}
 
@@ -179,7 +210,7 @@ class ConsoleFrontEnd
 	public inline function removeEnum(e:Enum<Dynamic>):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.console.removeEnum(e);
+		removeByAlias(FlxStringUtil.getEnumName(e, true));
 		#end
 	}
 

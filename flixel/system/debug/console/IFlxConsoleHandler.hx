@@ -39,4 +39,9 @@ interface IFlxConsoleHandler
 	 * Creates a list of all fields available at the top-level
 	 */
 	function getGlobals():Array<String>;
+	
+	/**
+	 * Searches all registered objects to find the alias of the target object
+	 */
+	function findAlias(obj:Any):Null<String>;
 }

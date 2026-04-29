@@ -92,6 +92,17 @@ class LegacyConsoleHandler implements IFlxConsoleHandler
 	{
 		interp.variables.remove(alias);
 	}
+	
+	public function findAlias(obj:Any):Null<String>
+	{
+		for (alias => value in interp.variables)
+		{
+			if (value == obj)
+				return alias;
+		}
+		
+		return null;
+	}
 	#end
 	
 	/**
@@ -229,7 +240,7 @@ class ConsoleUtil
 	 * @param   input  The user's input command.
 	 * @return  Whatever the input code evaluates to.
 	 */
-	public static function evaluate(input:String):Dynamic
+	public static function runCommand(input:String):Dynamic
 	{
 		return handler.evaluate(input);
 	}
@@ -239,7 +250,7 @@ class ConsoleUtil
 	 * @param   expr  The expression to run
 	 * @return  Whatever the input code evaluates to.
 	 */
-	public static function evaluateExpr(expr:Expr):Dynamic
+	public static function runExpr(expr:Expr):Dynamic
 	{
 		return handler.evaluateExpr(expr);
 	}

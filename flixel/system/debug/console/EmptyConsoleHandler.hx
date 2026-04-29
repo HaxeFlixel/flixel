@@ -28,4 +28,14 @@ class EmptyConsoleHandler implements IFlxConsoleHandler
 	{
 		return [];
 	}
+	
+	public function findAlias(obj:Any):Null<String>
+	{
+		return null;
+	}
+	
+	public function toString()
+	{
+		return "[EmptyConsoleHandler]";
+	}
 }
