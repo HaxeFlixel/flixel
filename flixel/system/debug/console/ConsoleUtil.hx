@@ -14,9 +14,9 @@ using flixel.util.FlxArrayUtil;
  * 
  * @since 6.2.0
  */
+#if hscript
 class LegacyConsoleHandler implements IFlxConsoleHandler
 {
-	#if hscript
 	var parser:Parser;
 
 	/**
@@ -103,7 +103,6 @@ class LegacyConsoleHandler implements IFlxConsoleHandler
 		
 		return null;
 	}
-	#end
 	
 	/**
 	 * Creates a list of all fields of the given object
@@ -191,6 +190,7 @@ class LegacyConsoleHandler implements IFlxConsoleHandler
 		return list;
 	}
 }
+#end
 
 /** 
  * A set of helper functions used by the console
