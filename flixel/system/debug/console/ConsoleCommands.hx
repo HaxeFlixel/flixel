@@ -48,7 +48,7 @@ class ConsoleCommands
 		console.registerFunction("clearBitmapLog", FlxG.bitmapLog.clear, "Clears the bitmapLog window.");
 		console.registerFunction("viewCache", FlxG.bitmapLog.viewCache, "Adds the cache to the bitmapLog window.");
 
-		console.registerFunction("create", create.bind(_, _, _, console),
+		console.registerFunction("create", (objCl, mPos, params)->create(objCl, mPos, params, console),
 			"Creates a new FlxObject and registers it - by default at the mouse position. \"create(ObjClass:Class<T>, PlaceAtMouse:Bool, ExtraParams:Array<Dynamic>)\" Ex: \"create(FlxSprite, false, [100, 100])\"");
 
 		console.registerFunction("watch", FlxG.watch.add, "Adds the specified field of an object to the watch window.");
