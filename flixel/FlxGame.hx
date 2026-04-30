@@ -311,9 +311,13 @@ class FlxGame extends Sprite
 		#if FLX_DEBUG
 		debugger = new FlxDebugger(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		addChild(debugger);
+		
+		@:privateAccess
+		FlxG.console.onDebugReady(debugger.console);
+		
 		// Install commands
 		new ConsoleCommands(debugger.console, FlxG.console);
-
+		
 		FlxG.debugger.onReady.dispatch();
 		#end
 

@@ -53,12 +53,7 @@ class ConsoleFrontEnd
 	/**
 	 * The console window in the FlxDebugger
 	 */
-	public var window(get, never):Console;
-	
-	inline function get_window()
-	{
-		return FlxG.game.debugger.console;
-	}
+	public var window(default, null):Null<Console>;
 	#end
 	
 	/**
@@ -213,6 +208,11 @@ class ConsoleFrontEnd
 		removeByAlias(FlxStringUtil.getEnumName(e, true));
 		#end
 	}
-
+	
 	public function new(){}
+	
+	function onDebugReady(window:Console)
+	{
+		this.window = window;
+	}
 }
