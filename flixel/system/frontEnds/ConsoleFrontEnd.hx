@@ -211,8 +211,10 @@ class ConsoleFrontEnd
 	
 	public function new(){}
 	
+	#if FLX_DEBUG
 	function onDebugReady(window:Console)
 	{
 		this.window = window;
 	}
+	#end
 }
