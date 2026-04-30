@@ -313,6 +313,8 @@ class FlxGame extends Sprite
 		addChild(debugger);
 		// Install commands
 		new ConsoleCommands(debugger.console, FlxG.console);
+
+		FlxG.debugger.onReady.dispatch();
 		#end
 
 		// No need for overlays on mobile.
