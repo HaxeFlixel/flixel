@@ -214,6 +214,5 @@ class ConsoleFrontEnd
 		#end
 	}
 
-	@:allow(flixel.FlxG)
-	function new() {}
+	public function new(){}
 }
