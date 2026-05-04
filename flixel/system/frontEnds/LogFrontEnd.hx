@@ -6,6 +6,11 @@ import flixel.system.debug.log.FlxLogStyle;
 import flixel.system.debug.log.LogStyle;
 import haxe.PosInfos;
 
+/**
+ * A list of the various log styles, useful for changing individual behaviors
+ * 
+ * @since 6.2.0
+ */
 class FlxLogStylesList
 {
 	public var normal (default, set):FlxLogStyle;
@@ -105,6 +110,11 @@ class LogFrontEnd
 	 */
 	public var redirectTraces(default, set):Bool = false;
 	
+	/**
+	 * A list of the various log styles, useful for changing individual behaviors
+	 * 
+	 * @since 6.2.0
+	 */
 	public final styles:FlxLogStylesList;
 
 	var _standardTraceFunction:(Dynamic, ?PosInfos)->Void;
