@@ -1299,10 +1299,10 @@ class FlxBitmapText extends FlxSprite
 				for (iter in 0...iterations)
 				{
 					final i = delta * (iter + 1);
-					func(-i, 0); // middle-left
-					func(i * 2, 0); // middle-right
-					func(-i, -i); // upper-middle
-					func(0, i * 2); // lower-middle
+					func(-i, 0); // left
+					func(i, 0); // right
+					func(0, -i); // up
+					func(0, i); // down
 				}
 
 			case OUTLINE_FAST:
