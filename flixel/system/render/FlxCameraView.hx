@@ -1,22 +1,17 @@
 package flixel.system.render;
 
-import openfl.Vector;
 import flixel.FlxCamera;
-import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
-import flixel.system.render.quad.FlxDrawTrianglesItem;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.Vector;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
-import openfl.display.DisplayObject;
-import openfl.display.DisplayObjectContainer;
-import openfl.display.Graphics;
 import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
