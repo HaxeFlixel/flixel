@@ -4,7 +4,9 @@ import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 import flixel.system.debug.FlxDebugger;
 import flixel.system.debug.Window;
-import flixel.system.debug.watch.TrackerProfile;
+import flixel.system.debug.interaction.Interaction;
+import flixel.system.debug.interaction.tools.Tool;
+import flixel.system.debug.watch.Tracker;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxHorizontalAlign;
 import flixel.util.FlxSignal;
@@ -12,12 +14,6 @@ import openfl.display.BitmapData;
 
 using flixel.util.FlxArrayUtil;
 using flixel.util.FlxStringUtil;
-
-#if FLX_DEBUG
-import flixel.system.debug.interaction.Interaction;
-import flixel.system.debug.interaction.tools.Tool;
-import flixel.system.debug.watch.Tracker;
-#end
 
 /**
  * Accessed via `FlxG.debugger`.
