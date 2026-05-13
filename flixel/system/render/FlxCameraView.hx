@@ -1,5 +1,6 @@
 package flixel.system.render;
 
+import openfl.Vector;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
@@ -188,7 +189,7 @@ abstract class FlxCameraView implements IFlxDestroyable
 	 * @param   transform  The color transform to use, optional.
 	 * @param   shader     The shader to use, optional (used only with the DRAW_TILES renderer).
 	 */
-	public function drawTriangles(graphic:FlxGraphic, vertices:FlxVector2d<Float>, indices:FlxVector2d<Int>, uvtData:FlxVector2d<Float>, ?colors:FlxVector2d<Int>,
+	public function drawTriangles(graphic:FlxGraphic, vertices:FlxVector2d<Float>, indices:Vector<Int>, uvtData:FlxVector2d<Float>, ?colors:Vector<Int>,
 		?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader)
 	{
 		throw "Not implemented";

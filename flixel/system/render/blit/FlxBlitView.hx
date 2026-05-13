@@ -1,5 +1,6 @@
 package flixel.system.render.blit;
 
+import openfl.Vector;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
@@ -250,7 +251,7 @@ class FlxBlitView extends FlxCameraView
 	
 	@:noCompletion
 	static final drawVertices = new FlxVector2d<Float>();
-	override function drawTriangles(graphic:FlxGraphic, vertices:FlxVector2d<Float>, indices:FlxVector2d<Int>, uvtData:FlxVector2d<Float>, ?colors:FlxVector2d<Int>,
+	override function drawTriangles(graphic:FlxGraphic, vertices:FlxVector2d<Float>, indices:Vector<Int>, uvtData:FlxVector2d<Float>, ?colors:Vector<Int>,
 			?position, ?blend, repeat = false, smoothing = false, ?transform, ?shader)
 	{
 		// super.drawTriangles(graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing, transform, shader);
