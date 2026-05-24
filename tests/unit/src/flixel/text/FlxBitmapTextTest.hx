@@ -76,16 +76,16 @@ class FlxBitmapTextTest extends FlxTest
 		assertRenderedText(field, msg2, CHAR, "The quick brown \nfox jumps over t\nhe lazy dog, sup\nercal-aphragalis\nt\nicexpiala-dociou\ns");
 		assertRenderedText(field, msg3, CHAR, "The quick brown \nfox jumps over t\nhe lazy dog, sup\nercalaphragalist\nicexpialadocious");
 		
-		assertRenderedText(field, msg1, WORD(NEVER), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist-\nicexpiala-\ndocious");
-		assertRenderedText(field, msg2, WORD(NEVER), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist\nicexpiala-\ndocious");
-		assertRenderedText(field, msg3, WORD(NEVER), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercalaphragalisticexpialadocious");
+		assertRenderedText(field, msg1, WORD(NEVER), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercal-\naphragalist-\nicexpiala-\ndocious");
+		assertRenderedText(field, msg2, WORD(NEVER), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercal-\naphragalist\nicexpiala-\ndocious");
+		assertRenderedText(field, msg3, WORD(NEVER), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercalaphragalisticexpialadocious");
 		
-		assertRenderedText(field, msg1, WORD(LINE_WIDTH), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist-\nicexpiala-\ndocious");
-		assertRenderedText(field, msg2, WORD(LINE_WIDTH), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist\nicexpiala-\ndocious");
-		assertRenderedText(field, msg3, WORD(LINE_WIDTH), "The quick brown \nfox jumps over \nthe lazy dog, su\npercalaphragalis\nticexpialadociou\ns");
+		assertRenderedText(field, msg1, WORD(LINE_WIDTH), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercal-\naphragalist-\nicexpiala-\ndocious");
+		assertRenderedText(field, msg2, WORD(LINE_WIDTH), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercal-\naphragalist\nicexpiala-\ndocious");
+		assertRenderedText(field, msg3, WORD(LINE_WIDTH), "The quick brown\nfox jumps over\nthe lazy dog, su\npercalaphragalis\nticexpialadociou\ns");
 		
-		assertRenderedText(field, msg1, WORD(LENGTH(10)), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-aphraga\nlist-icexpiala-\ndocious");
-		assertRenderedText(field, msg2, WORD(LENGTH(10)), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-aphraga\nlist\nicexpiala-\ndocious");
+		assertRenderedText(field, msg1, WORD(LENGTH(10)), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercal-aphraga\nlist-icexpiala-\ndocious");
+		assertRenderedText(field, msg2, WORD(LENGTH(10)), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercal-aphraga\nlist\nicexpiala-\ndocious");
 		assertRenderedText(field, msg3, WORD(LENGTH(10)), "The quick brown \nfox jumps over \nthe lazy dog, su\npercalaphragalis\nticexpialadociou\ns");
 	}
 	

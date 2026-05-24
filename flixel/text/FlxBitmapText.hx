@@ -849,7 +849,7 @@ class FlxBitmapText extends FlxSprite
 		function startNewLine()
 		{
 			if (line != "")
-				lines.push(line);
+				lines.push(trimEnd(line));
 			
 			// start a new line
 			line = "";
@@ -994,6 +994,18 @@ class FlxBitmapText extends FlxSprite
 	static inline function isSpaceChar(charCode:Int)
 	{
 		return charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE;
+	}
+	
+	static final startSpaces = ~/^\s+/g;
+	static inline function trimStart(str:String)
+	{
+		return startSpaces.replace(str, "");
+	}
+	
+	static final endSpaces = ~/\s+$/g;
+	static inline function trimEnd(str:String)
+	{
+		return endSpaces.replace(str, "");
 	}
 
 	/**
