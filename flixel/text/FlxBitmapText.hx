@@ -840,7 +840,7 @@ class FlxBitmapText extends FlxSprite
 		function startNewLine()
 		{
 			if (newline != "")
-				lines.push(trimEnd(newLine));
+				lines.push(trimEnd(newline));
 			
 			// start a new line
 			newline = "";
