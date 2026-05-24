@@ -306,12 +306,13 @@ class FlxBitmapText extends FlxSprite
 
 		if (pendingTextChange)
 		{
+			pendingTextChange = false;
 			updateText();
-			pendingTextBitmapChange = true;
 		}
 
 		if (pendingTextBitmapChange)
 		{
+			pendingTextBitmapChange = false;
 			updateTextBitmap(useTiles);
 			pendingPixelsChange = true;
 		}
@@ -560,8 +561,7 @@ class FlxBitmapText extends FlxSprite
 		{
 			_lines[i] = StringTools.rtrim(_lines[i]);
 		}
-
-		pendingTextChange = false;
+		
 		pendingTextBitmapChange = true;
 	}
 	
@@ -1065,8 +1065,6 @@ class FlxBitmapText extends FlxSprite
 		{
 			textBitmap.unlock();
 		}
-
-		pendingTextBitmapChange = false;
 	}
 
 	function drawLine(line:UnicodeString, posX:Int, posY:Int, useTiles:Bool = false):Void
@@ -1643,6 +1641,8 @@ class FlxBitmapText extends FlxSprite
 
 	function get_textWidth():Int
 	{
+		checkPendingChanges(true);
+		
 		var max:Int = 0;
 		var numLines:Int = _lines.length;
 		var lineWidth:Int;
@@ -1660,6 +1660,7 @@ class FlxBitmapText extends FlxSprite
 
 	function get_textHeight():Int
 	{
+		checkPendingChanges(true);
 		return (lineHeight + lineSpacing) * _lines.length - lineSpacing;
 	}
 
