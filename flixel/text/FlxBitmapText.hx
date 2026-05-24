@@ -197,12 +197,12 @@ class FlxBitmapText extends FlxSprite
 	public var numLines(get, never):Int;
 
 	/**
-	 * The width of the TextField object used for bitmap generation for this FlxText object.
-	 * Use it when you want to change the visible width of text. Enables autoSize if <= 0.
+	 * The visible width of the text field. If the text does not fit, the `wrap` field
+	 * determines how the excess text is displayed . Enables `autoSize` if <= 0.
 	 */
 	public var fieldWidth(get, set):Int;
 
-	var _fieldWidth:Int;
+	var _fieldWidth:Int = 0; // TODO: remove the getter/setter
 
 	var pendingTextChange:Bool = true;
 	var pendingTextBitmapChange:Bool = true;
@@ -231,7 +231,7 @@ class FlxBitmapText extends FlxSprite
 	{
 		super(x, y);
 
-		width = fieldWidth = 2;
+		width = 2;// TODO: remove?
 		alpha = 1;
 
 		this.font = (font == null) ? FlxBitmapFont.getDefaultFont() : font;
@@ -1040,8 +1040,6 @@ class FlxBitmapText extends FlxSprite
 			textData.clear();
 		}
 
-		_fieldWidth = frameWidth;
-
 		var numLines:Int = _lines.length;
 		var line:UnicodeString;
 		var lineWidth:Int;
@@ -1429,18 +1427,12 @@ class FlxBitmapText extends FlxSprite
 	{
 		return (autoSize) ? textWidth : _fieldWidth;
 	}
-
-	/**
-	 * Sets the width of the text field. If the text does not fit, it will spread on multiple lines.
-	 */
+	
 	function set_fieldWidth(value:Int):Int
 	{
-		value = (value > 1) ? value : 1;
-
 		if (value != _fieldWidth)
 		{
-			if (value <= 0)
-				autoSize = true;
+			autoSize = value <= 0;
 
 			pendingTextChange = true;
 		}
