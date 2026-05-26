@@ -188,6 +188,7 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Specifies whether the text field will break into multiple lines or not on overflow.
 	 */
+	@:deprecated("multiLine is deprecated, use wrap to determine how long test gets wrapped")
 	public var multiLine(default, set):Bool = true;
 
 	/**
@@ -196,12 +197,12 @@ class FlxBitmapText extends FlxSprite
 	public var numLines(get, never):Int;
 
 	/**
-	 * The width of the TextField object used for bitmap generation for this FlxText object.
-	 * Use it when you want to change the visible width of text. Enables autoSize if <= 0.
+	 * The visible width of the text field. If the text does not fit, the `wrap` field
+	 * determines how the excess text is displayed . Enables `autoSize` if <= 0.
 	 */
 	public var fieldWidth(get, set):Int;
 
-	var _fieldWidth:Int;
+	var _fieldWidth:Int = 0; // TODO: remove the getter/setter
 
 	var pendingTextChange:Bool = true;
 	var pendingTextBitmapChange:Bool = true;
@@ -230,7 +231,7 @@ class FlxBitmapText extends FlxSprite
 	{
 		super(x, y);
 
-		width = fieldWidth = 2;
+		width = 2;// TODO: remove?
 		alpha = 1;
 
 		this.font = (font == null) ? FlxBitmapFont.getDefaultFont() : font;
@@ -305,12 +306,13 @@ class FlxBitmapText extends FlxSprite
 
 		if (pendingTextChange)
 		{
+			pendingTextChange = false;
 			updateText();
-			pendingTextBitmapChange = true;
 		}
 
 		if (pendingTextBitmapChange)
 		{
+			pendingTextBitmapChange = false;
 			updateTextBitmap(useTiles);
 			pendingPixelsChange = true;
 		}
@@ -530,6 +532,7 @@ class FlxBitmapText extends FlxSprite
 		return value;
 	}
 
+	@:haxe.warning("-WDeprecated")
 	function updateText():Void
 	{
 		var tmp:UnicodeString = (autoUpperCase) ? (text : UnicodeString).toUpperCase() : text;
@@ -558,8 +561,7 @@ class FlxBitmapText extends FlxSprite
 		{
 			_lines[i] = StringTools.rtrim(_lines[i]);
 		}
-
-		pendingTextChange = false;
+		
 		pendingTextBitmapChange = true;
 	}
 	
@@ -725,26 +727,21 @@ class FlxBitmapText extends FlxSprite
 	function autoWrap(lines:Array<UnicodeString>)
 	{
 		// subdivide lines
-		var newLines:Array<UnicodeString> = [];
-		var words:Array<UnicodeString>; // the array of words in the current line
+		final newLines:Array<UnicodeString> = [];
 
 		for (line in lines)
 		{
-			words = [];
-			// split this line into words
-			splitLineIntoWords(line, words);
-
 			switch(wrap)
 			{
 				case NONE:
 					throw "autoWrap called with wrap:NONE";
 				case WORD(splitWords):
-					wrapLineByWord(words, newLines, splitWords);
+					wrapLineByWord(line, newLines, splitWords);
 				case CHAR:
-					wrapLineByCharacter(words, newLines);
+					wrapLineByCharacter(splitLineIntoWords(line), newLines);
 			}
 		}
-
+		
 		return newLines;
 	}
 
@@ -754,17 +751,18 @@ class FlxBitmapText extends FlxSprite
 	 * @param   line   Line to split.
 	 * @param   words  Result array to fill with words.
 	 */
-	function splitLineIntoWords(line:UnicodeString, words:Array<UnicodeString>):Void
+	function splitLineIntoWords(line:UnicodeString)
 	{
+		final words = new Array<UnicodeString>();
 		var word:UnicodeString = ""; // current word to process
 		var isSpaceWord:Bool = false; // whether current word consists of spaces or not
-		var lineLength:Int = line.length; // lenght of the current line
+		final lineLength:Int = line.length; // lenght of the current line
 		
 		var c:Int = 0; // char index on the line
 		while (c < lineLength)
 		{
 			final charCode = line.charCodeAt(c);
-			if (charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE)
+			if (isSpaceChar(charCode))
 			{
 				if (!isSpaceWord)
 				{
@@ -811,6 +809,8 @@ class FlxBitmapText extends FlxSprite
 
 		if (word != "")
 			words.push(word);
+		
+		return words;
 	}
 
 	/**
@@ -819,65 +819,58 @@ class FlxBitmapText extends FlxSprite
 	 * @param   words     The array of words in the line to process.
 	 * @param   newLines  Array to fill with result lines.
 	 */
-	function wrapLineByWord(words:Array<UnicodeString>, lines:Array<UnicodeString>, wordSplit:WordSplitConditions):Void
+	function wrapLineByWord(line:UnicodeString, lines:Array<UnicodeString>, wordSplit:WordSplitConditions):Void
 	{
+		final words = splitLineIntoWords(line);
 		if (words.length == 0)
 			return;
 		
 		final maxLineWidth = _fieldWidth - 2 * padding;
 		final startX:Int = font.minOffsetX;
-		var lineWidth = startX;
-		var line:UnicodeString = "";
-		var word:String = null;
-		var wordWidth:Int = 0;
-		var i = 0;
+		var newLineWidth = startX;
+		var newline:UnicodeString = "";
 		
 		function addWord(word:String, wordWidth = -1)
 		{
-			line = line + word;// `line += word` is broken in html5 on haxe 4.2.5
-			lineWidth += (wordWidth < 0 ? getWordWidth(word) : wordWidth) + letterSpacing;
+			newline = newline + word;// `line += word` is broken in html5 on haxe 4.2.5
+			newLineWidth += (wordWidth < 0 ? getWordWidth(word) : wordWidth) + letterSpacing;
 		}
 		
-		inline function addCurrentWord()
-		{
-			addWord(word, wordWidth);
-			i++;
-		}
 		
 		function startNewLine()
 		{
-			if (line != "")
-				lines.push(line);
+			if (newline != "")
+				lines.push(trimEnd(newline));
 			
 			// start a new line
-			line = "";
-			lineWidth = startX;
+			newline = "";
+			newLineWidth = startX;
 		}
 		
-		function addWordByChars()
+		function addWordByChars(word)
 		{
 			// put the word on the next line and split the word if it exceeds fieldWidth
 			var chunks:Array<UnicodeString> = [];
-			wrapLineByCharacter([line, word], chunks);
+			wrapLineByCharacter([newline, word], chunks);
 			
 			// add all but the last chunk as a new line, the last chunk starts the next line
 			while (chunks.length > 1)
 				lines.push(chunks.shift());
 			
-			line = chunks.shift();
-			lineWidth = startX + getWordWidth(line);
-			i++;
+			newline = chunks.shift();
+			newLineWidth = startX + getWordWidth(newline);
+			// i++;
 		}
 		
-		while (i < words.length)
+		while (words.length > 0)
 		{
-			word = words[i];
-			wordWidth = getWordWidth(word);
+			final word = words.shift();
+			final wordWidth = getWordWidth(word);
 			
-			if (lineWidth + wordWidth <= maxLineWidth)
+			if (newLineWidth + wordWidth <= maxLineWidth)
 			{
 				// the word fits in the current line
-				addCurrentWord();
+				addWord(word, wordWidth);
 				continue;
 			}
 			
@@ -885,7 +878,6 @@ class FlxBitmapText extends FlxSprite
 			{
 				// skip spaces when starting a new line
 				startNewLine();
-				i++;
 				continue;
 			}
 			
@@ -894,24 +886,24 @@ class FlxBitmapText extends FlxSprite
 			switch (wordSplit)
 			{
 				case LINE_WIDTH if(!wordFitsLine):
-					addWordByChars();
-				case LENGTH(min) if (word.length >= min) :
-					addWordByChars();
-				case WIDTH(min) if (wordWidth >= min) :
-					addWordByChars();
+					addWordByChars(word);
+				case LENGTH(min) if (word.length >= min):
+					addWordByChars(word);
+				case WIDTH(min) if (wordWidth >= min):
+					addWordByChars(word);
 				case NEVER | LINE_WIDTH | LENGTH(_) | WIDTH(_):
 					// add word to next line, continue as normal
 					startNewLine();
-					addCurrentWord();
+					addWord(word, wordWidth);
 			}
 			
-			if (lineWidth > maxLineWidth)
+			if (newLineWidth > maxLineWidth)
 				startNewLine();
 		}
 
 		// add the final line, since previous lines were added when the next one started
-		if (line != "")
-			lines.push(line);
+		if (newline != "")
+			lines.push(newline);
 	}
 
 	/**
@@ -993,6 +985,18 @@ class FlxBitmapText extends FlxSprite
 	{
 		return charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE;
 	}
+	
+	static final startSpaces = ~/^\s+/g;
+	static inline function trimStart(str:String)
+	{
+		return startSpaces.replace(str, "");
+	}
+	
+	static final endSpaces = ~/\s+$/g;
+	static inline function trimEnd(str:String)
+	{
+		return endSpaces.replace(str, "");
+	}
 
 	/**
 	 * Internal method for updating helper data for text rendering
@@ -1025,8 +1029,6 @@ class FlxBitmapText extends FlxSprite
 		{
 			textData.clear();
 		}
-
-		_fieldWidth = frameWidth;
 
 		var numLines:Int = _lines.length;
 		var line:UnicodeString;
@@ -1063,8 +1065,6 @@ class FlxBitmapText extends FlxSprite
 		{
 			textBitmap.unlock();
 		}
-
-		pendingTextBitmapChange = false;
 	}
 
 	function drawLine(line:UnicodeString, posX:Int, posY:Int, useTiles:Bool = false):Void
@@ -1417,18 +1417,12 @@ class FlxBitmapText extends FlxSprite
 	{
 		return (autoSize) ? textWidth : _fieldWidth;
 	}
-
-	/**
-	 * Sets the width of the text field. If the text does not fit, it will spread on multiple lines.
-	 */
+	
 	function set_fieldWidth(value:Int):Int
 	{
-		value = (value > 1) ? value : 1;
-
 		if (value != _fieldWidth)
 		{
-			if (value <= 0)
-				autoSize = true;
+			autoSize = value <= 0;
 
 			pendingTextChange = true;
 		}
@@ -1443,7 +1437,8 @@ class FlxBitmapText extends FlxSprite
 
 		return alignment = value;
 	}
-
+	
+	@:haxe.warning("-WDeprecated")
 	function set_multiLine(value:Bool):Bool
 	{
 		if (multiLine != value)
@@ -1640,6 +1635,8 @@ class FlxBitmapText extends FlxSprite
 
 	function get_textWidth():Int
 	{
+		checkPendingChanges(true);
+		
 		var max:Int = 0;
 		var numLines:Int = _lines.length;
 		var lineWidth:Int;
@@ -1657,6 +1654,7 @@ class FlxBitmapText extends FlxSprite
 
 	function get_textHeight():Int
 	{
+		checkPendingChanges(true);
 		return (lineHeight + lineSpacing) * _lines.length - lineSpacing;
 	}
 
