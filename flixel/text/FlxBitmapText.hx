@@ -188,7 +188,6 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Specifies whether the text field will break into multiple lines or not on overflow.
 	 */
-	@:deprecated("multiLine is deprecated, use wrap to determine how long test gets wrapped")
 	public var multiLine(default, set):Bool = true;
 
 	/**
@@ -1438,7 +1437,6 @@ class FlxBitmapText extends FlxSprite
 		return alignment = value;
 	}
 	
-	@:haxe.warning("-WDeprecated")
 	function set_multiLine(value:Bool):Bool
 	{
 		if (multiLine != value)
