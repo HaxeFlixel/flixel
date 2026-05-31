@@ -95,7 +95,7 @@ class CameraFrontEnd
 	    
 	    // invalid ranges are added (match Array.insert's behavior)
         if (position >= list.length)
-            return add(newCamera);
+            return add(newCamera, defaultDrawTarget);
         
         final childIndex = FlxG.game.getChildIndex(list[position].flashSprite);
         FlxG.game.addChildAt(newCamera.flashSprite, childIndex);
