@@ -842,9 +842,11 @@ enum abstract FlxFrameAngle(Int) from Int to Int
  * `bottom`. This is for optimization reasons, to reduce arithmetic when drawing vertices
  */
 @:forward(put)
-abstract FlxUVRect(FlxRect) from FlxRect
+abstract FlxUVRect(FlxRect) from FlxRect // to flixel.util.FlxPool.IFlxPooled
 {
-	@:to public inline function toIFlxPooled():flixel.util.FlxPool.IFlxPooled
+	// https://github.com/HaxeFlixel/flixel/pull/3609
+	// Needed to work with hscript-improved
+	@:to inline function toIFlxPooled():flixel.util.FlxPool.IFlxPooled
 	{
 		return this;
 	}
