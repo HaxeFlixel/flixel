@@ -1,17 +1,17 @@
 package flixel.input.gamepad;
 
 import flixel.input.FlxInput.FlxInputState;
-import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSignal.FlxTypedSignal;
 #if FLX_JOYSTICK_API
 import flixel.FlxG;
 import flixel.math.FlxPoint;
 import openfl.events.JoystickEvent;
 #elseif FLX_GAMEINPUT_API
+import openfl.events.GameInputEvent;
 import openfl.ui.GameInput;
 import openfl.ui.GameInputDevice;
-import openfl.events.GameInputEvent;
 
 using flixel.util.FlxStringUtil;
 #end
@@ -409,10 +409,10 @@ class FlxGamepadManager implements IFlxInputManager
 		name = name.toLowerCase().remove("-").remove("_");
 		return if (name.contains("ouya"))
 				OUYA; // "OUYA Game Controller"
-			else if (name.contains("wireless controller") || name.contains("ps4") || name.contains("dualshock 4"))
-				PS4; // "Wireless Controller" or "PS4 controller"
 			else if (name.contains("ps5") || name.contains('dualsense'))
 				PS5;
+			else if (name.contains("wireless controller") || name.contains("ps4") || name.contains("dualshock 4"))
+				PS4; // "Wireless Controller" or "PS4 controller"
 			else if (name.contains("logitech"))
 				LOGITECH;
 			else if ((name.contains("xbox") && name.contains("360")) || name.contains("xinput"))

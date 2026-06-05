@@ -99,7 +99,7 @@ class CameraFrontEnd
 	    
 	    // invalid ranges are added (match Array.insert's behavior)
         if (position >= list.length)
-            return add(newCamera);
+            return add(newCamera, defaultDrawTarget);
         
         FlxG.renderer.addCameraViewAt(newCamera.view, position);
 		
