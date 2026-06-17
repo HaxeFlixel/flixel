@@ -1547,13 +1547,17 @@ class FlxSprite extends FlxObject
 		result.degrees -= angle;
 		result.add(origin);
 		
-		final animFlipX = animation.curAnim != null && animation.curAnim.flipX;
-		if (flipX != animFlipX)
-			result.x = frameWidth - result.x;
-		
-		final animFlipY = animation.curAnim != null && animation.curAnim.flipY;
-		if (flipY != animFlipY)
-			result.y = frameHeight - result.y;
+		// FlxSpriteContainers don't have animations
+		if (animation != null)
+		{
+			final animFlipX = animation.curAnim != null && animation.curAnim.flipX;
+			if (flipX != animFlipX)
+				result.x = frameWidth - result.x;
+			
+			final animFlipY = animation.curAnim != null && animation.curAnim.flipY;
+			if (flipY != animFlipY)
+				result.y = frameHeight - result.y;
+		}
 		
 		return result;
 	}
