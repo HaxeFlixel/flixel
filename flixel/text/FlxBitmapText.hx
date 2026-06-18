@@ -822,7 +822,11 @@ class FlxBitmapText extends FlxSprite
 	{
 		final words = splitLineIntoWords(line);
 		if (words.length == 0)
+		{
+			// no splitting needed
+			lines.push(line);
 			return;
+		}
 		
 		final maxLineWidth = _fieldWidth - 2 * padding;
 		final startX:Int = font.minOffsetX;
