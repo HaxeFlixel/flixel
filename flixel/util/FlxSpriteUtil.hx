@@ -549,9 +549,11 @@ class FlxSpriteUtil
 		beginDraw(FillColor, lineStyle);
 		var p:FlxPoint = Vertices.shift();
 		flashGfx.moveTo(p.x, p.y);
+		p.putWeak();
 		for (p in Vertices)
 		{
 			flashGfx.lineTo(p.x, p.y);
+			p.putWeak();
 		}
 		endDraw(sprite, drawStyle);
 		Vertices.unshift(p);
