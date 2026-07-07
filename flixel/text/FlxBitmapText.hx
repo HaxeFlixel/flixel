@@ -1653,6 +1653,9 @@ class FlxBitmapText extends FlxSprite
 	function get_textHeight():Int
 	{
 		checkPendingChanges(true);
+		if (_lines.length == 0)
+			return 0;
+		
 		return (lineHeight + lineSpacing) * _lines.length - lineSpacing;
 	}
 
