@@ -1241,6 +1241,7 @@ class FlxObject extends FlxBasic
 	 * @param   axes   On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both. 
 	 * @return  This FlxObject for chaining
 	 */
+	@:deprecated("screenCenter is deprecated, use alignTo(CENTER, CENTER) or alignTo(null, CENTER) or alignTo(CENTER)")
 	public inline function screenCenter(axes:FlxAxes = XY):FlxObject
 	{
 		if (axes.x)
@@ -1249,6 +1250,51 @@ class FlxObject extends FlxBasic
 		if (axes.y)
 			y = (FlxG.height - height) / 2;
 
+		return this;
+	}
+
+	/**
+	 * Aligns this `FlxObject` relative to another object or the game window.
+	 *
+	 * @param  alignX   Horizontal alignment (`LEFT`, `CENTER`, `RIGHT`). `null` leaves X unchanged.
+	 * @param  alignY   Vertical alignment (`TOP`, `CENTER`, `BOTTOM`). `null` leaves Y unchanged.
+	 * @param  obj      Object to align relative to. If `null`, the game window is used.
+	 * @param  offsetX  Additional horizontal offset applied after alignment.
+	 * @param  offsetY  Additional vertical offset applied after alignment.
+	 * @return This `FlxObject` for chaining.
+	 */
+	public function alignTo(?alignX:FlxAlignX, ?alignY:FlxAlignY, ?obj:FlxObject, offsetX:Float = 0, offsetY:Float = 0):FlxObject
+	{
+		if (alignX != null)
+		{
+			final left:Float = obj != null ? obj.x : 0;
+			final w:Float = obj != null ? obj.width : FlxG.width;
+			
+			x = switch (alignX)
+			{
+				case LEFT: left;
+				case CENTER: left + (w - width) * 0.5;
+				case RIGHT: left + w - width;
+			}
+			
+			x += offsetX;
+		}
+		
+		if (alignY != null)
+		{
+			final top:Float = obj != null ? obj.y : 0;
+			final h:Float = obj != null ? obj.height : FlxG.height;
+			
+			y = switch (alignY)
+			{
+				case TOP: top;
+				case CENTER: top + (h - height) * 0.5;
+				case BOTTOM: top + h - height;
+			}
+			
+			y += offsetY;
+		}
+		
 		return this;
 	}
 
@@ -1568,4 +1614,24 @@ enum abstract CollisionDragType(Int)
 
 	/** Drags when colliding with heavier objects. Immovable objects have infinite mass. */
 	var HEAVIER = 3;
+}
+
+/**
+ * X-aligned.
+ */
+enum abstract FlxAlignX(Int)
+{
+	final LEFT:FlxAlignX = 0;
+	final CENTER:FlxAlignX = 1;
+	final RIGHT:FlxAlignX = 2;
+}
+
+/**
+ * Y-aligned.
+ */
+enum abstract FlxAlignY(Int)
+{
+	final TOP:FlxAlignY = 0;
+	final CENTER:FlxAlignY = 1;
+	final BOTTOM:FlxAlignY = 2;
 }
