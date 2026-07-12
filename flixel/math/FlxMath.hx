@@ -517,6 +517,7 @@ class FlxMath
 	 * @param	n	The angle in radians.
 	 * @return	An approximated sine of `n`.
 	 */
+	@:deprecated("fastSin is deprecated, use Math.sin, instead")
 	public static inline function fastSin(n:Float):Float
 	{
 		n *= 0.3183098862; // divide by pi to normalize
@@ -549,6 +550,7 @@ class FlxMath
 	 * @param	n	The angle in radians.
 	 * @return	An approximated cosine of `n`.
 	 */
+	@:deprecated("fastCos is deprecated, use Math.cos, instead")
 	public static inline function fastCos(n:Float):Float
 	{
 		return fastSin(n + 1.570796327); // sin and cos are the same, offset by pi/2
