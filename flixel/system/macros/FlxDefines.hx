@@ -135,6 +135,7 @@ private enum HelperDefine
 	FLX_NO_DEFAULT_SOUND_EXT;
 	/** Enables audio streaming related APIs */
 	FLX_STREAM_SOUND;
+	FLX_RENDER_DRAWQUADS;
 }
 
 class FlxDefines
@@ -303,6 +304,8 @@ class FlxDefines
 		if (defined(FLX_NO_UNIT_TEST))
 			define(FLX_OPENGL_AVAILABLE);
 		#end
+
+		define(FLX_RENDER_DRAWQUADS);
 		
 		defineInversion(FLX_TRACK_GRAPHICS, FLX_NO_TRACK_GRAPHICS);
 		

@@ -8,9 +8,6 @@ import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import openfl.Assets;
 import openfl.display.BitmapData;
-#if FLX_OPENGL_AVAILABLE
-import lime.graphics.opengl.GL;
-#end
 
 /**
  * Internal storage system to prevent graphics from being used repeatedly in memory.
@@ -19,7 +16,6 @@ import lime.graphics.opengl.GL;
  */
 class BitmapFrontEnd
 {
-	#if FLX_OPENGL_AVAILABLE
 	/**
 	 * Returns the maximum allowed width and height (in pixels) for a texture.
 	 * This value is only available on hardware-accelerated targets that use OpenGL.
@@ -27,12 +23,12 @@ class BitmapFrontEnd
 	 * 
 	 * @see https://opengl.gpuinfo.org/displaycapability.php?name=GL_MAX_TEXTURE_SIZE
 	 */
+	@:deprecated("maxTextureSize is deprecated, use FlxG.renderer.maxTextureSize instead.")
 	public var maxTextureSize(get, never):Int;
-	#end
 
 	/**
 	 * Helper FlxFrame object. Containing only one frame.
-	 * Useful for drawing colored rectangles of all sizes in FlxG.renderTile mode.
+	 * Useful for drawing colored rectangles of all sizes when not using the blitting renderer.
 	 */
 	public var whitePixel(get, never):FlxFrame;
 
@@ -341,18 +337,10 @@ class BitmapFrontEnd
 		}
 	}
 
-	#if FLX_OPENGL_AVAILABLE
-	static var _maxTextureSize = -1;
-
-	@:allow(flixel.FlxG)
-	function get_maxTextureSize():Int
+	inline function get_maxTextureSize():Int
 	{
-		if (_maxTextureSize < 0)
-			_maxTextureSize = FlxG.renderTile ? cast GL.getParameter(GL.MAX_TEXTURE_SIZE) : 0;
-		
-		return _maxTextureSize;
+		return FlxG.renderer.maxTextureSize;
 	}
-	#end
 
 	function get_whitePixel():FlxFrame
 	{

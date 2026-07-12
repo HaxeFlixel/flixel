@@ -7,6 +7,7 @@ import flixel.math.FlxRect;
 import flixel.system.debug.Icon;
 import flixel.system.debug.Tooltip;
 import flixel.system.debug.interaction.Interaction;
+import flixel.system.render.FlxCanvas;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BitmapData;
@@ -218,6 +219,7 @@ class Transform extends Tool
 		}
 	}
 	
+	#if FLX_DEBUG
 	override function draw():Void
 	{
 		if (!isActive())
@@ -232,36 +234,36 @@ class Transform extends Tool
 			case TRANSFORM(target, _, _, _):
 				target;
 		}
-		
-		final gfx = _brain.getDebugGraphics();
-		if (gfx == null)
-			return;
-		
-		drawSelection(gfx, target.getDefaultCamera());
-		Marker.draw(target.x + target.origin.x, target.y + target.origin.y, false, gfx);
-		
-		// Draw the debug info to the main camera buffer.
-		if (FlxG.renderBlit)
-			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+
+		final camera = target.getDefaultCamera();
+
+		final view = camera.view;
+		view.beginDrawDebug();
+		final buffer = view.getDebugBuffer();
+		drawSelection(buffer, camera);
+		Marker.draw(buffer, target.x + target.origin.x, target.y + target.origin.y, false);
+		view.endDrawDebug();
 	}
-	
-	function drawSelection(gfx:Graphics, camera:FlxCamera)
+
+	function drawSelection(buffer:FlxCanvas, camera:FlxCamera)
 	{
-		gfx.lineStyle(1.0, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
-		
 		// draw lines
-		gfx.moveTo(markers[3].x, markers[3].y);
-		for (marker in markers)
-			gfx.lineTo(marker.x, marker.y);
+		final scroll = camera.scroll;
+		for (i => marker in markers)
+		{
+			final prev = markers[(i + 3) % 4];
+			buffer.drawLine(prev.x - scroll.x, prev.y - scroll.y, marker.x - scroll.x, marker.y - scroll.y, FlxColor.MAGENTA);
+		}
 		
 		// draw markers
 		for (marker in markers)
 		{
 			final x = marker.x;
 			final y = marker.y;
-			Marker.draw(x, y, marker.type == ROTATE, gfx);
+			Marker.draw(buffer, x - scroll.x, y - scroll.y, marker.type == ROTATE);
 		}
 	}
+	#end
 }
 
 private class Marker
@@ -297,15 +299,13 @@ private class Marker
 		y = target.y + target.origin.y + rot.y;
 		rot.put();
 	}
-	
-	public static function draw(screenX:Float, screenY:Float, circle:Bool, gfx:Graphics)
+
+	public static function draw(buffer:FlxCanvas, screenX:Float, screenY:Float, circle:Bool)
 	{
-		gfx.beginFill(FlxColor.MAGENTA);
 		if (circle)
-			gfx.drawCircle(screenX, screenY, CIRCLE_RADIUS);
+			buffer.drawFilledCircle(screenX, screenY, CIRCLE_RADIUS, FlxColor.MAGENTA);
 		else
-			gfx.drawRect(screenX - RECT_MARGIN, screenY - RECT_MARGIN, RECT_SIZE, RECT_SIZE);
-		gfx.endFill();
+			buffer.drawFilledRect(screenX - RECT_MARGIN, screenY - RECT_MARGIN, RECT_SIZE, RECT_SIZE, FlxColor.MAGENTA);
 	}
 }
 

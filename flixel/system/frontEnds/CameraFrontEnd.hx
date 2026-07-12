@@ -1,11 +1,12 @@
 package flixel.system.frontEnds;
 
-import openfl.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.system.render.blit.FlxBlitRenderer;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxSignal.FlxTypedSignal;
+import openfl.geom.Rectangle;
 
 using flixel.util.FlxArrayUtil;
 
@@ -44,8 +45,11 @@ class CameraFrontEnd
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
 	 * you are not doing any pre-processing in your game state's draw() call.
+	 * 
+	 * **NOTE**: Only works with the blitting renderer.
 	 */
-	public var useBufferLocking:Bool = false;
+	@:deprecated("useBufferLocking is deprecated, use FlxBlitRenderer.useBufferLocking, instead.")
+	public var useBufferLocking(get, set):Bool;
 
 	/**
 	 * Internal helper variable for clearing the cameras each frame.
@@ -64,7 +68,7 @@ class CameraFrontEnd
 	 */
 	public function add<T:FlxCamera>(NewCamera:T, DefaultDrawTarget:Bool = true):T
 	{
-		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
+		FlxG.renderer.addCameraView(NewCamera.view);
 		
 		list.push(NewCamera);
 		if (DefaultDrawTarget)
@@ -97,8 +101,7 @@ class CameraFrontEnd
         if (position >= list.length)
             return add(newCamera, defaultDrawTarget);
         
-        final childIndex = FlxG.game.getChildIndex(list[position].flashSprite);
-        FlxG.game.addChildAt(newCamera.flashSprite, childIndex);
+        FlxG.renderer.addCameraViewAt(newCamera.view, position);
 		
 		list.insert(position, newCamera);
 		if (defaultDrawTarget)
@@ -122,7 +125,7 @@ class CameraFrontEnd
 		var index:Int = list.indexOf(Camera);
 		if (Camera != null && index != -1)
 		{
-			FlxG.game.removeChild(Camera.flashSprite);
+			FlxG.renderer.removeCameraView(Camera.view);
 			list.splice(index, 1);
 			defaults.remove(Camera);
 		}
@@ -132,7 +135,7 @@ class CameraFrontEnd
 			return;
 		}
 
-		if (FlxG.renderTile)
+		if (FlxG.renderer.tile)
 		{
 			for (i in 0...list.length)
 			{
@@ -253,87 +256,46 @@ class CameraFrontEnd
 	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.
 	 */
 	@:allow(flixel.FlxGame)
+	@:deprecated("lock() is deprecated, use clear() instead.")
 	inline function lock():Void
+	{
+		clear();
+	}
+
+	/**
+	 * Called by the game object to clear all the camera buffers for the next draw pass.
+	 */
+	@:allow(flixel.system.render)
+	inline function clear():Void
 	{
 		for (camera in list)
 		{
-			if (camera == null || !camera.exists || !camera.visible)
-			{
-				continue;
-			}
-
-			if (FlxG.renderBlit)
-			{
-				camera.checkResize();
-
-				if (useBufferLocking)
-				{
-					camera.buffer.lock();
-				}
-			}
-
-			if (FlxG.renderTile)
-			{
-				camera.clearDrawStack();
-				camera.canvas.graphics.clear();
-				// Clearing camera's debug sprite
-				#if FLX_DEBUG
-				camera.debugLayer.graphics.clear();
-				#end
-			}
-
-			if (FlxG.renderBlit)
-			{
-				camera.fill(camera.bgColor, camera.useBgAlphaBlending);
-				camera.screen.dirty = true;
-			}
-			else
-			{
-				camera.fill(camera.bgColor.rgb, camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
-			}
-		}
-	}
-
-	@:allow(flixel.FlxGame)
-	inline function render():Void
-	{
-		if (FlxG.renderTile)
-		{
-			for (camera in list)
-			{
-				if ((camera != null) && camera.exists && camera.visible)
-				{
-					camera.render();
-				}
-			}
+			if ((camera != null) && camera.exists && camera.visible)
+				camera.view.clear();
 		}
 	}
 
 	/**
-	 * Called by the game object to draw the special FX and unlock all the camera buffers.
+	 * Called by the game object to draw everything onto the screen.
 	 */
-	@:allow(flixel.FlxGame)
-	inline function unlock():Void
+	@:allow(flixel.system.render)
+	inline function render():Void
 	{
 		for (camera in list)
 		{
-			if ((camera == null) || !camera.exists || !camera.visible)
-			{
-				continue;
-			}
-
-			camera.drawFX();
-
-			if (FlxG.renderBlit)
-			{
-				if (useBufferLocking)
-				{
-					camera.buffer.unlock();
-				}
-
-				camera.screen.dirty = true;
-			}
+			if ((camera != null) && camera.exists && camera.visible)
+				camera.view.render();
 		}
+	}
+
+	/**
+	 * Called by the game object to draw everything onto the screen.
+	 */
+	@:allow(flixel.FlxGame)
+	@:deprecated("unlock() is deprecated, use render() instead.")
+	inline function unlock():Void
+	{
+		render();
 	}
 
 	/**
@@ -376,5 +338,21 @@ class CameraFrontEnd
 		}
 
 		return Color;
+	}
+
+	function get_useBufferLocking():Bool 
+	{
+		if (FlxG.renderer.blit)
+			return cast(FlxG.renderer, FlxBlitRenderer).useBufferLocking;
+
+		return false;
+	}
+
+	function set_useBufferLocking(value:Bool):Bool
+	{
+		if (FlxG.renderer.blit)
+			return cast(FlxG.renderer, FlxBlitRenderer).useBufferLocking = value;
+
+		return value;
 	}
 }

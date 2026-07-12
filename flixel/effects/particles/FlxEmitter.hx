@@ -1,6 +1,5 @@
 package flixel.effects.particles;
 
-import openfl.display.BlendMode;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -15,6 +14,7 @@ import flixel.util.FlxDirectionFlags;
 import flixel.util.helpers.FlxBounds;
 import flixel.util.helpers.FlxPointRangeBounds;
 import flixel.util.helpers.FlxRangeBounds;
+import openfl.display.BlendMode;
 
 typedef FlxEmitter = FlxTypedEmitter<FlxParticle>;
 
@@ -264,7 +264,7 @@ class FlxTypedEmitter<T:FlxSprite & IFlxParticle> extends FlxTypedGroup<T>
 		var particle:T = Type.createInstance(particleClass, []);
 		var frame = Multiple ? FlxG.random.int(0, totalFrames - 1) : -1;
 
-		if (FlxG.renderBlit && bakedRotationAngles > 0)
+		if (FlxG.renderer.blit && bakedRotationAngles > 0)
 			particle.loadRotatedGraphic(Graphics, bakedRotationAngles, frame, false, AutoBuffer);
 		else
 			particle.loadGraphic(Graphics, Multiple);

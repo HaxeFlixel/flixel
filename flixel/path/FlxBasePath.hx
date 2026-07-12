@@ -4,6 +4,8 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
+import flixel.system.render.FlxCameraView;
+import flixel.system.render.FlxCanvas;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -316,19 +318,11 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	 *
 	 * @param camera   The camera object the path will draw to.
 	 */
+	@:haxe.warning("-WDeprecated")
 	public function drawDebugOnCamera(camera:FlxCamera):Void
 	{
 		// Set up our global flash graphics object to draw out the path
-		var gfx:Graphics = null;
-		if (FlxG.renderBlit)
-		{
-			gfx = FlxSpriteUtil.flashGfx;
-			gfx.clear();
-		}
-		else
-		{
-			gfx = camera.debugLayer.graphics;
-		}
+		camera.view.beginDrawDebug();
 		
 		final length = nodes.length;
 		// Then fill up the object with node and path graphics
@@ -354,25 +348,22 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 				}
 			}
 			
+			final buffer = camera.view.getDebugBuffer();
 			// draw a box for the node
-			drawNode(gfx, prevNodeScreen, nodeSize, nodeColor);
+			drawNode(buffer, prevNodeScreen, nodeSize, nodeColor);
 			
 			if (i + 1 < length || loopType == LOOP)
 			{
 				// draw a line to the next node, if LOOP, get connect the tail and head
 				final nextNode = nodes[(i + 1) % length];
 				final nextNodeScreen = copyWorldToScreenPos(nextNode, camera);
-				drawLine(gfx, prevNodeScreen, nextNodeScreen);
+				drawLine(buffer, prevNodeScreen, nextNodeScreen);
 				nextNodeScreen.put();
 			}
 			prevNodeScreen.put();
 		}
 		
-		if (FlxG.renderBlit)
-		{
-			// then stamp the path down onto the game buffer
-			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
-		}
+		camera.view.endDrawDebug();
 	}
 	
 	@:access(flixel.FlxCamera)
@@ -386,7 +377,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 			result.y -= camera.scroll.y * object.scrollFactor.y;
 		}
 		
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.blit)
 		{
 			result.x -= camera.viewMarginX;
 			result.y -= camera.viewMarginY;
@@ -396,25 +387,22 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		return result;
 	}
 	
-	inline function drawNode(gfx:Graphics, node:FlxPoint, size:Int, color:FlxColor)
+	inline function drawNode(buffer:FlxCanvas, node:FlxPoint, size:Int, color:FlxColor)
 	{
-		gfx.beginFill(color.rgb, color.alphaFloat);
-		gfx.lineStyle();
 		final offset = Math.floor(size * 0.5);
-		gfx.drawRect(node.x - offset, node.y - offset, size, size);
-		gfx.endFill();
+		buffer.drawFilledRect(node.x - offset, node.y - offset, size, size, color);
 	}
 	
-	function drawLine(gfx:Graphics, node1:FlxPoint, node2:FlxPoint)
+	@:deprecated("drawLine is deprecated, use drawCable, instead")
+	function drawLine(gfx:Graphics, node1:FlxPoint, node2:FlxPoint) // TODO: warn on override
 	{
-		// then draw a line to the next node
-		final color = debugDrawData.lineColor;
-		final size = debugDrawData.lineSize;
-		gfx.lineStyle(size, color.rgb, color.alphaFloat);
-		
+		drawLink(gfx, node1, node2);
+	}
+	
+	function drawLink(buffer:FlxCanvas, node1:FlxPoint, node2:FlxPoint)
+	{
 		final lineOffset = debugDrawData.lineSize / 2;
-		gfx.moveTo(node1.x + lineOffset, node1.y + lineOffset);
-		gfx.lineTo(node2.x + lineOffset, node2.y + lineOffset);
+		buffer.drawLine(node1.x + lineOffset, node1.y + lineOffset, node2.x + lineOffset, node2.y + lineOffset, debugDrawData.lineColor);
 	}
 	#end
 }

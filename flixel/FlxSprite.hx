@@ -149,7 +149,7 @@ class FlxSprite extends FlxObject
 	public var framePixels:BitmapData;
 
 	/**
-	 * Always `true` on `FlxG.renderBlit`. On `FlxG.renderTile` it determines whether
+	 * Always `true` when using the blitting renderer. On other renderers it determines whether
 	 * `framePixels` is used and defaults to `false` for performance reasons.
 	 */
 	public var useFramePixels(default, set):Bool = true;
@@ -248,7 +248,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Change the size of your sprite's graphic.
 	 * NOTE: The hitbox is not automatically adjusted, use `updateHitbox()` for that.
-	 * **WARNING:** With `FlxG.renderBlit`, scaling sprites decreases rendering performance by a factor of about x10!
+	 * **WARNING:** With `the blitting renderer, scaling sprites decreases rendering performance by a factor of about x10!
 	 * @see https://snippets.haxeflixel.com/sprites/scale/
 	 */
 	public var scale(default, null):FlxPoint;
@@ -384,7 +384,7 @@ class FlxSprite extends FlxObject
 	{
 		super(X, Y);
 
-		useFramePixels = FlxG.renderBlit;
+		useFramePixels = FlxG.renderer.blit;
 		if (SimpleGraphic != null)
 			loadGraphic(SimpleGraphic);
 	}
@@ -908,7 +908,7 @@ class FlxSprite extends FlxObject
 
 		centerOrigin();
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.blit)
 		{
 			dirty = true;
 			updateFramePixels();
@@ -1009,7 +1009,10 @@ class FlxSprite extends FlxObject
 			_point.floor();
 
 		_point.copyTo(_flashPoint);
-		camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
+		if (framePixels != null && useFramePixels)
+			camera.view.copyPixels(framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
+		else
+			camera.view.copyFrame(_frame, _flashPoint, colorTransform, blend, antialiasing);
 	}
 
 	@:noCompletion
@@ -1025,7 +1028,10 @@ class FlxSprite extends FlxObject
 		final matrix = drawComplexMatrix; // TODO: Just use local?
 		prepareComplexMatrix(matrix, frame, camera);
 		
-		camera.drawPixels(frame, framePixels, matrix, colorTransform, blend, antialiasing, shader);
+		if (framePixels != null && useFramePixels)
+			camera.view.drawPixels(framePixels, matrix, colorTransform, blend, antialiasing, shader);
+		else
+			camera.view.drawFrame(frame, matrix, colorTransform, blend, antialiasing, shader);
 	}
 	
 	function prepareComplexMatrix(matrix:FlxMatrix, frame:FlxFrame, camera:FlxCamera)
@@ -1095,7 +1101,7 @@ class FlxSprite extends FlxObject
 			graphic.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
 		}
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.blit)
 		{
 			dirty = true;
 			calcFrame();
@@ -1110,7 +1116,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function drawFrame(Force:Bool = false):Void
 	{
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.blit)
 		{
 			if (Force || dirty)
 			{
@@ -1169,7 +1175,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Sets the sprite's color transformation with control over color offsets.
-	 * With `FlxG.renderTile`, offsets are only supported on OpenFL Next version 3.6.0 or higher.
+	 * With the DRAW_TILES renderer, offsets are only supported on OpenFL Next version 3.6.0 or higher.
 	 *
 	 * @param   redMultiplier     The value for the red multiplier, in the range from `0` to `1`.
 	 * @param   greenMultiplier   The value for the green multiplier, in the range from `0` to `1`.
@@ -1567,10 +1573,8 @@ class FlxSprite extends FlxObject
 	{
 		checkEmptyFrame();
 
-		if (FlxG.renderTile && !force)
-			return;
-
-		updateFramePixels();
+		if (FlxG.renderer.blit || force)
+			updateFramePixels();
 	}
 
 	/**
@@ -1583,7 +1587,7 @@ class FlxSprite extends FlxObject
 		
 		// don't try to regenerate frame pixels if _frame already uses it as source of graphics
 		// if you'll try then it will clear framePixels and you won't see anything
-		if (FlxG.renderTile && _frameGraphic != null)
+		if (FlxG.renderer.tile && _frameGraphic != null)
 		{
 			dirty = false;
 			return framePixels;
@@ -1601,12 +1605,12 @@ class FlxSprite extends FlxObject
 			framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, doFlipX, doFlipY, false, true);
 		}
 		
-		if (FlxG.renderBlit && hasColorTransform())
+		if (FlxG.renderer.blit && hasColorTransform())
 		{
 			framePixels.colorTransform(_flashRect, colorTransform);
 		}
 		
-		if (FlxG.renderTile && useFramePixels)
+		if (FlxG.renderer.tile && useFramePixels)
 		{
 			// recreate _frame for native target, so it will use modified framePixels
 			_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
@@ -1675,15 +1679,12 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Returns the result of `isSimpleRenderBlit()` if `FlxG.renderBlit` is
-	 * `true`, or `false` if `FlxG.renderTile` is `true`.
+	 * Returns the result of `isSimpleRenderBlit()` if the blitting renderer is used,
+	 * or `false` elsewhere.
 	 */
 	public function isSimpleRender(?camera:FlxCamera):Bool
 	{
-		if (FlxG.renderTile)
-			return false;
-
-		return isSimpleRenderBlit(camera);
+		return FlxG.renderer.blit && isSimpleRenderBlit(camera);
 	}
 
 	/**
@@ -1849,7 +1850,7 @@ class FlxSprite extends FlxObject
 			return null;
 		}
 		
-		if (FlxG.renderTile)
+		if (FlxG.renderer.tile)
 		{
 			_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
 		}
@@ -2007,7 +2008,7 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	function set_flipX(Value:Bool):Bool
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.tile)
 		{
 			_facingHorizontalMult = Value ? -1 : 1;
 		}
@@ -2018,7 +2019,7 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	function set_flipY(Value:Bool):Bool
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.tile)
 		{
 			_facingVerticalMult = Value ? -1 : 1;
 		}
@@ -2035,25 +2036,26 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	function set_useFramePixels(value:Bool):Bool
 	{
-		if (FlxG.renderTile)
+		switch FlxG.renderer.method
 		{
-			if (value != useFramePixels)
-			{
-				useFramePixels = value;
-				resetFrame();
-
-				if (value)
+			case DRAW_TILES:
+				if (value != useFramePixels)
 				{
-					updateFramePixels();
-				}
-			}
+					useFramePixels = value;
+					resetFrame();
 
-			return value;
-		}
-		else
-		{
-			useFramePixels = true;
-			return true;
+					if (value)
+					{
+						updateFramePixels();
+					}
+				}
+
+				return value;
+			case BLITTING:
+				useFramePixels = true;
+				return true;
+			case CUSTOM:
+				return useFramePixels = value;
 		}
 	}
 

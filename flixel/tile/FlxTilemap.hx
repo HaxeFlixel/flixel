@@ -16,6 +16,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
+import flixel.system.render.quad.FlxQuadView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
@@ -286,7 +287,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	{
 		super();
 
-		if (FlxG.renderTile)
+		if (FlxG.renderer.tile)
 		{
 			_helperPoint = new Point();
 			_matrix = new FlxMatrix();
@@ -305,7 +306,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		debugBoundingBoxColorPartial = FlxColor.PINK;
 		debugBoundingBoxColorNotSolid = FlxColor.TRANSPARENT;
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.blit)
 			FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
 		#end
 	}
@@ -321,19 +322,19 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		_tileObjects = FlxDestroyUtil.destroyArray(_tileObjects);
 		_buffers = FlxDestroyUtil.destroyArray(_buffers);
 
-		if (FlxG.renderBlit)
+		switch FlxG.renderer.method
 		{
-			#if FLX_DEBUG
-			_debugRect = null;
-			_debugTileNotSolid = FlxDestroyUtil.dispose(_debugTileNotSolid);
-			_debugTilePartial = FlxDestroyUtil.dispose(_debugTilePartial);
-			_debugTileSolid = FlxDestroyUtil.dispose(_debugTileSolid);
-			#end
-		}
-		else
-		{
-			_helperPoint = null;
-			_matrix = null;
+			case BLITTING:
+				#if FLX_DEBUG
+				_debugRect = null;
+				_debugTileNotSolid = FlxDestroyUtil.dispose(_debugTileNotSolid);
+				_debugTilePartial = FlxDestroyUtil.dispose(_debugTilePartial);
+				_debugTileSolid = FlxDestroyUtil.dispose(_debugTileSolid);
+				#end
+			case DRAW_TILES:
+				_helperPoint = null;
+				_matrix = null;
+			case CUSTOM:
 		}
 
 		frames = null;
@@ -351,7 +352,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		FlxG.cameras.cameraResized.remove(onCameraChanged);
 
 		#if FLX_DEBUG
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.blit)
 			FlxG.debugger.drawDebugChanged.remove(onDrawDebugChanged);
 		#end
 
@@ -499,7 +500,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 	function updateDebugTile(tileBitmap:BitmapData, color:FlxColor):BitmapData
 	{
-		if (FlxG.renderTile)
+		if (!FlxG.renderer.blit)
 			return null;
 
 		if (tileWidth <= 0 || tileHeight <= 0)
@@ -530,7 +531,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	override function updateMap():Void
 	{
 		#if FLX_DEBUG
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.blit)
 			_debugRect = new Rectangle(0, 0, tileWidth, tileHeight);
 		#end
 
@@ -542,7 +543,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	#if FLX_DEBUG
 	override function drawDebugOnCamera(camera:FlxCamera):Void
 	{
-		if (!FlxG.renderTile)
+		if (!FlxG.renderer.tile)
 			return;
 
 		var buffer:FlxTilemapBuffer = null;
@@ -595,7 +596,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 					if (color != null)
 					{
 						final colStr = color.toHexString();
-						drawDebugBoundingBoxColor(camera.debugLayer.graphics, rect, color);
+						drawDebugBoundingBoxColorTo(camera.view, rect, color);
 					}
 				}
 			}
@@ -656,7 +657,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 			buffer = _buffers[i];
 
-			if (FlxG.renderBlit)
+			if (FlxG.renderer.blit)
 			{
 				if (buffer.isDirty(this, camera))
 					drawTilemap(buffer, camera);
@@ -704,7 +705,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 */
 	override function setDirty(dirty:Bool = true):Void
 	{
-		if (FlxG.renderTile)
+		if (!FlxG.renderer.blit)
 			return;
 
 		for (buffer in _buffers)
@@ -1032,9 +1033,8 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		var drawY:Float = 0;
 		var scaledWidth:Float = 0;
 		var scaledHeight:Float = 0;
-		var drawItem = null;
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.blit)
 		{
 			buffer.fill();
 		}
@@ -1047,9 +1047,6 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 			scaledWidth = scaledTileWidth;
 			scaledHeight = scaledTileHeight;
-
-			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
-			drawItem = camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
 		}
 
 		// Copy tile images into the tile buffer
@@ -1088,7 +1085,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				{
 					frame = tile.frame;
 
-					if (FlxG.renderBlit)
+					if (FlxG.renderer.blit)
 					{
 						frame.paint(buffer.pixels, _flashPoint, true);
 
@@ -1132,17 +1129,17 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 						_matrix.scale(scaleX, scaleY);
 						_matrix.translate(drawX, drawY);
 
-						drawItem.addQuad(frame, _matrix, colorTransform);
+						camera.view.drawFrame(frame, _matrix, colorTransform, blend, antialiasing, shader);
 					}
 				}
 
-				if (FlxG.renderBlit)
+				if (FlxG.renderer.blit)
 					_flashPoint.x += tileWidth;
 
 				columnIndex++;
 			}
 
-			if (FlxG.renderBlit)
+			if (FlxG.renderer.blit)
 				_flashPoint.y += tileHeight;
 			rowIndex += widthInTiles;
 		}
@@ -1150,7 +1147,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		buffer.x = screenXInTiles * scaledTileWidth;
 		buffer.y = screenYInTiles * scaledTileHeight;
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.blit)
 		{
 			if (isColored)
 				buffer.colorTransform(colorTransform);
@@ -1167,7 +1164,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	#if FLX_DEBUG
 	function makeDebugTile(color:FlxColor):BitmapData
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.tile)
 			return null;
 
 		var debugTile = new BitmapData(tileWidth, tileHeight, true, 0);

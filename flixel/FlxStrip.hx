@@ -1,6 +1,6 @@
 package flixel;
 
-import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
+import flixel.system.render.quad.FlxDrawTrianglesItem.DrawData;
 
 /**
  * A very basic rendering component which uses `drawTriangles()`.
@@ -58,7 +58,7 @@ class FlxStrip extends FlxSprite
 
 			getScreenPosition(_point, camera);
 			_point -= offset;
-			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, repeat, antialiasing, colorTransform, shader);
+			camera.view.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, repeat, antialiasing, colorTransform, shader);
 		}
 	}
 }
