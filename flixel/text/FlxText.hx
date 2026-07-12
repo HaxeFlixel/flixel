@@ -1186,10 +1186,10 @@ class FlxText extends FlxSprite
 				while (i-- > 1)
 				{
 					final curDelta = borderSize / iterations * i;
-					copyTextWithOffset(-curDelta, 0); // middle-left
-					copyTextWithOffset(curDelta * 2, 0); // middle-right
-					copyTextWithOffset(-curDelta, -curDelta); // upper-middle
-					copyTextWithOffset(0, curDelta * 2); // lower-middle
+					copyTextWithOffset(-curDelta, 0); // left
+					copyTextWithOffset(curDelta * 2, 0); // right
+					copyTextWithOffset(-curDelta, -curDelta); // up
+					copyTextWithOffset(0, curDelta * 2); // down
 					
 					_matrix.translate(0, -curDelta); // return to center
 				}
