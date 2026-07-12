@@ -2195,7 +2195,7 @@ class FlxCamera extends FlxBasic
 	 * screen coordinates.
 	 * @since 4.3.0
 	 */
-	public inline function containsPoint(point:FlxPoint, width:Float = 0, height:Float = 0):Bool
+	public function containsPoint(point:FlxPoint, width:Float = 0, height:Float = 0):Bool
 	{
 		var contained = (point.x + width > viewMarginLeft) && (point.x < viewMarginRight)
 			&& (point.y + height > viewMarginTop) && (point.y < viewMarginBottom);
@@ -2207,7 +2207,7 @@ class FlxCamera extends FlxBasic
 	 * Checks whether this camera contains a given rectangle, in screen coordinates.
 	 * @since 4.11.0
 	 */
-	public inline function containsRect(rect:FlxRect):Bool
+	public function containsRect(rect:FlxRect):Bool
 	{
 		var contained = (rect.right > viewMarginLeft) && (rect.x < viewMarginRight)
 			&& (rect.bottom > viewMarginTop) && (rect.y < viewMarginBottom);
