@@ -29,7 +29,6 @@ class FlxArrayUtil
 	 * @param 	element	The element to remove from the array
 	 * @return	The array
 	 */
-	@:generic
 	public static inline function fastSplice<T>(array:Array<T>, element:T):Array<T>
 	{
 		var index = array.indexOf(element);
@@ -61,7 +60,6 @@ class FlxArrayUtil
 	 * @param 	index	The index of the element to be removed from the array
 	 * @return	The array
 	 */
-	@:generic
 	public static inline function swapAndPop<T>(array:Array<T>, index:Int):Array<T>
 	{
 		array[index] = array[array.length - 1]; // swap element to remove and last element
@@ -159,7 +157,6 @@ class FlxArrayUtil
 	 * Flattens 2D arrays into 1D arrays.
 	 * Example: `[[1, 2], [3, 2], [1, 1]]` -> `[1, 2, 3, 2, 1, 1]`
 	 */
-	@:generic
 	public static function flatten2DArray<T>(array:Array<Array<T>>):Array<T>
 	{
 		var result = [];
