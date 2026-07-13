@@ -1206,4 +1206,62 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * This functionality isn't supported in SpriteGroup
 	 */
 	override inline function updateColorTransform():Void {}
+	
+	override function clipToWorldBounds(left:Float, top:Float, right:Float, bottom:Float)
+	{
+		_skipTransformChildren = true;
+		
+		super.clipToWorldBounds(left, top, right, bottom);
+		for (member in group.members)
+			member.clipToWorldBounds(left, top, right, bottom);
+		
+		_skipTransformChildren = false;
+	}
+	
+	override function clipToViewBounds(left:Float, top:Float, right:Float, bottom:Float, ?camera)
+	{
+		_skipTransformChildren = true;
+		
+		super.clipToViewBounds(left, top, right, bottom, camera);
+		for (member in group.members)
+			member.clipToViewBounds(left, top, right, bottom, camera);
+		
+		_skipTransformChildren = false;
+	}
+	
+	override function clipToWorldBoundsSimple(left:Float, top:Float, right:Float, bottom:Float)
+	{
+		_skipTransformChildren = true;
+		
+		super.clipToWorldBoundsSimple(left, top, right, bottom);
+		for (member in group.members)
+			member.clipToWorldBoundsSimple(left, top, right, bottom);
+		
+		_skipTransformChildren = false;
+	}
+	
+	override function viewToFrameHelper(viewX:Float, viewY:Float, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	{
+		if (camera == null)
+			camera = this.getDefaultCamera();
+		
+		result = camera.viewToWorldPosition(viewX, viewY, scrollFactor, result);
+		result.subtract(x, y);
+		result.add(offset);
+		result.subtract(origin);
+		result.scale(1 / scale.x, 1 / scale.y);
+		result.degrees -= angle;
+		result.add(origin);
+		
+		// not needed for sprite groups
+		// final animFlipX = animation.curAnim != null && animation.curAnim.flipX;
+		// if (flipX != animFlipX)
+		// 	result.x = frameWidth - result.x;
+		
+		// final animFlipY = animation.curAnim != null && animation.curAnim.flipY;
+		// if (flipY != animFlipY)
+		// 	result.y = frameHeight - result.y;
+		
+		return result;
+	}
 }
