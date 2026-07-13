@@ -1025,7 +1025,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	@:access(flixel.FlxCamera)
 	function drawTilemap(buffer:FlxTilemapBuffer, camera:FlxCamera):Void
 	{
-		var isColored:Bool = (alpha != 1) || (color != 0xffffff);
+		var isColored:Bool = #if html5 true #else (alpha != 1) || (color != 0xffffff) #end;
 
 		// only used for renderTile
 		var drawX:Float = 0;

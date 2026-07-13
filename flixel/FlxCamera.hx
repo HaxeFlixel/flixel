@@ -804,7 +804,7 @@ class FlxCamera extends FlxBasic
 			_helperMatrix.identity();
 			_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
 
-			var isColored = (transform != null && transform.hasRGBMultipliers());
+			var isColored = (transform != null #if !html5 && transform.hasRGBMultipliers() #end);
 			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 
 			#if FLX_RENDER_TRIANGLE
@@ -895,7 +895,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			final isColored = (colors != null && colors.length != 0) || (transform != null && transform.hasRGBMultipliers());
+			final isColored = (colors != null && colors.length != 0) || (transform != null #if !html5 && transform.hasRGBMultipliers() #end);
 			final hasColorOffsets = (transform != null && transform.hasRGBAOffsets());
 
 			final drawItem = startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
