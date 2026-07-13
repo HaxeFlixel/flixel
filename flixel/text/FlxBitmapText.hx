@@ -1290,6 +1290,20 @@ class FlxBitmapText extends FlxSprite
 					func( 0,  i); // lower-middle
 					func( i,  i); // lower-right
 				}
+			case OUTLINE_CARDINAL:
+				// Render an outline around the text (4 draws | LEFT, RIGHT, UP, DOWN)
+				var iterations:Int = Std.int(borderSize * borderQuality);
+				iterations = (iterations <= 0) ? 1 : iterations;
+				final delta = Std.int(borderSize / iterations);
+				for (iter in 0...iterations)
+				{
+					final i = delta * (iter + 1);
+					func(-i, 0); // left
+					func(i, 0); // right
+					func(0, -i); // up
+					func(0, i); // down
+				}
+
 			case OUTLINE_FAST:
 				// Render an outline around the text in each corner (4 draws)
 				var iterations:Int = Std.int(borderSize * borderQuality);
