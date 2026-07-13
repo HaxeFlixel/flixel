@@ -2080,6 +2080,7 @@ class FlxSprite extends FlxObject
 	}
 }
 
+@:deprecated("IFlxSprite is deprecated and never used")
 interface IFlxSprite extends IFlxBasic
 {
 	var x(default, set):Float;
