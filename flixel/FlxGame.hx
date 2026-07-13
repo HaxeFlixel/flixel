@@ -156,7 +156,7 @@ class FlxGame extends Sprite
 	/**
 	 * Mouse cursor.
 	 */
-	@:deprecated("_inputContainer is deprecated, use")
+	@:deprecated("_inputContainer is deprecated, use inputContainer")
 	final _inputContainer:Sprite;
 	
 	/**
