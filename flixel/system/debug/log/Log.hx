@@ -57,7 +57,7 @@ class Log extends Window
 	 * @param   style     The LogStyle to be used
 	 * @param   fireOnce  If true, the log history is checked for matching logs
 	 */
-	public function add(data:Array<Dynamic>, style:LogStyle, fireOnce = false):Bool
+	public function add(data:Array<Dynamic>, style:FlxLogStyle, fireOnce = false):Bool
 	{
 		if (data == null)
 		{
@@ -65,11 +65,7 @@ class Log extends Window
 		}
 		
 		// Apply text formatting
-		#if (!js && !lime_console)
 		final text = style.toHtmlString(data);
-		#else
-		final text = style.toLogString(data);
-		#end
 		
 		// Check if the text has been added yet already
 		if (fireOnce)
@@ -99,21 +95,11 @@ class Log extends Window
 			{
 				newText += _lines[i] + LINE_BREAK;
 			}
-			// TODO: Make htmlText work on HTML5 target
-			#if (!js && !lime_console)
 			_text.htmlText = newText;
-			#else
-			_text.text = newText;
-			#end
 		}
 		else
 		{
-			// TODO: Make htmlText work on HTML5 target
-			#if (!js && !lime_console)
 			_text.htmlText += (text + LINE_BREAK);
-			#else
-			_text.text += text + LINE_BREAK;
-			#end
 		}
 
 		_text.scrollV = Std.int(_text.maxScrollV);

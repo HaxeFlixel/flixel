@@ -13,6 +13,10 @@ class FlxRectTest extends FlxTest
 	{
 		rect1 = new FlxRect();
 		rect2 = new FlxRect();
+		
+		// allows better testing of pooling issues
+		@:privateAccess
+		FlxRect._pool.clear();
 	}
 
 	@Test
@@ -152,7 +156,7 @@ class FlxRectTest extends FlxTest
 	}
 	
 	@Test
-	function testContins()
+	function testContains()
 	{
 		rect1.set(0, 0, 100, 100);
 		
@@ -173,5 +177,110 @@ class FlxRectTest extends FlxTest
 		assertNotContains(51, 51);
 		assertContains(0, 0, 100, 100);
 		assertNotContains(-1, -1, 101, 101);
+	}
+	
+	@Test
+	function testBounds()
+	{
+		rect1.set(100, 150, 100, 100);
+		rect2.setBounds(100, 150, 200, 250);
+		
+		FlxAssert.rectsNear(rect1, rect2, 0.0001);
+	}
+	
+	@Test
+	function testBoundsAbs()
+	{
+		rect1.set(100, 150, 100, 100);
+		rect2.setBoundsAbs(200, 250, 100, 150);
+		
+		FlxAssert.rectsNear(rect1, rect2, 0.0001);
+	}
+	
+	
+	@Test
+	function testAbs()
+	{
+		rect1.set(0, 0, 100, 100);
+		rect2.set(100, 100, -100, -100);
+		
+		rect2.abs();
+		FlxAssert.rectsNear(rect1, rect2, 0.0001);
+		
+		rect2.abs();
+		FlxAssert.rectsNear(rect1, rect2, 0.0001);
+	}
+	
+	@Test
+	function testPad()
+	{
+		rect1.setBounds(50, 50, 100, 100).pad(1, 2, 3, 4);
+		FlxAssert.rectsNearLTRD(50 - 1, 50 - 2, 100 + 3, 100 + 4, rect1);
+		
+		rect1.setBounds(50, 50, 100, 100).pad(10, 20);
+		FlxAssert.rectsNearLTRD(50 - 10, 50 - 20, 100 + 10, 100 + 20, rect1);
+		
+		rect1.setBounds(50, 50, 100, 100).pad(10);
+		FlxAssert.rectsNearLTRD(50 - 10, 50 - 10, 100 + 10, 100 + 10, rect1);
+	}
+	
+	@Test
+	function testCopyTo()
+	{
+		rect1.set(10, 10, 20, 20);
+		rect1.copyTo(rect2);
+		FlxAssert.rectsNear(rect1, rect2);
+		
+		// test to weak
+		final r2 = rect1.copyTo(FlxRect.weak());
+		FlxRect.get(0, 0, 0, 0);
+		
+		FlxAssert.rectsNear(rect1, r2);
+		
+		// test from weak
+		final r2 = FlxRect.weak(10, 10, 20, 20);
+		r2.copyTo(rect1);
+		final r3 = FlxRect.get(0, 0, 0, 0);
+		
+		FlxAssert.rectsNearXYWH(10, 10, 20, 20, rect1);
+		Assert.areEqual(r2, r3);
+	}
+	
+	@Test
+	function testCopyFrom()
+	{
+		rect1.set(10, 10, 20, 20);
+		rect2.copyFrom(rect1);
+		FlxAssert.rectsNear(rect1, rect2);
+		
+		// test from weak
+		final r2 = FlxRect.weak(10, 10, 20, 20);
+		rect1.copyFrom(r2);
+		final r3 = FlxRect.get(0, 0, 0, 0);
+		
+		FlxAssert.rectsNearXYWH(10, 10, 20, 20, rect1);
+		Assert.areEqual(r2, r3);
+		
+		// test to weak
+		final r2 = FlxRect.weak().copyFrom(rect1);
+		FlxRect.get(0, 0, 0, 0);
+		
+		FlxAssert.rectsNear(rect1, r2);
+	}
+	
+	@Test
+	function testClone()
+	{
+		rect1.set(10, 10, 20, 20);
+		final r2 = rect1.clone();
+		FlxAssert.rectsNear(rect1, r2);
+		
+		// test from weak
+		final r1 = FlxRect.weak(10, 10, 20, 20);
+		final r2 = r1.clone();
+		final r3 = FlxRect.get(0, 0, 0, 0);
+		
+		FlxAssert.rectsNearXYWH(10, 10, 20, 20, r2);
+		Assert.areEqual(r1, r3);
 	}
 }

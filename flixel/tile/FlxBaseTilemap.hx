@@ -9,14 +9,17 @@ import flixel.system.FlxAssets;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxDirection;
 import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxStringUtil;
 import openfl.display.BitmapData;
 
 using StringTools;
+using flixel.tile.FlxBaseTilemap.AmbiIntIterator;
 
 @:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("overlapsWithCallback", "overlapsWithCallback is deprecated, use objectOverlapsTiles"))
-class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
+abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
 	/**
 	 * Set this flag to use one of the 16-tile binary auto-tile algorithms (OFF, AUTO, or ALT).
@@ -145,7 +148,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public function getColumnAt(worldX:Float, bind = false):Int
 	{
-		throw "getColumnAt must be implemented";
+		final result = Math.floor((worldX - x) / getTileWidth());
+		
+		if (bind)
+			return result < 0 ? 0 : (result >= widthInTiles ? widthInTiles - 1 : result);
+			
+		return result;
 	}
 	
 	/**
@@ -158,7 +166,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public function getRowAt(worldY:Float, bind = false):Int
 	{
-		throw "getRowAt must be implemented";
+		final result = Math.floor((worldY - y) / getTileWidth());
+		
+		if (bind)
+			return result < 0 ? 0 : (result >= heightInTiles ? heightInTiles - 1 : result);
+			
+		return result;
 	}
 	
 	/**
@@ -168,11 +181,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
 	 * @since 5.9.0
 	 */
-	public function getColumnPos(column:Float, midPoint = false):Float
+	public function getColumnPos(column:Int, midpoint = false):Float
 	{
-		throw "getColumnPos must be implemented";
+		return x + column * getTileWidth() + (midpoint ? getTileWidth() * 0.5 : 0);
 	}
-
+	
 	/**
 	 * Get the world position of the specified row
 	 * 
@@ -180,10 +193,48 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
 	 * @since 5.9.0
 	 */
-	public function getRowPos(row:Int, midPoint = false):Float
+	public function getRowPos(row:Int, midpoint = false):Float
 	{
-		throw "getRowPos must be implemented";
+		return y + row * getTileHeight() + (midpoint ? getTileHeight() * 0.5 : 0);
 	}
+	
+	/**
+	 * Get the world position of the column at the specified location
+	 * 
+	 * @param   worldX    An X coordinate in the world
+	 * @param   midpoint  Whether to use the tile's midpoint, or left edge
+	 * @since 6.2.0
+	 */
+	public function getColumnPosAt(worldX:Float, midpoint = false):Float
+	{
+		return getColumnPos(getColumnAt(worldX), midpoint);
+	}
+	
+	/**
+	 * Get the world position of the row at the specified location
+	 * 
+	 * @param   worldY    An X coordinate in the world
+	 * @param   midpoint  Whether to use the tile's midpoint, or upper edge
+	 * @since 6.2.0
+	 */
+	public function getRowPosAt(worldY:Float, midpoint = false):Float
+	{
+		return getRowPos(getRowAt(worldY), midpoint);
+	}
+	
+	/**
+	 * Get the width of a column, in world coordinates
+	 * 
+	 * @since 6.2.0
+	 */
+	abstract public function getTileWidth():Float;
+	
+	/**
+	 * Get the height of a row, in world coordinates
+	 * 
+	 * @since 6.2.0
+	 */
+	abstract  public function getTileHeight():Float;
 	
 	/**
 	 * **Note:** This method name is misleading! It does not return a `tileIndex`, it returns a `mapIndex`
@@ -202,25 +253,421 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return getTilePos(mapIndex, midpoint);
 	}
 
+	// =============================================================================
+	//{ region                          Ray + Helpers
+	// =============================================================================
+	
 	/**
-	 * Shoots a ray from the start point to the end point.
-	 * If/when it passes through a tile, it stores that point and returns false.
+	 * Determines whether the ray can travel from `start` to `end` without hitting a solid wall.
 	 * 
 	 * **Note:** In flixel 5.0.0, this was redone, the old method is now `rayStep`
-	 *
-	 * @param   start   The world coordinates of the start of the ray.
-	 * @param   end     The world coordinates of the end of the ray.
-	 * @param   result  Optional result vector, to avoid creating a new instance to be returned.
-	 *                  Only returned if the line enters the rect.
-	 * @return  Returns true if the ray made it from Start to End without hitting anything.
-	 *          Returns false and fills Result if a tile was hit.
+	 * 
+	 * @param   start   The world coordinates of the start of the ray
+	 * @param   end     The world coordinates of the end of the ray
+	 * @param   result  Optional result vector, indicating where the ray hit the first wall
+	 * @return  Whether the ray can travel from `start` to `end` without hitting a wall
 	 */
 	public function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool
 	{
-		throw "ray must be implemented";
-		return false;
+		return switch rayAdvanced(start, end, false)
+		{
+			case END:
+				return true;
+				
+			case STOPPED(index, x, y, entry):
+				if (result != null)
+					result.set(x, y);
+				
+				return false;
+		}
 	}
-
+	
+	/**
+	 * Determines whether the ray can travel from `start` to `end` without hitting a solid wall.
+	 * 
+	 * @param   start     The world coordinates of the start of the ray
+	 * @param   end       The world coordinates of the end of the ray
+	 * @param   checkDir  If `true`, tiles' `allowCollision` directions are used, otherwise just checks `solid`
+	 * @return  Whether the ray can travel from `start` to `end` without hitting a wall
+	 */
+	public function rayAdvanced(start:FlxPoint, end:FlxPoint, checkDir = true)
+	{
+		final func = checkRayDirHelper(start, end, checkDir);
+		return findInRay(start, end, func);
+	}
+	
+	/**
+	 * Ray func helper, checks tiles' directions according to the ray's direction
+	 */
+	function checkRayDirHelper(start:FlxPoint, end:FlxPoint, checkDir:Bool)
+	{
+		if (!checkDir)
+			return (_, t:Tile, _)->t != null && t.solid;
+		
+		return function (i:Int, tile:Null<Tile>, entry:FlxRayEntry)
+		{
+			return tile != null && switch entry
+			{
+				case EDGE(dir):
+					tile.allowCollisions.has(dir);
+					
+				case START: tile.allowCollisions == ANY
+					|| (tile.allowCollisions.left  && start.x < end.x)
+					|| (tile.allowCollisions.right && start.x > end.x)
+					|| (tile.allowCollisions.up    && start.y < end.y)
+					|| (tile.allowCollisions.down  && start.y > end.y);
+			}
+		};
+	}
+	
+	/**
+	 * Calls `func` on all tiles overlapping a ray from `start` to `end`
+	 * 
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The function, where `index` is the tile's map index, `tile` is the tile data
+	 *                 at that location, if one exists and `entry` is how the ray entered the tile
+	 * @since 6.2.0
+	 */
+	inline public function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Void)
+	{
+		findInRay(start, end, (i, t, e)->{ func(i, t, e); return false; });
+	}
+	
+	/**
+	 * Checks all tile indices overlapping a ray from `start` to `end`,
+	 * finds the first tile that satisfies to condition of `func` and returns its index
+	 * 
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The stopping condition, where `index` is the tile's map index, `tile` is the
+	 *                 tile data at that location, if one exists and `entry` is how the ray entered the
+	 *                 tile. If `true` is returned, the search ends and that tile's index is the result
+	 * @return  The index of the found tile
+	 * @since 6.2.0
+	 */
+	public function findIndexInRay(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Bool):Int
+	{
+		switch findInRay(start, end, func)
+		{
+			case END:
+				return -1;
+			case STOPPED(mapIndex, _, _, _):
+				return mapIndex;
+		}
+	}
+	
+	/**
+	 * Checks all tile indices overlapping a ray from `start` to `end`,
+	 * finds the first tile that satisfies to condition of `func`
+	 * 
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The stopping condition, where `index` is the tile's map index, `tile` is the
+	 *                 tile data at that location, if one exists, `entry` is how the ray entered the
+	 *                 tile. If `true` is returned, the search ends and that tile is the result
+	 * @return  The result of the ray, whether it reached the end or was stopped, and where
+	 * @since 6.2.0
+	 */
+	public function findInRay
+		(start:FlxPoint, end:FlxPoint, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Bool):FlxRayResult
+	{
+		// trim the line to the parts inside the map
+		final trimmedStart = calcRayEntry(start, end);
+		final trimmedEnd = calcRayExit(start, end);
+		
+		start.putWeak();
+		end.putWeak();
+		
+		if (trimmedStart == null && trimmedEnd == null)
+			return END;
+		
+		// Cache x/y in floats so we can put() them now
+		final wasStartTrimmed = trimmedStart.x != start.x || trimmedStart.y != start.y;
+		final startX = trimmedStart.x;
+		final startY = trimmedStart.y;
+		final endX = trimmedEnd.x;
+		final endY = trimmedEnd.y;
+		trimmedStart.put();
+		trimmedEnd.put();
+		
+		final startIndex = getMapIndexAt(startX, startY);
+		final endIndex = getMapIndexAt(endX, endY);
+		final startTileX = getColumn(startIndex);
+		final startTileY = getRow(startIndex);
+		final endTileX = getColumn(endIndex);
+		final endTileY = getRow(endIndex);
+		final dirY = start.y < end.y ? FlxDirection.UP : FlxDirection.DOWN;
+		
+		// handle vertical line (infinite slope), first
+		if (start.x == end.x)
+		{
+			final entry = wasStartTrimmed ? EDGE(dirY) : START;
+			final resultIndex = findIndexInColumnWithEntry(startTileX, startTileY, endTileY, func, entry);
+			if (resultIndex != -1)
+			{
+				final resultY = getRowPos(getRow(resultIndex) + (start.y > end.y ? 1 : 0));
+				final colEntry = getRow(resultIndex) == startTileY ? entry : EDGE(dirY);
+				return STOPPED(resultIndex, start.x, resultY, colEntry);
+			}
+			
+			return END;
+		}
+		
+		// Use y = mx + b formula
+		final m = (start.y - end.y) / (start.x - end.x);
+		// y - mx = b
+		final b = start.y - m * start.x;
+		
+		final movesRight = start.x < end.x;
+		final inc = movesRight ? 1 : -1;
+		final offset = movesRight ? 1 : 0;
+		var colEntry = wasStartTrimmed ? EDGE(movesRight ? LEFT : RIGHT) : START;
+		var lastTileY = startTileY;
+		
+		for (tileX in startTileX.iter(endTileX))
+		{
+			final xPos = getColumnPos(tileX + offset);
+			final yPos = ambiClamp(m * getColumnPos(tileX + offset) + b, startY, endY);
+			final tileY = getRowAt(yPos);
+			final resultIndex = findIndexInColumnWithEntry(tileX, lastTileY, tileY, func, colEntry);
+			if (resultIndex != -1)
+			{
+				final endY = getRow(resultIndex);
+				final tileEntry = endY == lastTileY ? colEntry : EDGE(dirY);
+				return calcRayResult(resultIndex, tileEntry, m, b, start);
+			}
+			
+			colEntry = EDGE(movesRight ? LEFT : RIGHT);
+			lastTileY = tileY;
+		}
+		
+		return END;
+	}
+	
+	/**
+	 * Helper to clamp between to values, regardless of which is smaller
+	 */
+	function ambiClamp(value:Float, a:Float, b:Float):Float
+	{
+		if (a > b)
+			return ambiClamp(value, b, a);
+		
+		if (value < a)
+			return a;
+		
+		if (value > b)
+			return b;
+		
+		return value;
+	}
+	
+	/**
+	 * Helper to add an `entry` to `findIndexInColumn` callbacks
+	 * 
+	 * @param   column    The column to check
+	 * @param   startRow  The row to check from
+	 * @param   endRow    The row to check to
+	 * @param   func      The stopping condition, where `index` is the tile's map index, `tile` is the
+	 *                    tile data at that location, if one exists, `entry` is how the ray entered the
+	 *                    tile. If `true` is returned, the search ends and that tile is the result
+	 * @param   entry     How the ray entered this column
+	 */
+	function findIndexInColumnWithEntry
+		(column, startRow, endRow, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry) -> Bool, entry:FlxRayEntry)
+	{
+		final startI = getMapIndex(column, startRow);
+		final edge = EDGE(startRow < endRow ? UP : DOWN);
+		
+		return findIndexInColumn(column, startRow, endRow, function(i, t)
+		{
+			return func(i, t, i == startI ? entry : edge);
+		});
+	}
+	
+	function calcRayResult(index:Int, entry:FlxRayEntry, m:Float, b:Float, start:FlxPoint):FlxRayResult
+	{
+		return switch entry
+		{
+			case START:
+				STOPPED(index, start.x, start.y, entry);
+			case EDGE(LEFT):
+				final x = getColumnPos(getColumn(index));
+				final y = m * x + b;
+				STOPPED(index, x, y, entry);
+			case EDGE(RIGHT):
+				final x = getColumnPos(getColumn(index) + 1);
+				final y = m * x + b;
+				STOPPED(index, x, y, entry);
+			case EDGE(UP):
+				final y = getRowPos(getRow(index));
+				final x = (y - b) / m;
+				STOPPED(index, x, y, entry);
+			case EDGE(DOWN):
+				final y = getRowPos(getRow(index) + 1);
+				final x = (y - b) / m;
+				STOPPED(index, x, y, entry);
+		}
+	}
+	
+	/**
+	 * Calls `func` on all tiles in the `column` between the specified `startRow` and `endRow`
+	 * 
+	 * @param   column    The column to check
+	 * @param   startRow  The row to check from
+	 * @param   endRow    The row to check to
+	 * @param   func      The function, where `index` is the tile's map index, and
+	 *                    `tile` is the tile data at that location, if one exists
+	 * @since 6.2.0
+	 */
+	public function forEachInColumn(column, startRow, endRow, func:(index:Int, tile:Null<Tile>)->Void)
+	{
+		findIndexInColumn(column, startRow, endRow, (i, t)->{ func(i, t); return false; });
+	}
+	
+	/**
+	 * Calls `func` on all tiles in the `column` between the specified `startColumn` and `endColumn`
+	 * 
+	 * @param   row          The row to check
+	 * @param   startColumn  The column to check from
+	 * @param   endColumn    The column to check to
+	 * @param   func         The function, where `index` is the tile's map index, and
+	 *                       `tile` is the tile data at that location, if one exists
+	 * @since 6.2.0
+	 */
+	overload public inline extern function forEachInRow(row, startColumn, endColumn, func:(index:Int, tile:Null<Tile>)->Void)
+	{
+		findIndexInRow(row, startColumn, endColumn, (i, t)->{ func(i, t); return false; });
+	}
+	
+	/**
+	 * Checks all tiles in the `column` between the specified `startRow` and `endRow`,
+	 * Retrieves the first tile that satisfies to condition of `func` and returns it
+	 * 
+	 * @param   column    The column to check
+	 * @param   startRow  The row to check from
+	 * @param   endRow    The row to check to
+	 * @param   func      The stopping condition, where `index` is the tile's map index, `tile` is
+	 *                    the tile data at that location, if one exists. If `true` is returned,
+	 *                    the search ends and that tile is the result
+	 * @return  The found tile
+	 * @since 6.2.0
+	 */
+	public function findInColumn(column:Int, startRow:Int, endRow:Int, func):Null<Tile>
+	{
+		final index = findIndexInColumn(column, startRow, endRow, func);
+		if (index < 0)
+			return null;
+		
+		return getTileData(index);
+	}
+	
+	/**
+	 * Checks all tile indices in the `column` between the specified `startRow` and `endRow`,
+	 * finds the first tile that satisfies to condition of `func` and returns its index
+	 * 
+	 * @param   column    The column to check
+	 * @param   startRow  The row to check from
+	 * @param   endRow    The row to check to
+	 * @param   func      The stopping condition, where `index` is the tile's map index, `tile` is
+	 *                    the tile data at that location, if one exists. If `true` is returned,
+	 *                    the search ends and that tile is the result
+	 * @return  The index of the found tile
+	 * @since 6.2.0
+	 */
+	public function findIndexInColumn(column:Int, startRow:Int, endRow:Int, func:(index:Int, tile:Null<Tile>)->Bool):Int
+	{
+		if (!columnExists(column))
+			throw 'Invalid column: $column, total column: $widthInTiles';
+		
+		if (startRow < 0)
+			startRow = 0;
+		else if (startRow > heightInTiles - 1)
+			startRow = heightInTiles - 1;
+			
+		if (endRow < 0)
+			endRow = 0;
+		else if (endRow > heightInTiles - 1)
+			endRow = heightInTiles - 1;
+			
+		for (row in startRow.iter(endRow))
+		{
+			final index = getMapIndex(column, row);
+			if (index == -1)
+				throw 'Unexpected -1 map index for column: $column row: $row';
+			
+			final tile = getTileData(index, true);
+			if (func(index, tile))
+				return index;
+		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Checks all tile indices in the `row` between the specified start and end column,
+	 * Retrieves the first tile that satisfies to condition of `func` and returns it
+	 * 
+	 * @param   row          The row to check
+	 * @param   startColumn  The column to check from
+	 * @param   endColumn    The column to check to
+	 * @param   func         The stopping condition, where `index` is the tile's map index, `tile` is
+	 *                       the tile data at that location, if one exists. If `true` is returned,
+	 *                       the search ends and that tile is the result
+	 * @return  The found tile
+	 * @since 6.2.0
+	 */
+	public function findInRow(row:Int, startColumn:Int, endColumn:Int, func)
+	{
+		final index = findIndexInRow(row, startColumn, endColumn, func);
+		if (index < 0)
+			return null;
+		
+		return getTileData(index, true);
+	}
+	
+	/**
+	 * Checks all tile indices in the `row` between the specified start and end column,
+	 * finds the first tile that satisfies to condition of `func` and returns its index
+	 * 
+	 * @param   row          The row to check
+	 * @param   startColumn  The column to check from
+	 * @param   endColumn    The column to check to
+	 * @param   func         The stopping condition, where `index` is the tile's map index, and
+	 *                      `tile` is the tile data at that location, if one exists. If `true` is
+	 *                       returned, the search ends and that tile's index is the result
+	 * @return  The index of the found tile
+	 * @since 6.2.0
+	 */
+	public function findIndexInRow(row:Int, startColumn:Int, endColumn:Int, func:(index:Int, tile:Null<Tile>)->Bool):Int
+	{
+		if (!rowExists(row))
+			throw 'Invalid row: $row, total rows: $heightInTiles';
+		
+		if (startColumn < 0)
+			startColumn = 0;
+		else if (startColumn > widthInTiles - 1)
+			startColumn = widthInTiles - 1;
+			
+		if (endColumn < 0)
+			endColumn = 0;
+		else if (endColumn > widthInTiles - 1)
+			endColumn = widthInTiles - 1;
+			
+		for (column in startColumn.iter(endColumn))
+		{
+			final index = getMapIndex(column, row);
+			if (index == -1)
+				throw 'Unexpected -1 map index for column: $column row: $row';
+			
+			final tile = getTileData(index, true);
+			if (func(index, tile))
+				return index;
+		}
+		
+		return -1;
+	}
+	
 	/**
 	 * Shoots a ray from the start point to the end point.
 	 * If/when it passes through a tile, it stores that point and returns false.
@@ -239,7 +686,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	public function rayStep(start:FlxPoint, end:FlxPoint, ?result:FlxPoint, resolution:Float = 1):Bool
 	{
 		throw "rayStep must be implemented?";
-		return false;
 	}
 
 	/**
@@ -287,6 +733,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return calcRayEntry(end, start, result);
 	}
 	
+	//} endregion                       Ray + Helpers
+	// =============================================================================
+	
 	/**
 	 * Searches all tiles near the object for any that satisfy the given filter. Stops searching
 	 * when the first overlapping tile that satisfies the condition is found
@@ -300,7 +749,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public function isOverlappingTile(object:FlxObject, ?filter:(tile:Tile)->Bool, ?position:FlxPoint):Bool
 	{
-		throw "overlapsWithCallback must be implemented";
+		throw "isOverlappingTile must be implemented";
 	}
 	
 	/**
@@ -315,7 +764,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public function forEachOverlappingTile(object:FlxObject, func:(tile:Tile)->Void, ?position:FlxPoint):Bool
 	{
-		throw "overlapsWithCallback must be implemented";
+		throw "forEachOverlappingTile must be implemented";
 	}
 	
 	@:deprecated("overlapsWithCallback is deprecated, use objectOverlapsTiles(object, callback, pos), instead") // 5.9.0
@@ -504,38 +953,139 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		loadMapHelper(tileGraphic, tileWidth, tileHeight, autoTile, startingIndex, drawIndex, collideIndex);
 		return this;
 	}
-
+	
 	/**
 	 * Load the tilemap with image data and a tile graphic.
-	 * Black pixels are flagged as 'solid' by default, non-black pixels are set as non-colliding. Black pixels must be PURE BLACK.
-	 * @param   mapGraphic      The image you want to use as a source of map data, where each pixel is a tile (or more than one tile if you change Scale's default value). Preferably black and white.
-	 * @param   invert          Load white pixels as solid instead.
-	 * @param   scale           Default is 1. Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
-	 * @param   colorMap        An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices
+	 * Black pixels are flagged as 'solid' by default, non-black pixels are set as non-colliding.
+	 * @param   mapGraphic      The image you want to use as a source of map data, where each
+	 *                          pixel is a tile or chunk of tiles.
+	 * @param   whiteIsSolid    Whether to load white pixels as solid and black and empty
+	 * @param   scale           Default is 1. `scale` of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param   colorMap        An array of color values (ignores alpha) in the
+	 *                          order they're intended to be assigned as indices
 	 * @param   tileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
 	 * @param   tileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
 	 * @param   tileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
 	 * @param   autoTile        Whether to load the map using an automatic tile placement algorithm (requires 16 tiles!).
-	 *                          Setting this to either AUTO or ALT will override any values you put for StartingIndex, DrawIndex, or CollideIndex.
+	 *                          Setting this to either `AUTO` or `ALT` will override any values you
+	 *                          put for `startingIndex`, `drawIndex`, or `collideIndex`.
 	 * @param   startingIndex   Used to sort of insert empty tiles in front of the provided graphic.
-	 *                          Default is 0, usually safest ot leave it at that.  Ignored if AutoTile is set.
+	 *                          Default is 0, usually safest ot leave it at that.  Ignored if `autoTile` is set.
 	 * @param   drawIndex       Initializes all tile objects equal to and after this index as visible.
-	 *                          Default value is 1. Ignored if AutoTile is set.
+	 *                          Default value is 1. Ignored if `autoTile` is set.
 	 * @param   collideIndex    Initializes all tile objects equal to and after this index as allowCollisions = ANY.
-	 *                          Default value is 1.  Ignored if AutoTile is set.
-	 *                          Can override and customize per-tile-type collision behavior using setTileProperties().
+	 *                          Default value is 1.  Ignored if `autoTile` is set.
+	 *                          Can override and customize per-tile-type collision behavior using `setTileProperties()`.
 	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
 	 * @since   4.1.0
 	 */
-	public function loadMapFromGraphic(mapGraphic:FlxGraphicSource, invert = false, scale = 1, ?colorMap:Array<FlxColor>,
+	@:deprecated("loadMapFromGraphic with both bitmap and colorMap is deprecated, use a different overload of loadMapFromGraphic")
+	overload public inline extern function loadMapFromGraphic(mapGraphic:FlxGraphicAsset, whiteIsSolid:Bool, scale:Int, colorMap:Null<Array<FlxColor>>,
 			tileGraphic:FlxTilemapGraphicAsset, tileWidth = 0, tileHeight = 0, ?autoTile:FlxTilemapAutoTiling,
 			startingIndex = 0, drawIndex = 1, collideIndex = 1)
 	{
-		var mapBitmap:BitmapData = FlxAssets.resolveBitmapData(mapGraphic);
-		var mapData:String = FlxStringUtil.bitmapToCSV(mapBitmap, invert, scale, colorMap);
+		final mapData = if (colorMap == null)
+			FlxStringUtil.imageToCSV(mapGraphic, whiteIsSolid, scale);
+		else
+			FlxStringUtil.imageToCSV(mapGraphic, scale, colorMap);
+		
 		return loadMapFromCSV(mapData, tileGraphic, tileWidth, tileHeight, autoTile, startingIndex, drawIndex, collideIndex);
 	}
-
+	
+	/**
+	 * Load the tilemap with image data and a tile graphic.
+	 * Black pixels are flagged as 'solid' by default, non-black pixels are set as non-colliding.
+	 * @param   mapGraphic      The image you want to use as a source of map data, where each
+	 *                          pixel is a tile or chunk of tiles.
+	 * @param   scale           Default is 1. `scale` of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param   colorMap        An array of rb color values (ignores alpha) in the
+	 *                          order they're intended to be assigned as indices
+	 * @param   tileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
+	 * @param   tileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
+	 * @param   tileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
+	 * @param   autoTile        Whether to load the map using an automatic tile placement algorithm (requires 16 tiles!).
+	 *                          Setting this to either `AUTO` or `ALT` will override any values you
+	 *                          put for `startingIndex`, `drawIndex`, or `collideIndex`.
+	 * @param   startingIndex   Used to sort of insert empty tiles in front of the provided graphic.
+	 *                          Default is 0, usually safest ot leave it at that.  Ignored if `autoTile` is set.
+	 * @param   drawIndex       Initializes all tile objects equal to and after this index as visible.
+	 *                          Default value is 1. Ignored if `autoTile` is set.
+	 * @param   collideIndex    Initializes all tile objects equal to and after this index as allowCollisions = ANY.
+	 *                          Default value is 1.  Ignored if `autoTile` is set.
+	 *                          Can override and customize per-tile-type collision behavior using `setTileProperties()`.
+	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
+	 * @since   6.2.0
+	 */
+	overload public inline extern function loadMapFromGraphic(mapGraphic:FlxGraphicAsset, scale = 1, colorMap:Array<FlxColor>,
+			tileGraphic:FlxTilemapGraphicAsset, tileWidth = 0, tileHeight = 0, ?autoTile:FlxTilemapAutoTiling,
+			startingIndex = 0, drawIndex = 1, collideIndex = 1)
+	{
+		final mapData:String = FlxStringUtil.imageToCSV(mapGraphic, scale, colorMap);
+		return loadMapFromCSV(mapData, tileGraphic, tileWidth, tileHeight, autoTile, startingIndex, drawIndex, collideIndex);
+	}
+	
+	/**
+	 * Load the tilemap with image data and a tile graphic.
+	 * Black pixels are flagged as 'solid' by default, non-black pixels are set as non-colliding.
+	 * @param   mapGraphic      The image you want to use as a source of map data, where each
+	 *                          pixel is a tile or chunk of tiles.
+	 * @param   scale           Default is 1. `scale` of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param   colorMap        An array of rgba color values in the order they're intended to be assigned as indices
+	 * @param   tileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
+	 * @param   tileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
+	 * @param   tileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
+	 * @param   autoTile        Whether to load the map using an automatic tile placement algorithm (requires 16 tiles!).
+	 *                          Setting this to either `AUTO` or `ALT` will override any values you
+	 *                          put for `startingIndex`, `drawIndex`, or `collideIndex`.
+	 * @param   startingIndex   Used to sort of insert empty tiles in front of the provided graphic.
+	 *                          Default is 0, usually safest ot leave it at that.  Ignored if `autoTile` is set.
+	 * @param   drawIndex       Initializes all tile objects equal to and after this index as visible.
+	 *                          Default value is 1. Ignored if `autoTile` is set.
+	 * @param   collideIndex    Initializes all tile objects equal to and after this index as allowCollisions = ANY.
+	 *                          Default value is 1.  Ignored if `autoTile` is set.
+	 *                          Can override and customize per-tile-type collision behavior using `setTileProperties()`.
+	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
+	 * @since   6.2.0
+	 */
+	public function loadMap32FromGraphic(mapGraphic:FlxGraphicAsset, scale = 1, colorMap:Array<FlxColor>,
+			tileGraphic:FlxTilemapGraphicAsset, tileWidth = 0, tileHeight = 0, ?autoTile:FlxTilemapAutoTiling,
+			startingIndex = 0, drawIndex = 1, collideIndex = 1)
+	{
+		final mapData:String = FlxStringUtil.image32ToCSV(mapGraphic, scale, colorMap);
+		return loadMapFromCSV(mapData, tileGraphic, tileWidth, tileHeight, autoTile, startingIndex, drawIndex, collideIndex);
+	}
+	
+	/**
+	 * Load the tilemap with image data and a tile graphic.
+	 * Black pixels are flagged as 'solid' by default, non-black pixels are set as non-colliding.
+	 * @param   mapGraphic      The image you want to use as a source of map data, where each
+	 *                          pixel is a tile or chunk of tiles
+	 * @param   whiteIsSolid    Whether to load white pixels as solid and black and empty
+	 * @param   scale           Default is 1. `scale` of 2 means each pixel forms a 2x2 block of tiles, and so on
+	 * @param   tileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData
+	 * @param   tileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified
+	 * @param   tileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified
+	 * @param   autoTile        Whether to load the map using an automatic tile placement algorithm (requires 16 tiles!).
+	 *                          Setting this to either `AUTO` or `ALT` will override any values you
+	 *                          put for `startingIndex`, `drawIndex`, or `collideIndex`
+	 * @param   startingIndex   Used to sort of insert empty tiles in front of the provided graphic.
+	 *                          Default is 0, usually safest ot leave it at that.  Ignored if `autoTile` is set
+	 * @param   drawIndex       Initializes all tile objects equal to and after this index as visible.
+	 *                          Default value is 1. Ignored if `autoTile` is set
+	 * @param   collideIndex    Initializes all tile objects equal to and after this index as allowCollisions = ANY.
+	 *                          Default value is 1.  Ignored if `autoTile` is set.
+	 *                          Can override and customize per-tile-type collision behavior using `setTileProperties()`
+	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
+	 * @since   6.2.0
+	 */
+	overload public inline extern function loadMapFromGraphic(mapGraphic:FlxGraphicAsset, whiteIsSolid = false, scale = 1,
+			tileGraphic:FlxTilemapGraphicAsset, tileWidth = 0, tileHeight = 0, ?autoTile:FlxTilemapAutoTiling,
+			startingIndex = 0, drawIndex = 1, collideIndex = 1)
+	{
+		final mapData:String = FlxStringUtil.imageToCSV(mapGraphic, whiteIsSolid, scale);
+		return loadMapFromCSV(mapData, tileGraphic, tileWidth, tileHeight, autoTile, startingIndex, drawIndex, collideIndex);
+	}
+	
 	function loadMapHelper(tileGraphic:FlxTilemapGraphicAsset, tileWidth = 0, tileHeight = 0, ?autoTile:FlxTilemapAutoTiling,
 			startingIndex = 0, drawIndex = 1, collideIndex = 1)
 	{
@@ -783,7 +1333,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   row     The grid Y location, in tiles
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getMapIndex(column:Int, row:Int):Int
+	overload public inline extern function getMapIndex(column:Int, row:Int):Int
 	{
 		return tileExists(column, row) ? (row * widthInTiles + column) : -1;
 	}
@@ -797,7 +1347,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   worldPos  A location in the world
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getMapIndex(worldPos:FlxPoint):Int
+	overload public inline extern function getMapIndex(worldPos:FlxPoint):Int
 	{
 		return getMapIndexAt(worldPos.x, worldPos.y);
 	}
@@ -817,7 +1367,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return getMapIndex(getColumnAt(worldX), getRowAt(worldY));
 	}
 	/**
-	 * Calculates the column from a map location
+	 * Calculates the column from a map index
+	 * 
+	 * **Note:** The index is not checked against the total tiles, to ensure a
+	 * valid tile, use `if (tileExists(mapIndex))`, first
 	 * 
 	 * @param   mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
 	 * @since 5.9.0
@@ -828,7 +1381,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
-	 * Calculates the column from a map location
+	 * Calculates the row from a map index
+	 * 
+	 * **Note:** The index is not checked against the total tiles, to ensure a
+	 * valid tile, use `if (tileExists(mapIndex))`, first
 	 * 
 	 * @param   mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
 	 * @since 5.9.0
@@ -845,7 +1401,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   row     The grid Y location, in tiles
 	 * @since 5.9.0
 	 */
-	public overload extern inline function tileExists(column:Int, row:Int):Bool
+	overload public inline extern function tileExists(column:Int, row:Int):Bool
 	{
 		return columnExists(column) && rowExists(row);
 	}
@@ -858,7 +1414,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   mapIndex  The desired location in the map
 	 * @since 5.9.0
 	 */
-	public overload extern inline function tileExists(mapIndex:Int):Bool
+	overload public inline extern function tileExists(mapIndex:Int):Bool
 	{
 		return mapIndex >= 0 && mapIndex < _data.length;
 	}
@@ -869,7 +1425,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   worldPos  A location in the map
 	 * @since 5.9.0
 	 */
-	public overload extern inline function tileExists(worldPos:FlxPoint):Bool
+	overload public inline extern function tileExists(worldPos:FlxPoint):Bool
 	{
 		return tileExistsAt(worldPos.x, worldPos.y);
 	}
@@ -892,7 +1448,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   column  The grid X location, in tiles
 	 * @since 5.9.0
 	 */
-	public overload extern inline function columnExists(column:Int):Bool
+	overload public inline extern function columnExists(column:Int):Bool
 	{
 		return column >= 0 && column < widthInTiles;
 	}
@@ -914,7 +1470,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   row  The grid Y location, in tiles
 	 * @since 5.9.0
 	 */
-	public overload extern inline function rowExists(row:Int):Bool
+	overload public inline extern function rowExists(row:Int):Bool
 	{
 		return row >= 0 && row < heightInTiles;
 	}
@@ -936,11 +1492,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *
 	 * @param   column  The grid X location, in tiles
 	 * @param   row     The grid Y location, in tiles
+	 * @param   orient  If `true`, positions the tile in the world, useful for collision
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileData(column:Int, row:Int):Null<Tile>
+	overload public inline extern function getTileData(column:Int, row:Int, orient = false)
 	{
-		return getTileData(getMapIndex(column, row));
+		return getTileData(getMapIndex(column, row), orient);
 	}
 	
 	/**
@@ -948,47 +1505,47 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * if the `mapIndex` is invalid, the result is `null`
 	 *
 	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
-	 * 
-	 * **Note:** The reulting tile's `x`, `y`, `width` and `height` will not be accurate.
-	 * You can call `tile.orient` or similar methods
 	 *
 	 * @param   mapIndex  The desired location in the map
+	 * @param   orient    If `true`, positions the tile in the world, useful for collision
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileData(mapIndex:Int):Null<Tile>
+	overload public inline extern function getTileData(mapIndex:Int, orient = false):Null<Tile>
 	{
-		return _tileObjects[getTileIndex(mapIndex)];
+		final tile = _tileObjects[getTileIndex(mapIndex)];
+		if (orient)
+			orientTile(tile, mapIndex);
+		
+		return tile;
 	}
+	
+	abstract function orientTile(tile:Null<Tile>, mapIndex:Int):Null<Tile>;
 	
 	/**
 	 * Finds the tile instance with the given world location, if the
 	 * coordinate does not overlap the tilemap, the result is `null`
-	 *
-	 * **Note:** The reulting tile's `x`, `y`, `width` and `height` will not be accurate.
-	 * You can call `tile.orient` or similar methods
 	 *
 	 * @param   worldPos  A location in the world
+	 * @param   orient    If `true`, positions the tile in the world, useful for collision
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileData(worldPos:FlxPoint):Null<Tile>
+	overload public inline extern function getTileData(worldPos:FlxPoint, orient = false):Null<Tile>
 	{
-		return getTileDataAt(worldPos.x, worldPos.y);
+		return getTileDataAt(worldPos.x, worldPos.y, orient);
 	}
 	
 	/**
 	 * Finds the tile instance with the given world location, if the
 	 * coordinate does not overlap the tilemap, the result is `null`
 	 *
-	 * **Note:** The reulting tile's `x`, `y`, `width` and `height` will not be accurate.
-	 * You can call `tile.orient` or similar methods
-	 *
 	 * @param   worldX  An X coordinate in the world
-	 * @param   worldY  A Y coordinate in the world
+	 * @param   worldY  An Y coordinate in the world
+	 * @param   orient  If `true`, positions the tile in the world, useful for collision
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileDataAt(worldX:Float, worldY:Float):Null<Tile>
+	overload public inline extern function getTileDataAt(worldX:Float, worldY:Float, orient = false):Null<Tile>
 	{
-		return _tileObjects[getTileIndexAt(worldX, worldY)];
+		return getTileData(getMapIndexAt(worldX, worldY), orient);
 	}
 	
 	/**
@@ -1000,7 +1557,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The tile index of the tile at this location
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileIndex(column:Int, row:Int):Int
+	overload public inline extern function getTileIndex(column:Int, row:Int):Int
 	{
 		return getTileIndex(getMapIndex(column, row));
 	}
@@ -1015,7 +1572,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The tileIndex of the tile with this `mapIndex`
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileIndex(mapIndex:Int):Int
+	overload public inline extern function getTileIndex(mapIndex:Int):Int
 	{
 		return tileExists(mapIndex) ? _data[mapIndex] : -1;
 	}
@@ -1028,7 +1585,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The tileIndex of the tile at this location
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileIndex(worldPos:FlxPoint):Int
+	overload public inline extern function getTileIndex(worldPos:FlxPoint):Int
 	{
 		return getTileIndexAt(worldPos.x, worldPos.y);
 	}
@@ -1049,18 +1606,19 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	
 	/**
 	 * Get the world position of the specified tile, if the `mapIndex` is invalid,
-	 * the result is `null`
+	 * `null` is returned and `result` is unchanged
 	 * 
 	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
 	 *
 	 * @param   mapIndex  The desired location in the map
 	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
+	 * @param   result    The point used to set the position, if the mapIndex is valid
 	 * @return  The world position of the matching tile
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTilePos(mapIndex:Int, midpoint = false):Null<FlxPoint>
+	overload public inline extern function getTilePos(mapIndex:Int, midpoint = false, ?result:FlxPoint):Null<FlxPoint>
 	{
-		return tileExists(mapIndex) ? getTilePos(getColumn(mapIndex), getRow(mapIndex), midpoint) : null;
+		return tileExists(mapIndex) ? getTilePos(getColumn(mapIndex), getRow(mapIndex), midpoint, result) : null;
 	}
 	
 	/**
@@ -1072,12 +1630,15 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   column    The grid X location, in tiles
 	 * @param   row       The grid Y location, in tiles
 	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
+	 * @param   result    The point used to set the resulting position
 	 * @return  The world position of the matching tile
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTilePos(column:Int, row:Int, midpoint = false):FlxPoint
+	overload public inline extern function getTilePos(column:Int, row:Int, midpoint = false, ?result:FlxPoint):FlxPoint
 	{
-		return FlxPoint.get(getColumnPos(column, midpoint), getRowPos(row, midpoint));
+		if (result == null)
+			result = FlxPoint.get();
+		return result.set(getColumnPos(column, midpoint), getRowPos(row, midpoint));
 	}
 	
 	/**
@@ -1088,12 +1649,13 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *
 	 * @param   worldPos  A location in the world
 	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
+	 * @param   result    The point used to set the resulting position
 	 * @return  The world position of the overlapping tile
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTilePos(worldPos:FlxPoint, midpoint = false):FlxPoint
+	overload public inline extern function getTilePos(worldPos:FlxPoint, midpoint = false, ?result:FlxPoint):FlxPoint
 	{
-		return getTilePosAt(worldPos.x, worldPos.y, midpoint);
+		return getTilePosAt(worldPos.x, worldPos.y, midpoint, result);
 	}
 	
 	/**
@@ -1105,12 +1667,13 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   worldX    An X coordinate in the world
 	 * @param   worldY    A Y coordinate in the world
 	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
+	 * @param   result    The point used to set the resulting position
 	 * @return  The world position of the overlapping tile
 	 * @since 5.9.0
 	 */
-	public inline function getTilePosAt(worldX:Float, worldY:Float, midpoint = false):FlxPoint
+	public inline function getTilePosAt(worldX:Float, worldY:Float, midpoint = false, ?result:FlxPoint):FlxPoint
 	{
-		return getTilePos(getColumnAt(worldX), getRowAt(worldY), midpoint);
+		return getTilePos(getColumnAt(worldX), getRowAt(worldY), midpoint, result);
 	}
 	
 	/**
@@ -1247,7 +1810,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Whether or not the tile was actually changed.
 	 * @since 5.9.0
 	 */
-	public overload extern inline function setTileIndex(mapIndex:Int, tileIndex:Int, redraw = true):Bool
+	overload public inline extern function setTileIndex(mapIndex:Int, tileIndex:Int, redraw = true):Bool
 	{
 		return setTileHelper(mapIndex, tileIndex, redraw);
 	}
@@ -1262,7 +1825,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Whether or not the tile was actually changed.
 	 * @since 5.9.0
 	 */
-	public overload extern inline function setTileIndex(column:Int, row:Int, tileIndex:Int, redraw = true):Bool
+	overload public inline extern function setTileIndex(column:Int, row:Int, tileIndex:Int, redraw = true):Bool
 	{
 		return setTileHelper(getMapIndex(column, row), tileIndex, redraw);
 	}
@@ -1276,7 +1839,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Whether or not the tile was actually changed.
 	 * @since 5.9.0
 	 */
-	public overload extern inline function setTileIndex(worldPos:FlxPoint, tileIndex:Int, redraw = true):Bool
+	overload public inline extern function setTileIndex(worldPos:FlxPoint, tileIndex:Int, redraw = true):Bool
 	{
 		return setTileIndexAt(worldPos.x, worldPos.y, tileIndex, redraw);
 	}
@@ -1652,3 +2215,68 @@ enum FlxTilemapAutoTiling
 	 */
 	FULL;
 }
+
+// =============================================================================
+//{ region                          Ray Helpers
+// =============================================================================
+
+/**
+ * How a ray entered a given tile. It either came in through an edge, or started inside
+ */
+enum FlxRayEntry
+{
+	/** The ray entered the tile on the given edge */
+	EDGE(dir:FlxDirection);
+	
+	/** The ray started in the tile */
+	START;
+}
+
+/**
+ * The end result of sending a ray through a tilemap.
+ * It will either reach it's end or be stopped by a tile
+ */
+enum FlxRayResult
+{
+	/** The ray reached a stopping tile */
+	STOPPED(mapIndex:Int, x:Float, y:Float, entry:FlxRayEntry);
+	
+	/** The ray reached the end without being stopped */
+	END;
+}
+
+/**
+ * Internal helper used to iterate between 2 numbers, in either direction
+ */
+private class AmbiIntIterator 
+{
+	final start:Int;
+	final iterator:IntIterator;
+	final step:Int;
+	
+	inline public function new(start:Int, end:Int, inclusive = true)
+	{
+		this.start = start;
+		this.step = start < end ? 1 : -1;
+		final dis = (end - start) * step + (inclusive ? 1 : 0);
+		iterator = (0... dis);
+	}
+	
+	inline public function hasNext()
+	{
+		return iterator.hasNext();
+	}
+	
+	inline public function next()
+	{
+		return start + iterator.next() * step;
+	}
+	
+	inline static public function iter(start:Int, end:Int, inclusive = true)
+	{
+		return new AmbiIntIterator(start, end, inclusive);
+	}
+}
+
+//} endregion                       Ray Helpers
+// =============================================================================

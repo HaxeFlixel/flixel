@@ -4,6 +4,7 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween.TweenCallback;
+import flixel.tweens.FlxTween.TweenOptions;
 import flixel.util.FlxTimer;
 import massive.munit.Assert;
 
@@ -430,6 +431,35 @@ class FlxTweenTest extends FlxTest
 		Assert.isTrue(tween1.finished);
 		Assert.isTrue(tween2Updated);
 		Assert.isTrue(tween3Updated);
+	}
+
+	function assertTweenUpdates(duration:Float, ?fps:Float, ?options:TweenOptions, expected:Int)
+	{
+		var updates = 0;
+		
+		if (options == null)
+			options = {};
+
+		if (fps != null)
+			options.framerate = fps;
+
+		options.onUpdate = function(_) ++updates;
+		options.onComplete = function(_) Assert.areEqual(expected, updates);
+		FlxTween.tween({value: 0.0}, {value: 1}, 2.0, options);
+	}
+
+	@Test
+	function testTweenFramerate()
+	{
+		assertTweenUpdates(2.0, null, null, 59);
+		assertTweenUpdates(2.0, 0, null, 59);
+		assertTweenUpdates(2.0, 5, null, 10);
+		assertTweenUpdates(2.0, 10, {startDelay: 0.5}, 20);
+		assertTweenUpdates(2.0, 10.1, null, 20);
+		assertTweenUpdates(2.0, 29.9, null, 59);
+		assertTweenUpdates(2.0, 100, null, 59);
+
+		step(FlxG.updateFramerate * 3); // 3 full seconds
 	}
 
 	function makeTween(duration:Float, onComplete:TweenCallback, ?onUpdate:TweenCallback):FlxTween

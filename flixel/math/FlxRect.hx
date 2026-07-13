@@ -1,6 +1,5 @@
 package flixel.math;
 
-import flixel.util.FlxPool.IFlxPooled;
 import flixel.util.FlxPool;
 import flixel.util.FlxStringUtil;
 import openfl.geom.Rectangle;
@@ -15,27 +14,31 @@ class FlxRect implements IFlxPooled
 	static var _pool:FlxPool<FlxRect> = new FlxPool(FlxRect.new.bind(0, 0, 0, 0));
 	// With the version below, this caused weird CI issues when FLX_NO_POINT_POOL is defined
 	// static var _pool = new FlxPool<FlxRect>(FlxRect);
-
+	
+	static inline function getPooled(weak = false):FlxRect
+	{
+		final rect = _pool.get();
+		rect._inPool = false;
+		rect._weak = weak;
+		return rect;
+	}
+	
 	/**
 	 * Recycle or create new FlxRect.
 	 * Be sure to put() them back into the pool after you're done with them!
 	 */
-	public static inline function get(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
+	public static inline function get(x = 0.0, y = 0.0, width = 0.0, height = 0.0):FlxRect
 	{
-		var rect = _pool.get().set(X, Y, Width, Height);
-		rect._inPool = false;
-		return rect;
+		return getPooled().set(x, y, width, height);
 	}
 
 	/**
 	 * Recycle or create a new FlxRect which will automatically be released
 	 * to the pool when passed into a flixel function.
 	 */
-	public static inline function weak(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
+	public static inline function weak(x = 0.0, y = 0.0, width = 0.0, height = 0.0):FlxRect
 	{
-		var rect = get(X, Y, Width, Height);
-		rect._weak = true;
-		return rect;
+		return getPooled(true).set(x, y, width, height);
 	}
 
 	public var x:Float;
@@ -85,7 +88,6 @@ class FlxRect implements IFlxPooled
 		if (!_inPool)
 		{
 			_inPool = true;
-			_weak = false;
 			_pool.putUnsafe(this);
 		}
 	}
@@ -157,6 +159,32 @@ class FlxRect implements IFlxPooled
 	}
 	
 	/**
+	 * Ensures that width and height are positive while covering the same space. For example:
+	 * ```haxe
+	 * rect.set(100, 100, -50, -50).abs();
+	 * // Is the same as
+	 * rect.set(50, 50, 50, 50);
+	 * ```
+	 * @since 6.2.0
+	 */
+	public inline function abs()
+	{
+		if (width < 0)
+		{
+			x += width;
+			width = -width;
+		}
+		
+		if (height < 0)
+		{
+			y += height;
+			height = -height;
+		}
+		
+		return this;
+	}
+	
+	/**
 	 * Fills the rectangle so that it has always has a positive width and height. For example:
 	 * ```haxe
 	 * rect.setAbs(100, 100, -50, -50);
@@ -172,11 +200,7 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function setAbs(x:Float, y:Float, width:Float, height:Float)
 	{
-		this.x = width > 0 ? x : x + width;
-		this.y = height > 0 ? y : y + height;
-		this.width = width > 0 ? width : -width;
-		this.height = height > 0 ? height : -height;
-		return this;
+		return this.set(x, y, width, height).abs();
 	}
 	
 	/**
@@ -199,46 +223,56 @@ class FlxRect implements IFlxPooled
 	{
 		return setAbs(x1, y1, x2 - x1, y2 - y1);
 	}
-
+	
 	/**
 	 * Helper function, just copies the values from the specified rectangle.
 	 *
-	 * @param	Rect	Any FlxRect.
-	 * @return	A reference to itself.
+	 * @param   rect  Any FlxRect.
+	 * @return  A reference to itself.
 	 */
-	public inline function copyFrom(Rect:FlxRect):FlxRect
+	public inline function copyFrom(rect:FlxRect):FlxRect
 	{
-		x = Rect.x;
-		y = Rect.y;
-		width = Rect.width;
-		height = Rect.height;
-
-		Rect.putWeak();
+		x = rect.x;
+		y = rect.y;
+		width = rect.width;
+		height = rect.height;
+		
+		rect.putWeak();
 		return this;
 	}
-
+	
 	/**
 	 * Helper function, just copies the values from this rectangle to the specified rectangle.
 	 *
-	 * @param	Point	Any FlxRect.
-	 * @return	A reference to the altered rectangle parameter.
+	 * @param   point  Any FlxRect.
+	 * @return  A reference to the altered rectangle parameter.
 	 */
-	public inline function copyTo(Rect:FlxRect):FlxRect
+	public inline function copyTo(rect:FlxRect):FlxRect
 	{
-		Rect.x = x;
-		Rect.y = y;
-		Rect.width = width;
-		Rect.height = height;
-
-		Rect.putWeak();
-		return Rect;
+		rect.x = x;
+		rect.y = y;
+		rect.width = width;
+		rect.height = height;
+		
+		putWeak();
+		return rect;
 	}
 
 	/**
+	 * Copies this rect's data into a new instance (from the pool)
+	 *
+	 * @return  A new rectangle
+	 */
+	public inline function clone():FlxRect
+	{
+		return copyTo(getPooled());
+	}
+	
+	/**
 	 * Helper function, just copies the values from the specified Flash rectangle.
 	 *
-	 * @param	FlashRect	Any Rectangle.
-	 * @return	A reference to itself.
+	 * @param   flashRect	Any Rectangle.
+	 * @return  A reference to itself.
 	 */
 	public inline function copyFromFlash(FlashRect:Rectangle):FlxRect
 	{
@@ -545,6 +579,54 @@ class FlxRect implements IFlxPooled
 	public function clipTo(rect:FlxRect):FlxRect
 	{
 		return rect.intersection(this, this);
+	}
+	
+	/**
+	 * 
+	 * Expands all four edges outward by the specified amounts. For example:
+	 * `rect.pad(10)` will increase the width and height by 20 (10 on each side).
+	 * 
+	 * **Note:** Negative numbers will shrink the edge.
+	 * 
+	 * @param amount The amount to extend the left, top, right and bottom edges
+	 * @since 6.2.0
+	 */
+	overload public inline extern function pad(amount:Float)
+	{
+		return pad(amount, amount, amount, amount);
+	}
+	
+	/**
+	 * Expands all four edges outward by the specified amounts. For example:
+	 * `rect.pad(10, 5)` will increase the width by 20 (10 on each side) and the height by 10.
+	 * 
+	 * **Note:** Negative numbers will shrink the edges.
+	 * 
+	 * @param   leftAndRight  The amount to extend both the left and right
+	 * @param   topAndBottom  The amount to extend both the top and bottom
+	 * @since 6.2.0
+	 */
+	overload public inline extern function pad(leftAndRight:Float, topAndBottom:Float)
+	{
+		return pad(leftAndRight, topAndBottom, leftAndRight, topAndBottom);
+	}
+	
+	/**
+	 * Expands all four edges outward by the specified amounts. For example:
+	 * `rect.pad(10, 5, 20, 5)` will increase the width by 30 (10 on the left and 20 on the right)
+	 * and the height by 10 (5 on both side).
+	 * 
+	 * **Note:** Negative numbers will shrink the edge.
+	 * 
+	 * @param   left    The amount to extend the left
+	 * @param   top     The amount to extend the top
+	 * @param   right   The amount to extend the right
+	 * @param   bottom  The amount to extend the bottom
+	 * @since 6.2.0
+	 */
+	overload public inline extern function pad(left:Float, top:Float, right:Float, bottom:Float)
+	{
+		return set(x - left, y - top, width + left + right, height + top + bottom);
 	}
 	
 	/**

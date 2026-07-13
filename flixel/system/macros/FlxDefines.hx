@@ -12,7 +12,7 @@ import flixel.addons.system.macros.FlxAddonDefines;
 
 
 
-private enum UserDefines
+private enum UserDefine
 {
 	FLX_NO_MOUSE_ADVANCED;
 	FLX_NO_GAMEPAD;
@@ -66,6 +66,24 @@ private enum UserDefines
 	 * Used to make the debug windows bigger
 	 */
 	FLX_DEBUGGER_SCALE;
+	
+	/**
+	 * Determines which `FlxG.log` calls will throw an exception. Use values `ERROR`, `WARNING`,
+	 * `NOTICE`, `NORMAL` or `NONE`. If undefined, `NONE` is used.
+	 */
+	FLX_LOG_THROW;
+	
+	/**
+	 * Determines which `FlxG.log` calls will play a sound. Use values `ERROR`, `WARNING`,
+	 * `NOTICE`, `NORMAL` or `NONE`. If undefined, `WARNING` is used.
+	 */
+	FLX_LOG_PLAY_SOUND;
+	
+	/**
+	 * Determines which `FlxG.log` calls will show the debugger. Use values `ERROR`, `WARNING`,
+	 * `NOTICE`, `NORMAL` or `NONE`. Ignored if `FLX_NO_DEBUG` is defined. If undefined, `NOTICE` is used.
+	 */
+	FLX_LOG_OPEN_CONSOLE;
 }
 
 /**
@@ -73,7 +91,7 @@ private enum UserDefines
  * are shortened into a single define to avoid the redundancy
  * that comes with using them frequently.
  */
-private enum HelperDefines
+private enum HelperDefine
 {
 	FLX_GAMEPAD;
 	FLX_MOUSE;
@@ -115,6 +133,8 @@ private enum HelperDefines
 	/** The normalized, absolute path of `FLX_CUSTOM_ASSETS_DIRECTORY`, used internally */
 	FLX_CUSTOM_ASSETS_DIRECTORY_ABS;
 	FLX_NO_DEFAULT_SOUND_EXT;
+	/** Enables audio streaming related APIs */
+	FLX_STREAM_SOUND;
 }
 
 class FlxDefines
@@ -129,7 +149,7 @@ class FlxDefines
 		#end
 		
 		defineInversions();
-		defineHelperDefines();
+		defineHelperDefine();
 		
 		#if (flixel_addons >= "3.2.2")
 		flixel.addons.system.macros.FlxAddonDefines.run();
@@ -175,7 +195,7 @@ class FlxDefines
 
 	static function checkDefines()
 	{
-		for (define in HelperDefines.getConstructors())
+		for (define in HelperDefine.getConstructors())
 			abortIfDefined(define);
 
 		for (define in Context.getDefines().keys())
@@ -187,7 +207,7 @@ class FlxDefines
 		}
 	}
 	
-	static var userDefinable = UserDefines.getConstructors();
+	static var userDefinable = UserDefine.getConstructors();
 	static function isValidUserDefine(define:String)
 	{
 		return (define.startsWith("FLX_") && userDefinable.indexOf(define) == -1)
@@ -224,7 +244,7 @@ class FlxDefines
 		}
 	}
 
-	static function defineHelperDefines()
+	static function defineHelperDefine()
 	{
 		if (defined(FLX_UNIT_TEST) || defined(FLX_COVERAGE_TEST) || defined(FLX_SWF_VERSION_TEST))
 			define(FLX_CI);
@@ -308,9 +328,35 @@ class FlxDefines
 		}
 		else // define boolean inversion
 			define(FLX_STANDARD_ASSETS_DIRECTORY);
+
+		#if lime_vorbis
+		define(FLX_STREAM_SOUND);
+		#end
+		
+		validateLogLevel(FLX_LOG_THROW);
+		validateLogLevel(FLX_LOG_PLAY_SOUND);
+		validateLogLevel(FLX_LOG_OPEN_CONSOLE);
+	}
+	
+	static function validateLogLevel(userDefine:UserDefine)
+	{
+		if (defined(userDefine))
+		{
+			switch definedValue(userDefine).toUpperCase()
+			{
+				case "NORMAL"
+					| "NOTICE"
+					| "WARNING"
+					| "ERROR"
+					| "NONE":
+				
+				case unexpected:
+					abort('$userDefine must be: "NORMAL", "NOTICE", "WARNING", "ERROR" or "NONE", got "$unexpected"', (macro null).pos);
+			}
+		}
 	}
 
-	static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)
+	static function defineInversion(userDefine:UserDefine, invertedDefine:HelperDefine)
 	{
 		if (!defined(userDefine))
 			define(invertedDefine);
@@ -326,7 +372,7 @@ class FlxDefines
 		swfVersionError("Gamepad input is", "11.8", FLX_NO_GAMEPAD);
 	}
 
-	static function swfVersionError(feature:String, version:String, define:UserDefines)
+	static function swfVersionError(feature:String, version:String, define:UserDefine)
 	{
 		var errorMessage = '$feature only supported in Flash Player version $version or higher. '
 			+ 'Define ${define.getName()} to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';

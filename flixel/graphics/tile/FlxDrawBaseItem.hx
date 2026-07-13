@@ -16,6 +16,8 @@ class FlxDrawBaseItem<T>
 	 */
 	public static var drawCalls:Int = 0;
 
+	@:noCompletion
+	@:deprecated("blendToInt() is deprecated, remove all references to it")
 	public static function blendToInt(blend:BlendMode):Int
 	{
 		return 0; // no blend mode support in drawQuads()
@@ -29,8 +31,11 @@ class FlxDrawBaseItem<T>
 	public var antialiasing:Bool = false;
 	public var colored:Bool = false;
 	public var hasColorOffsets:Bool = false;
-	public var blending:Int = 0;
 	public var blend:BlendMode;
+
+	@:noCompletion
+	@:deprecated("blending is deprecated, remove all references to it")
+	public var blending:Int = 0;
 
 	public var type:FlxDrawItemType;
 
