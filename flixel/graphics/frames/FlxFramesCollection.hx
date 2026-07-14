@@ -199,10 +199,6 @@ class FlxFramesCollection implements IFlxDestroyable
 		texFrame.sourceSize.set(sourceSize.x, sourceSize.y);
 		texFrame.offset.set(offset.x, offset.y);
 		texFrame.frame = checkFrame(frame, name);
-
-		sourceSize = FlxDestroyUtil.put(sourceSize);
-		offset = FlxDestroyUtil.put(offset);
-
 		return pushFrame(texFrame);
 	}
 

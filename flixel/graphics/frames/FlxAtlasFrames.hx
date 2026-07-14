@@ -65,7 +65,14 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 */
 	public static function fromTexturePackerJson(source:FlxGraphicAsset, description:FlxTexturePackerJsonAsset, useFrameDuration = false):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
+		if (description == null)
+			return null;
+			
+		final data:TexturePackerAtlas = description.getData();
+		if (data == null)
+			return null;
+			
+		final graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		if (graphic == null)
 			return null;
 
@@ -74,12 +81,8 @@ class FlxAtlasFrames extends FlxFramesCollection
 		if (frames != null)
 			return frames;
 
-		if (graphic == null || description == null)
-			return null;
-
 		frames = new FlxAtlasFrames(graphic);
 
-		final data:TexturePackerAtlas = description.getData();
 		// JSON-Array
 		if (data.frames.isArray())
 		{
@@ -137,6 +140,10 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 */
 	public static function fromLibGdx(source:FlxGraphicAsset, description:String):FlxAtlasFrames
 	{
+		description = description != null && FlxG.assets.exists(description) ? FlxG.assets.getTextUnsafe(description) : null;
+		if (description == null)
+			return null;
+
 		var graphic:FlxGraphic = FlxG.bitmap.add(source);
 		if (graphic == null)
 			return null;
@@ -146,13 +153,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		if (frames != null)
 			return frames;
 
-		if ((graphic == null) || (description == null))
-			return null;
-
 		frames = new FlxAtlasFrames(graphic);
-
-		if (FlxG.assets.exists(description))
-			description = FlxG.assets.getTextUnsafe(description);
 
 		var pack:String = StringTools.trim(description);
 		var lines:Array<String> = pack.split("\n");
@@ -236,6 +237,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 */
 	public static function fromSparrow(source:FlxGraphicAsset, xml:FlxXmlAsset):FlxAtlasFrames
 	{
+		if (xml == null)
+			return null;
+			
+		final data:Xml = xml.getXml();
+		if (data == null)
+			return null;
+
 		var graphic:FlxGraphic = FlxG.bitmap.add(source);
 		if (graphic == null)
 			return null;
@@ -244,14 +252,11 @@ class FlxAtlasFrames extends FlxFramesCollection
 		if (frames != null)
 			return frames;
 
-		if (graphic == null || xml == null)
-			return null;
-
 		frames = new FlxAtlasFrames(graphic);
 
-		var data:Access = new Access(xml.getXml().firstElement());
+		var acs:Access = new Access(data.firstElement());
 
-		for (texture in data.nodes.SubTexture)
+		for (texture in acs.nodes.SubTexture)
 		{
 			if (!texture.has.width && texture.has.w)
 				throw "Sparrow v1 is not supported, use Sparrow v2";
@@ -294,11 +299,16 @@ class FlxAtlasFrames extends FlxFramesCollection
 
                 frame.name = name;
                 frame.offset.copyFrom(offset);
-                
+				sourceSize.put();
+				offset.put();
+				size.put();
                 continue;
             }
 
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle, flipX, flipY);
+			sourceSize.put();
+			offset.put();
+			size.put();
 		}
 
 		return frames;
@@ -314,6 +324,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 */
 	public static function fromTexturePackerXml(source:FlxGraphicAsset, xml:FlxXmlAsset):FlxAtlasFrames
 	{
+		if (xml == null)
+			return null;
+			
+		final data:Xml = xml.getXml();
+		if (data == null)
+			return null;
+
 		final graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		if (graphic == null)
 			return null;
@@ -323,12 +340,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		if (frames != null)
 			return frames;
 
-		if (graphic == null || xml == null)
-			return null;
-
 		frames = new FlxAtlasFrames(graphic);
-
-		final data = xml.getXml();
 
 		for (sprite in data.firstElement().elements())
 		{
@@ -363,6 +375,10 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 */
 	public static function fromSpriteSheetPacker(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
 	{
+		Description = Description != null && FlxG.assets.exists(Description) ? FlxG.assets.getTextUnsafe(Description) : null;
+		if (Description == null)
+			return null;
+
 		var graphic:FlxGraphic = FlxG.bitmap.add(Source);
 		if (graphic == null)
 			return null;
@@ -372,13 +388,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		if (frames != null)
 			return frames;
 
-		if (graphic == null || Description == null)
-			return null;
-
 		frames = new FlxAtlasFrames(graphic);
-
-		if (FlxG.assets.exists(Description))
-			Description = FlxG.assets.getTextUnsafe(Description);
 
 		var pack = StringTools.trim(Description);
 		var lines:Array<String> = pack.split("\n");

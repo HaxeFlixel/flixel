@@ -1249,7 +1249,6 @@ class FlxSprite extends FlxObject
 	 */
 	function transformColor(colorIn:FlxColor):FlxColor
 	{
-		final colorStr = color.toHexString();
 		if (hasColorTransform())
 		{
 			final ct = colorTransform;
