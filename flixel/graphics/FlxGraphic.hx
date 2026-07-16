@@ -355,6 +355,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * All types of frames collection which had been added to this graphic object.
 	 * It helps to avoid map iteration, which produces a lot of garbage.
 	 */
+	@deprecated("frameCollectionTypes is deprecated, iterate frameCollections, instead")
 	var frameCollectionTypes:Array<FlxFrameCollectionType>;
 
 	/**
@@ -456,11 +457,8 @@ class FlxGraphic implements IFlxDestroyable
 			return;
 
 		var collections:Array<FlxFramesCollection>;
-		for (collectionType in frameCollectionTypes)
-		{
-			collections = cast frameCollections.get(collectionType);
+		for (type => collections in frameCollections)
 			FlxDestroyUtil.destroyArray(collections);
-		}
 
 		frameCollections = null;
 		frameCollectionTypes = null;
