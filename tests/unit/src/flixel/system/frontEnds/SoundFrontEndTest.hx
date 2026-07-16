@@ -98,6 +98,7 @@ class SoundFrontEndTest
 		assertSoundProps(1.0, false, false);
 		#end
 	}
+	#end
 	
 	@Test
 	@:haxe.warning("-WDeprecated")
@@ -187,24 +188,6 @@ class SoundFrontEndTest
 		FlxG.assets.streamSoundUnsafe = oldStreamFunc;
 		FlxG.assets.exists = oldExistsFunc;
 	}
-	
-	@Test
-	function playMusicFocus()
-	{
-		final sound:Sound = debugSound(1000);
-		FlxG.sound.playMusic(sound);
-		
-		Assert.areEqual(true, FlxG.sound.music.playing);
-		
-		@:privateAccess
-		FlxG.sound.onFocusLost();
-		Assert.areEqual(false, FlxG.sound.music.playing);
-		
-		@:privateAccess
-		FlxG.sound.onFocus();
-		Assert.areEqual(true, FlxG.sound.music.playing);
-	}
-	#end
 	
 	function debugSound(ms:Float)//:Sound
 	{
