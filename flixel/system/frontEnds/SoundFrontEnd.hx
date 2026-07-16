@@ -116,14 +116,11 @@ class SoundFrontEnd
 			group = defaultMusicGroup;
 		
 		if (music == null)
-		{
-			music = recycle(group);
-		}
+			music = new FlxSound();
 		else if (music.active)
-		{
 			music.stop();
-			group.add(music);
-		}
+		
+		group.add(music);
 		
 		return music;
 	}
