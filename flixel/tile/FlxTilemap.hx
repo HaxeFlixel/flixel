@@ -467,7 +467,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 					+ "Using `@:bitmap` assets on html5 is not recommended");
 			}
 			#end
-			frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(tileWidth, tileHeight));
+			frames = FlxTileFrames.fromGraphic(graph, tileWidth, tileHeight);
 		}
 	}
 
