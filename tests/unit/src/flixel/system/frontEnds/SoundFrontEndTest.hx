@@ -204,6 +204,15 @@ class SoundFrontEndTest
 		FlxG.sound.onFocus();
 		Assert.areEqual(true, FlxG.sound.music.playing);
 	}
+	
+	@Test
+	function playMusicPersist()
+	{
+		final sound:Sound = debugSound(1000);
+		FlxG.sound.playMusic(sound);
+		
+		Assert.areEqual(true, FlxG.sound.music.persist);
+	}
 	#end
 	
 	function debugSound(ms:Float)//:Sound
