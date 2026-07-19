@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-    - master
+    - dev
     paths-ignore:
     - '**/*.md'
     - '.vscode/*'
