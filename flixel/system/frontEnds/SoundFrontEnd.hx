@@ -120,6 +120,7 @@ class SoundFrontEnd
 		else if (music.active)
 			music.stop();
 		
+		music.persist = true;
 		group.add(music);
 		
 		return music;
