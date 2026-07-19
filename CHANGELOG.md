@@ -26,7 +26,7 @@
 - `FlxSound` and `FlxG.sound`: Add support for music streaming ([#3518](https://github.com/HaxeFlixel/flixel/pull/3518))
 - `FlxBaseTilemap`: Add `rayAdvanced` and various `forEachInRay` helpers ([#3335](https://github.com/HaxeFlixel/flixel/pull/3335))
 - `FlxSound`: Add `loopCount` and `loopUntil` ([#3546](https://github.com/HaxeFlixel/flixel/pull/3546))
-- `FlxSound` and `FlxG.sound`: Large refactor of sound initialization ([#3558](https://github.com/HaxeFlixel/flixel/pull/3558)) ([#3586](https://github.com/HaxeFlixel/flixel/pull/3586))
+- `FlxSound` and `FlxG.sound`: Large refactor of sound initialization ([#3558](https://github.com/HaxeFlixel/flixel/pull/3558)) ([#3586](https://github.com/HaxeFlixel/flixel/pull/3586)) ([#3636](https://github.com/HaxeFlixel/flixel/pull/3636))
 - `AtlasRect`: add `l`, `r`, `t`, `b` getters ([#3588](https://github.com/HaxeFlixel/flixel/pull/3588))
 - `FlxRect`: Add `clone()`, set `_weak` once + doc ([#3587](https://github.com/HaxeFlixel/flixel/pull/3587))
 - `FlxBitmapText` and `FlxText`: Add `OUTLINE_CARDINAL` ([#3593](https://github.com/HaxeFlixel/flixel/pull/3593))
