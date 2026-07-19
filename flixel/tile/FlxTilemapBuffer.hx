@@ -1,16 +1,16 @@
 package flixel.tile;
 
-import openfl.display.BitmapData;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.math.FlxMatrix;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 /**
  * A helper object to keep tilemap drawing performance decent across the new multi-camera system.
@@ -177,8 +177,8 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	{
 		if (isPixelPerfectRender(camera))
 		{
-			flashPoint.x = Math.floor(flashPoint.x);
-			flashPoint.y = Math.floor(flashPoint.y);
+			flashPoint.x = Math.round(flashPoint.x);
+			flashPoint.y = Math.round(flashPoint.y);
 		}
 		
 		if (isPixelPerfectRender(camera) && (scaleX == 1.0 && scaleY == 1.0) && blend == null)
