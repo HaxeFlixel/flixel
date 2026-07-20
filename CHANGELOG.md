@@ -42,7 +42,6 @@
 - `FlxBitmapText`: Make `fieldWidth` behave as documented ([#3601](https://github.com/HaxeFlixel/flixel/pull/3601))
 - `FlxG.cameras`: Honor `defaultDrawTarget` arg in insert method ([#3605](https://github.com/HaxeFlixel/flixel/pull/3605))
 - `FlxFrame`: replace implicit `to` cast with `@:to` function for Haxe 4.3 compatibility ([#3609](https://github.com/HaxeFlixel/flixel/pull/3609))
-- 
 
 ### 6.1.2 (December 6, 2025)
 
