@@ -820,6 +820,13 @@ class FlxBitmapText extends FlxSprite
 	 */
 	function wrapLineByWord(line:UnicodeString, lines:Array<UnicodeString>, wordSplit:WordSplitConditions):Void
 	{
+		if (line.length == 0)
+		{
+			// no splitting needed
+			lines.push(line);
+			return;
+		}
+		
 		final words = splitLineIntoWords(line);
 		if (words.length == 0)
 			return;
