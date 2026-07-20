@@ -1,19 +1,4 @@
-## 6.2.0 (TBD)
-
-#### Changes and improvements:
-- `FlxG`: Add macro to determine `VERSION` ([#3531](https://github.com/HaxeFlixel/flixel/pull/3531))
-- `FlxText`: Avoid redundant image regen in setters ([#3532](https://github.com/HaxeFlixel/flixel/pull/3532))
-- Deprecate `FlxGraphicSource` in favor of `FlxGraphicAsset` ([#3469](https://github.com/HaxeFlixel/flixel/pull/3469))
-- `FlxStringUtil`: Optimize and improve `bitmapToCSV` and prevent errors when farbling ([#3542](https://github.com/HaxeFlixel/flixel/pull/3542))
-- `FlxBitmapFont`: Allow extra whitespace when parsing bmfont rows ([#3556](https://github.com/HaxeFlixel/flixel/pull/3556))
-- `FlxGamepadManager`: Check ps5 before ps4 ([#3603](https://github.com/HaxeFlixel/flixel/pull/3603))
-- `FlxCamera`: Remove inlines ([#3626](https://github.com/HaxeFlixel/flixel/pull/3626))
-- `FlxRandom` and `FlxArrayUtil`: Remove generic methods ([#3627](https://github.com/HaxeFlixel/flixel/pull/3627))
-- `FlxMath`: deprecate `fastSin` and `fastCos` ([#3628](https://github.com/HaxeFlixel/flixel/pull/3628))
-- `FlxSpriteUtil`: Call `putWeak` to the points in `drawPolygon` ([#3618](https://github.com/HaxeFlixel/flixel/pull/3618))
-- Deprecate `IFlxSprite` and `IFlxBasic`, remove refs ([#3598](https://github.com/HaxeFlixel/flixel/pull/3598))
-- `FlxAtlas`: Fix tilemaps ([#3630](https://github.com/HaxeFlixel/flixel/pull/3630))
-- `pixelPerfectRender`: Round screen position instead of flooring ([#3638](https://github.com/HaxeFlixel/flixel/pull/3638))
+## 6.2.0 (July 20, 2026)
 
 #### New features:
 - `FlxTween`: Add `framerate` option ([#3372](https://github.com/HaxeFlixel/flixel/pull/3372))
@@ -32,6 +17,20 @@
 - `FlxRect`: Add `clone()`, set `_weak` once + doc ([#3587](https://github.com/HaxeFlixel/flixel/pull/3587))
 - `FlxBitmapText` and `FlxText`: Add `OUTLINE_CARDINAL` ([#3593](https://github.com/HaxeFlixel/flixel/pull/3593))
 
+#### Changes and improvements:
+- `FlxG`: Add macro to determine `VERSION` ([#3531](https://github.com/HaxeFlixel/flixel/pull/3531))
+- `FlxText`: Avoid redundant image regen in setters ([#3532](https://github.com/HaxeFlixel/flixel/pull/3532))
+- Deprecate `FlxGraphicSource` in favor of `FlxGraphicAsset` ([#3469](https://github.com/HaxeFlixel/flixel/pull/3469))
+- `FlxStringUtil`: Optimize and improve `bitmapToCSV` and prevent errors when farbling ([#3542](https://github.com/HaxeFlixel/flixel/pull/3542))
+- `FlxBitmapFont`: Allow extra whitespace when parsing bmfont rows ([#3556](https://github.com/HaxeFlixel/flixel/pull/3556))
+- `FlxGamepadManager`: Check ps5 before ps4 ([#3603](https://github.com/HaxeFlixel/flixel/pull/3603))
+- `FlxCamera`: Remove inlines ([#3626](https://github.com/HaxeFlixel/flixel/pull/3626))
+- `FlxRandom` and `FlxArrayUtil`: Remove generic methods ([#3627](https://github.com/HaxeFlixel/flixel/pull/3627))
+- `FlxMath`: deprecate `fastSin` and `fastCos` ([#3628](https://github.com/HaxeFlixel/flixel/pull/3628))
+- `FlxSpriteUtil`: Call `putWeak` to the points in `drawPolygon` ([#3618](https://github.com/HaxeFlixel/flixel/pull/3618))
+- Deprecate `IFlxSprite` and `IFlxBasic`, remove refs ([#3598](https://github.com/HaxeFlixel/flixel/pull/3598))
+- `FlxAtlas`: Fix tilemaps ([#3630](https://github.com/HaxeFlixel/flixel/pull/3630))
+- `pixelPerfectRender`: Round screen position instead of flooring ([#3638](https://github.com/HaxeFlixel/flixel/pull/3638))
 
 #### Bugfixes:
 - `FlxSprite`: Fix null camera check on `clipToViewBounds` ([#3545](https://github.com/HaxeFlixel/flixel/pull/3545))

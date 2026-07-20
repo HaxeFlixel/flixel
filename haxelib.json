@@ -5,7 +5,7 @@
 	"tags": ["game", "openfl", "flash", "html5", "neko", "cpp", "android", "ios", "cross"],
 	"description": "HaxeFlixel is a 2D game engine based on OpenFL that delivers cross-platform games.",
 	"version": "6.2.0",
-	"releasenote": "TBD",
+	"releasenote": "Sound refactor, FlxMatrixSprite and tilemap ray methods",
 	"contributors": ["haxeflixel", "Gama11", "GeoKureli"],
 	"dependencies": {
 		"lime": "",
