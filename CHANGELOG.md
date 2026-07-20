@@ -13,6 +13,7 @@
 - `FlxSpriteUtil`: Call `putWeak` to the points in `drawPolygon` ([#3618](https://github.com/HaxeFlixel/flixel/pull/3618))
 - Deprecate `IFlxSprite` and `IFlxBasic`, remove refs ([#3598](https://github.com/HaxeFlixel/flixel/pull/3598))
 - `FlxAtlas`: Fix tilemaps ([#3630](https://github.com/HaxeFlixel/flixel/pull/3630))
+- `pixelPerfectRender`: Round screen position instead of flooring ([#3638](https://github.com/HaxeFlixel/flixel/pull/3638))
 
 #### New features:
 - `FlxTween`: Add `framerate` option ([#3372](https://github.com/HaxeFlixel/flixel/pull/3372))
