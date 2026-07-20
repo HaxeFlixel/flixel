@@ -1,37 +1,35 @@
 package flixel.system.debug.console;
 
-import flixel.FlxG;
-import flixel.system.debug.log.LogStyle;
-
 using StringTools;
-using flixel.util.FlxArrayUtil;
-using flixel.util.FlxStringUtil;
 
 #if hscript
 import hscript.Expr;
 import hscript.Parser;
+
+using flixel.util.FlxArrayUtil;
 #end
 
-/** 
- * A set of helper functions used by the console.
+/**
+ * The default debug console manager used by `FlxG.console` and the Console debug window
+ * 
+ * @since 6.2.0
  */
-class ConsoleUtil
+#if hscript
+class LegacyConsoleHandler implements IFlxConsoleHandler
 {
-	#if hscript
-	/**
-	 * The hscript parser to make strings into haxe code.
-	 */
-	static var parser:Parser;
+	var parser:Parser;
 
 	/**
 	 * The custom hscript interpreter to run the haxe code from the parser.
 	 */
-	public static var interp:Interp;
+	public var interp:Interp;
 
 	/**
 	 * Sets up the hscript parser and interpreter.
 	 */
-	public static function init():Void
+	public function new() {}
+	
+	public function init()
 	{
 		parser = new Parser();
 		parser.allowJSON = true;
@@ -39,20 +37,208 @@ class ConsoleUtil
 
 		interp = new Interp();
 	}
+	
+	/**
+	 * Converts a string into a runnable command
+	 * 
+	 * @param   input  A string of code
+	 * @return  An exectutable expression
+	 */
+	public function parse(input:String):Expr
+	{
+		if (StringTools.endsWith(input, ";"))
+			input = input.substr(0, -1);
+		return parser.parseString(input);
+	}
+	
+	/**
+	 * Converts a string into a runnable command and executes it
+	 * 
+	 * @param   input  A string of code
+	 * @return  The result of running the command
+	 */
+	public function evaluate(input:String):Any
+	{
+		return evaluateExpr(parse(input));
+	}
 
+	/**
+	 * Runs the input expression.
+	 * @param   expr  The expression to run
+	 * @return  Whatever the input code evaluates to.
+	 */
+	public function evaluateExpr(expr:Expr):Dynamic
+	{
+		return interp.expr(expr);
+	}
+	
+	/**
+	 * Registers the field to be used in commands
+	 * 
+	 * @param   alias  The name used to access the field
+	 * @param   value  The value of the field
+	 */
+	public function register(alias:String, object:Dynamic):Void
+	{
+		interp.variables.set(alias, object);
+	}
+	
+	/**
+	 * Removes the registered field by its alias
+	 * 
+	 * @param   alias  The name used to access the field
+	 */
+	public function remove(alias:String):Void
+	{
+		interp.variables.remove(alias);
+	}
+	
+	public function findAlias(obj:Any):Null<String>
+	{
+		for (alias => value in interp.variables)
+		{
+			if (value == obj)
+				return alias;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Creates a list of all fields of the given object
+	 */
+	public function getFields(object:Dynamic):Array<String>
+	{
+		return getFieldsOf(object);
+	}
+	
+	/**
+	 * Creates a list of all fields available at the top-level
+	 */
+	public function getGlobals():Array<String>
+	{
+		return sortAlphabetically(interp.getGlobals());
+	}
+}
+#end
+
+function getFieldsOf(object:Dynamic):Array<String>
+{
+	var fields = [];
+	if ((object is Class)) // passed a class -> get static fields
+		fields = Type.getClassFields(object);
+	else if ((object is Enum))
+		fields = Type.getEnumConstructs(object);
+	else if (Reflect.isObject(object)) // get instance fields
+	{
+		try
+		{
+			fields = Type.getInstanceFields(Type.getClass(object));
+		}
+		catch(e)
+		{
+			fields = [for (field in Reflect.fields(object)) field];
+		}
+	}
+	
+	// on Flash, enums are classes, so Std.isOfType(_, Enum) fails
+	fields.remove("__constructs__");
+	
+	var filteredFields = [];
+	for (field in fields)
+	{
+		// don't add property getters / setters
+		if (field.startsWith("get_") || field.startsWith("set_"))
+		{
+			var name = field.substr(4);
+			// property without a backing field, needs to be added
+			if (!fields.contains(name) && !filteredFields.contains(name))
+				filteredFields.push(name);
+		}
+		else
+			filteredFields.push(field);
+	}
+	
+	return sortFields(filteredFields);
+}
+
+function sortFields(fields:Array<String>):Array<String>
+{
+	var underscoreList = [];
+	
+	fields = fields.filter(function(field)
+	{
+		if (field.startsWith("_"))
+		{
+			underscoreList.push(field);
+			return false;
+		}
+		return true;
+	});
+	
+	sortAlphabetically(fields);
+	sortAlphabetically(underscoreList);
+	
+	return fields.concat(underscoreList);
+}
+
+function sortAlphabetically(list:Array<String>):Array<String>
+{
+	list.sort(function(a, b)
+	{
+		a = a.toLowerCase();
+		b = b.toLowerCase();
+		if (a < b)
+			return -1;
+		if (a > b)
+			return 1;
+		return 0;
+	});
+	return list;
+}
+
+/** 
+ * A set of helper functions used by the console
+ */
+@:deprecated("ConsoleUtil is deprecated, use FlxG.console, instead")
+class ConsoleUtil
+{
+	#if hscript
+	static var handler:LegacyConsoleHandler;
+	
+	/**
+	 * The hscript parser to make strings into haxe code.
+	 */
+	static var parser:Parser;
+	
+	/**
+	 * The custom hscript interpreter to run the haxe code from the parser.
+	 */
+	public static var interp:Interp;
+	
+	/**
+	 * Sets up the hscript parser and interpreter.
+	 */
+	public static function init():Void
+	{
+		handler = new LegacyConsoleHandler();
+		handler.init();
+		@:privateAccess
+		parser = handler.parser;
+		interp = handler.interp;
+	}
+	
 	/**
 	 * Converts the input string into its AST form to be executed.
 	 *
 	 * @param   input  The user's input command.
 	 * @return  The parsed out AST.
 	 */
-	public static function parseCommand(input:String):Expr
+	public static function parse(input:String):Expr
 	{
-		if (StringTools.endsWith(input, ";"))
-			input = input.substr(0, -1);
-		return parser.parseString(input);
+		return handler.parse(input);
 	}
-
+	
 	/**
 	 * Parses and runs the input command.
 	 *
@@ -61,9 +247,9 @@ class ConsoleUtil
 	 */
 	public static function runCommand(input:String):Dynamic
 	{
-		return interp.expr(parseCommand(input));
+		return handler.evaluate(input);
 	}
-
+	
 	/**
 	 * Runs the input expression.
 	 * @param   expr  The expression to run
@@ -71,9 +257,9 @@ class ConsoleUtil
 	 */
 	public static function runExpr(expr:Expr):Dynamic
 	{
-		return interp.expr(expr);
+		return handler.evaluateExpr(expr);
 	}
-
+	
 	/**
 	 * Register a new object to use in any command.
 	 *
@@ -83,9 +269,9 @@ class ConsoleUtil
 	public static function registerObject(alias:String, object:Dynamic):Void
 	{
 		if (object == null || Reflect.isObject(object))
-			interp.variables.set(alias, object);
+			handler.register(alias, object);
 	}
-
+	
 	/**
 	 * Register a new function to use in any command.
 	 *
@@ -95,9 +281,9 @@ class ConsoleUtil
 	public static function registerFunction(alias:String, func:Dynamic):Void
 	{
 		if (Reflect.isFunction(func))
-			interp.variables.set(alias, func);
+			handler.register(alias, func);
 	}
-
+	
 	/**
 	 * Removes an alias from the command registry.
 	 *
@@ -106,70 +292,22 @@ class ConsoleUtil
 	 */
 	public static function removeByAlias(alias:String):Void
 	{
-		interp.variables.remove(alias);
+		handler.remove(alias);
 	}
 	#end
-
-	public static function getFields(Object:Dynamic):Array<String>
+	
+	public static function getFields(object:Dynamic):Array<String>
 	{
-		var fields = [];
-		if ((Object is Class)) // passed a class -> get static fields
-			fields = Type.getClassFields(Object);
-		else if ((Object is Enum))
-			fields = Type.getEnumConstructs(Object);
-		else if (Reflect.isObject(Object)) // get instance fields
-			fields = Type.getInstanceFields(Type.getClass(Object));
-
-		// on Flash, enums are classes, so Std.isOfType(_, Enum) fails
-		fields.remove("__constructs__");
-
-		var filteredFields = [];
-		for (field in fields)
-		{
-			// don't add property getters / setters
-			if (field.startsWith("get_") || field.startsWith("set_"))
-			{
-				var name = field.substr(4);
-				// property without a backing field, needs to be added
-				if (!fields.contains(name) && !filteredFields.contains(name))
-					filteredFields.push(name);
-			}
-			else
-				filteredFields.push(field);
-		}
-
-		return sortFields(filteredFields);
+		return getFieldsOf(object);
 	}
-
-	static function sortFields(fields:Array<String>):Array<String>
-	{
-		var underscoreList = [];
-
-		fields = fields.filter(function(field)
-		{
-			if (field.startsWith("_"))
-			{
-				underscoreList.push(field);
-				return false;
-			}
-			return true;
-		});
-
-		fields.sortAlphabetically();
-		underscoreList.sortAlphabetically();
-
-		return fields.concat(underscoreList);
-	}
-
+	
 	/**
 	 * Shortcut to log a text with the Console LogStyle.
 	 *
 	 * @param   text  The text to log.
 	 */
-	public static inline function log(text:Dynamic):Void
-	{
-		FlxG.log.advanced([text], FlxG.log.styles.console);
-	}
+	@:deprecated("ConsoleUtil.log no longer logs and will be removed")
+	public static inline function log(text:Dynamic):Void {}
 }
 
 /**

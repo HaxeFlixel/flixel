@@ -17,6 +17,7 @@ import openfl.events.FocusEvent;
 #end
 #if FLX_DEBUG
 import flixel.system.debug.FlxDebugger;
+import flixel.system.debug.console.ConsoleCommands;
 #end
 #if FLX_SOUND_TRAY
 import flixel.system.ui.FlxSoundTray;
@@ -310,6 +311,14 @@ class FlxGame extends Sprite
 		#if FLX_DEBUG
 		debugger = new FlxDebugger(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		addChild(debugger);
+		
+		@:privateAccess
+		FlxG.console.onDebugReady(debugger.console);
+		
+		// Install commands
+		new ConsoleCommands(debugger.console, FlxG.console);
+		
+		FlxG.debugger.onReady.dispatch();
 		#end
 
 		// No need for overlays on mobile.
@@ -591,7 +600,7 @@ class FlxGame extends Sprite
 			gameStart();
 
 		#if FLX_DEBUG
-		debugger.console.registerObject("state", _state);
+		FlxG.console.registerObject("state", _state);
 		#end
 
 		FlxG.signals.postStateSwitch.dispatch();
