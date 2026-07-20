@@ -522,7 +522,7 @@ class FlxSprite extends FlxObject
 			FlxG.log.warn('frameHeight:$frameHeight is larger than the graphic\'s height:${graph.height}');
 
 		if (animated)
-			frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(frameWidth, frameHeight));
+			frames = FlxTileFrames.fromGraphic(graph, frameWidth, frameHeight);
 		else
 			frames = graph.imageFrame;
 
@@ -586,7 +586,7 @@ class FlxSprite extends FlxObject
 		var max:Int = (brush.height > brush.width) ? brush.height : brush.width;
 		max = AutoBuffer ? Std.int(max * 1.5) : max;
 
-		frames = FlxTileFrames.fromGraphic(tempGraph, FlxPoint.get(max, max));
+		frames = FlxTileFrames.fromGraphic(tempGraph, max, max);
 
 		if (AutoBuffer)
 		{

@@ -250,14 +250,36 @@ class FlxTileFrames extends FlxFramesCollection
 	 * Generates spritesheet frame collection from provided region of image.
 	 *
 	 * @param   graphic       Source graphic for spritesheet.
-	 * @param   tileSize      The size of tiles in spritesheet.
+	 * @param   tileSize      The size of tiles in the spritesheet.
 	 * @param   region        Region of image to use for spritesheet generation. Default value is `null`,
 	 *                        which means that the whole image will be used for it.
 	 * @param   tileSpacing   Offsets between frames in spritesheet.
 	 *                        Default value is `null`, which means no offsets between tiles.
 	 * @return  Newly created spritesheet frame collection.
 	 */
-	public static function fromGraphic(graphic:FlxGraphic, tileSize:FlxPoint, ?region:FlxRect, ?tileSpacing:FlxPoint):FlxTileFrames
+	overload public static inline extern function fromGraphic(graphic:FlxGraphic, tileSize:FlxPoint, ?region:FlxRect, ?tileSpacing:FlxPoint):FlxTileFrames
+	{
+		return fromGraphicHelper(graphic, tileSize, region, tileSpacing);
+	}
+
+	/**
+	 * Generates spritesheet frame collection from provided region of image.
+	 *
+	 * @param   graphic       Source graphic for spritesheet.
+	 * @param   tileWidth     The width of tiles in the spritesheet.
+	 * @param   tileHeight    The height of tiles in the spritesheet.
+	 * @param   region        Region of image to use for spritesheet generation. Default value is `null`,
+	 *                        which means that the whole image will be used for it.
+	 * @param   tileSpacing   Offsets between frames in spritesheet.
+	 *                        Default value is `null`, which means no offsets between tiles.
+	 * @return  Newly created spritesheet frame collection.
+	 */
+	overload public static inline extern function fromGraphic(graphic:FlxGraphic, tileWidth:Int, tileHeight:Int, ?region:FlxRect, ?tileSpacing:FlxPoint):FlxTileFrames
+	{
+		return fromGraphicHelper(graphic, FlxPoint.weak(tileWidth, tileHeight), region, tileSpacing);
+	}
+	
+	static function fromGraphicHelper(graphic:FlxGraphic, tileSize:FlxPoint, ?region:FlxRect, ?tileSpacing:FlxPoint):FlxTileFrames
 	{
 		// find TileFrames object, if there is one already
 		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(graphic, tileSize, region, null, tileSpacing);
@@ -467,8 +489,30 @@ class FlxTileFrames extends FlxFramesCollection
 	 * @return  `FlxTileFrames` object which corresponds to specified arguments.
 	 *          Could be null if there is no such `FlxTileFrames`.
 	 */
-	public static function findFrame(graphic:FlxGraphic, tileSize:FlxPoint, ?region:FlxRect, ?atlasFrame:FlxFrame, ?tileSpacing:FlxPoint,
-			?border:FlxPoint):FlxTileFrames
+	overload public static inline extern function findFrame(graphic:FlxGraphic, tileSize, ?region, ?atlasFrame, ?tileSpacing, ?border)
+	{
+		return findFrameHelper(graphic, tileSize, region, atlasFrame, tileSpacing, border);
+	}
+
+	/**
+	 * Searches `FlxTileFrames` object for a specified `FlxGraphic` object
+	 * which has the same parameters (frame size, frame spacings, region of image, etc.).
+	 *
+	 * @param   graphic       `FlxGraphic` object to search `FlxTileFrames` for.
+	 * @param   tileWidth     The width of tiles in TileFrames.
+	 * @param   tileHeight    The height of tiles in TileFrames.
+	 * @param   region        The region of source image used for spritesheet generation.
+	 * @param   atlasFrame    Optional `FlxFrame` object used for spritesheet generation.
+	 * @param   tileSpacing   Spaces between tiles in spritesheet.
+	 * @return  `FlxTileFrames` object which corresponds to specified arguments.
+	 *          Could be null if there is no such `FlxTileFrames`.
+	 */
+	overload public static inline extern function findFrame(graphic:FlxGraphic, tileWidth:Int, tileHeight:Int, ?region, ?atlasFrame, ?tileSpacing, ?border)
+	{
+		return findFrameHelper(graphic, FlxPoint.weak(tileWidth, tileHeight), region, atlasFrame, tileSpacing, border);
+	}
+	
+	static function findFrameHelper(graphic:FlxGraphic, tileSize:FlxPoint, ?region:FlxRect, ?atlasFrame:FlxFrame, ?tileSpacing:FlxPoint, ?border:FlxPoint):FlxTileFrames
 	{
 		var tileFrames:Array<FlxTileFrames> = cast graphic.getFramesCollections(FlxFrameCollectionType.TILES);
 
@@ -514,20 +558,21 @@ class FlxTileFrames extends FlxFramesCollection
 
 	override public function addBorder(border:FlxPoint):FlxTileFrames
 	{
-		var resultBorder:FlxPoint = FlxPoint.get().add(this.border).add(border);
-		var resultSize:FlxPoint = FlxPoint.get().copyFrom(tileSize).subtract(2 * border.x, 2 * border.y);
-		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(parent, resultSize, region, atlasFrame, tileSpacing, resultBorder);
+		final resultBorder = this.border + border;
+		final resultSize = tileSize.clone().subtract(2 * border.x, 2 * border.y);
+		final tileFrames = FlxTileFrames.findFrame(parent, resultSize, region, atlasFrame, tileSpacing, resultBorder);
 		if (tileFrames != null)
 		{
-			resultSize = FlxDestroyUtil.put(resultSize);
+			resultBorder.put();
+			resultSize.put();
 			return tileFrames;
 		}
 
-		tileFrames = new FlxTileFrames(parent, resultBorder);
-		tileFrames.region = FlxRect.get().copyFrom(region);
+		final tileFrames = new FlxTileFrames(parent, resultBorder);
+		tileFrames.region = region.clone();
 		tileFrames.atlasFrame = atlasFrame;
 		tileFrames.tileSize = resultSize;
-		tileFrames.tileSpacing = FlxPoint.get().copyFrom(tileSpacing);
+		tileFrames.tileSpacing = tileSpacing.clone();
 
 		for (frame in frames)
 		{

@@ -1093,6 +1093,11 @@ class FlxCamera extends FlxBasic
 		scroll = FlxDestroyUtil.put(scroll);
 		targetOffset = FlxDestroyUtil.put(targetOffset);
 		deadzone = FlxDestroyUtil.put(deadzone);
+		followLead = FlxDestroyUtil.put(followLead);
+		_flashOffset = FlxDestroyUtil.put(_flashOffset);
+		_lastTargetPosition = FlxDestroyUtil.put(_lastTargetPosition);
+		_scrollTarget = FlxDestroyUtil.put(_scrollTarget);
+		_point = FlxDestroyUtil.put(_point);
 
 		target = null;
 		flashSprite = null;
