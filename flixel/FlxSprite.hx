@@ -1006,7 +1006,7 @@ class FlxSprite extends FlxObject
 	{
 		getScreenPosition(_point, camera).subtract(offset);
 		if (isPixelPerfectRender(camera))
-			_point.floor();
+			_point.round();
 
 		_point.copyTo(_flashPoint);
 		camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
@@ -1049,8 +1049,8 @@ class FlxSprite extends FlxObject
 		
 		if (isPixelPerfectRender(camera))
 		{
-			matrix.tx = Math.floor(matrix.tx);
-			matrix.ty = Math.floor(matrix.ty);
+			matrix.tx = Math.round(matrix.tx);
+			matrix.ty = Math.round(matrix.ty);
 		}
 	}
 
@@ -1737,12 +1737,12 @@ class FlxSprite extends FlxObject
 		
 		newRect.setPosition(x, y);
 		if (pixelPerfectPosition)
-			newRect.floor();
+			newRect.round();
 		_scaledOrigin.set(origin.x * scale.x, origin.y * scale.y);
 		newRect.x += -Std.int(camera.scroll.x * scrollFactor.x) - offset.x + origin.x - _scaledOrigin.x;
 		newRect.y += -Std.int(camera.scroll.y * scrollFactor.y) - offset.y + origin.y - _scaledOrigin.y;
 		if (isPixelPerfectRender(camera))
-			newRect.floor();
+			newRect.round();
 		newRect.setSize(frameWidth * Math.abs(scale.x), frameHeight * Math.abs(scale.y));
 		return newRect.getRotatedBounds(angle, _scaledOrigin, newRect);
 	}
