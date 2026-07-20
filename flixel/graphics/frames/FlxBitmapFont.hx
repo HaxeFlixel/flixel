@@ -9,7 +9,6 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import haxe.xml.Access;
-import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;

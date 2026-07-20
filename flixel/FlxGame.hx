@@ -5,7 +5,6 @@ import flixel.system.FlxSplash;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.typeLimit.NextState;
-import openfl.Assets;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.display.StageAlign;
@@ -351,8 +350,6 @@ class FlxGame extends Sprite
 
 		// make sure the cursor etc are properly scaled from the start
 		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
-
-		Assets.addEventListener(Event.CHANGE, FlxG.bitmap.onAssetsReload);
 	}
 
 	function onFocus(_):Void
