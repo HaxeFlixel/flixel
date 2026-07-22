@@ -298,7 +298,7 @@ class FlxSound extends FlxBasic
 			_sound = null;
 		}
 		
-		if (fadeTween == null)
+		if (fadeTween != null)
 		{
 			fadeTween.cancel();
 			fadeTween = null;
