@@ -58,7 +58,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	var _keyListMap:Map<Int, FlxInput<Key>> = new Map<Int, FlxInput<Key>>();
 
 	/**
-	 * Interal storage of held input keys, populated by OpenFl events.
+	 * Interngal storage of held input keys, populated by OpenFl events.
 	 */
 	var _heldKeyList:Array<Bool> = [];
 
