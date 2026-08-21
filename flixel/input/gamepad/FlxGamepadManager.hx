@@ -388,6 +388,19 @@ class FlxGamepadManager implements IFlxInputManager
 		deviceConnected.dispatch(gamepad);
 	}
 
+	static final productReg = ~/$(.+?)\(STANDARD GAMEPAD Vendor: ([0-9a-f]+?) Product: ([0-9a-f]+?)\)^/;
+	static final productMap =
+	[
+		"057e:0306" => WII_REMOTE,
+		"057e:2006" => SWITCH_JOYCON_LEFT,
+		"057e:2007" => SWITCH_JOYCON_RIGHT,
+		"057e:2009" => SWITCH_PRO,
+		"057e:200e" => SWITCH_PRO,          // Joy-Con l+r
+		"054c:05c4" => PS4,                 // Dualshock4
+		"054c:09cc" => PS4,                 // Dualshock4
+		"054c:0ba0" => PS4,                 // Dualshock4UsbReceiver
+	];
+	
 	function getModelFromDeviceName(name:String):FlxGamepadModel
 	{
 		// If we're actually running on console hardware, we know what controller hardware you're using
@@ -402,6 +415,13 @@ class FlxGamepadManager implements IFlxInputManager
 		#elseif xbox1
 		return XINPUT;
 		#end
+
+		if (productReg.match(name))
+		{
+			final id = productReg.matched(2) + ":" + productReg.matched(3);
+			if (productMap.exists(id))
+				return productMap[id];
+		}
 
 		// "Sony PLAYSTATION(R)3 Controller" is the PS3 controller, but that is not supported as its PC drivers are terrible,
 		// and the most popular tools just turn it into a 360 controller
@@ -423,7 +443,7 @@ class FlxGamepadManager implements IFlxInputManager
 				WII_REMOTE; // WiiRemote w/o  motion plus
 			else if (name.contains("mayflash wiimote pc adapter"))
 				MAYFLASH_WII_REMOTE; // WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
-			else if (name.contains("pro controller") || name.contains("joycon l+r"))
+			else if (name.contains("pro controller") || name.contains("joycon l+r") || name.contains("joycon (l/r)"))
 				SWITCH_PRO;
 			else if (name.contains("joycon (l)"))
 				SWITCH_JOYCON_LEFT;
