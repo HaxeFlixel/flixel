@@ -229,7 +229,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   flipX       Whether the frames should be flipped horizontally.
 	 * @param   flipY       Whether the frames should be flipped vertically.
 	 */
-	public function add(name:String, frames:Array<Int>, frameRate = 30.0, looped = true, flipX = false, flipY = false):Void
+	overload public inline extern function add(name:String, frames:Array<Int>, frameRate = 30.0, looped = true, flipX = false, flipY = false):Void
 	{
 		if (numFrames == 0)
 		{
@@ -268,6 +268,39 @@ class FlxAnimationController implements IFlxDestroyable
 		}
 		else
 			FlxG.log.warn('Could not create animation: "$name", no valid frames were given');
+	}
+
+	/**
+	 * Adds a new animation to the sprite.
+	 *
+	 * @param   name        What this animation should be called (e.g. `"run"`).
+	 * @param   frame       An index indicating what single frame to play (e.g. `0`,`1`,`2`).
+	 * @param   frameRate   The speed in frames per second that the animation should play at (e.g. `40` fps).
+	 * @param   looped      Whether or not the animation is looped or just plays once.
+	 * @param   flipX       Whether the frames should be flipped horizontally.
+	 * @param   flipY       Whether the frames should be flipped vertically.
+	 */
+	overload public inline extern function add(name:String, frame:Int, frameRate = 30.0, looped = true, flipX = false, flipY = false):Void
+	{
+		if (numFrames == 0)
+		{
+			FlxG.log.warn('Could not create animation: "$name", this sprite has no frames');
+			return;
+		}
+
+		if (frame >= numFrames)
+		{
+			FlxG.log.warn('Could not add frame above ${numFrames - 1} to animation: "$name"');
+			return;
+		}
+
+		if (frame >= 0)
+		{
+			var anim = new FlxAnimation(this, name, [frame], frameRate, looped, flipX, flipY);
+			_animations.set(name, anim);
+		}
+		else
+			FlxG.log.warn('Could not create animation: "$name", no valid frame was given');
 	}
 
 	/**
