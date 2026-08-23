@@ -412,6 +412,8 @@ class FlxBitmapText extends FlxSprite
 					if (clipRect != null)
 					{
 						charClipHelper.copyFrom(clippedFrameRect).offset(-x, -y);
+						if (!frame.overlaps(charClipHelper))
+							return;
 						if (!frame.isContained(charClipHelper))
 							frame = frame.clipTo(charClipHelper, charClippedFrame);
 					}
