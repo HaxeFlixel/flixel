@@ -1,6 +1,6 @@
 package flixel;
 
-import flixel.FlxBasic.IFlxBasic;
+import flixel.FlxBasic;
 import flixel.animation.FlxAnimationController;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
@@ -16,6 +16,7 @@ import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
+import flixel.util.FlxSignal;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
@@ -286,14 +287,16 @@ class FlxSprite extends FlxObject
 	 * applied after the frame is clipped. Use `clipToWorldBounds` or `clipToViewBounds` to convert
 	 */
 	public var clipRect(default, set):FlxRect;
-	var _lastClipRect = FlxRect.get(Math.NaN);
+	var _lastClipRect:FlxRect;
 
 	/**
 	 * GLSL shader for this sprite. Avoid changing it frequently as this is a costly operation.
 	 * @since 4.1.0
 	 */
 	public var shader:FlxShader;
-
+	
+	public final onFrameChange = new FlxSignal();
+	
 	/**
 	 * The actual frame used for sprite rendering
 	 */
@@ -406,6 +409,7 @@ class FlxSprite extends FlxObject
 		_halfSize = FlxPoint.get();
 		_matrix = new FlxMatrix();
 		_scaledOrigin = new FlxPoint();
+		_lastClipRect = FlxRect.get(Math.NaN);
 	}
 
 	/**
@@ -430,6 +434,7 @@ class FlxSprite extends FlxObject
 		_halfSize = FlxDestroyUtil.put(_halfSize);
 		_scaledOrigin = FlxDestroyUtil.put(_scaledOrigin);
 		_lastClipRect = FlxDestroyUtil.put(_lastClipRect);
+		onFrameChange.removeAll();
 
 		framePixels = FlxDestroyUtil.dispose(framePixels);
 
@@ -1857,6 +1862,8 @@ class FlxSprite extends FlxObject
 		_frame = frame.copyTo(_frame);
 		if (clipRect != null)
 			_frame.clip(clipRect);
+		
+		onFrameChange.dispatch();
 		
 		return frame;
 	}
