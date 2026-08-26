@@ -48,6 +48,11 @@ class DebuggerFrontEnd
 	 * @since 4.1.0
 	 */
 	public var visibilityChanged(default, null):FlxSignal = new FlxSignal();
+	
+	/**
+	 * Dispatched when all debug features are properly initialized
+	 */
+	public final onReady = new FlxSignal();
 
 	public var visible(default, set):Bool = false;
 	
