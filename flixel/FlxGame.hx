@@ -709,7 +709,7 @@ class FlxGame extends Sprite
 		}
 		#end
 
-		filters = filtersEnabled ? _filters : null;
+		setFiltersSuper(filtersEnabled ? _filters : null);
 	}
 
 	function updateElapsed():Void
@@ -846,6 +846,17 @@ class FlxGame extends Sprite
 	{
 		// expensive, only call if necessary
 		return Lib.getTimer();
+	}
+	
+	override function set_filters(value:Array<BitmapFilter>):Array<BitmapFilter>
+	{
+		setFilters(value);
+		return value;
+	}
+	
+	function setFiltersSuper(value:Array<BitmapFilter>):Array<BitmapFilter>
+	{
+		return super.set_filters(value);
 	}
 }
 
