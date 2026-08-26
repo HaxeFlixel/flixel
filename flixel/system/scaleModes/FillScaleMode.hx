@@ -8,10 +8,4 @@ import flixel.FlxG;
  * 
  * To enable it in your project, use `FlxG.scaleMode = new FillScaleMode();`.
  */
-class FillScaleMode extends BaseScaleMode
-{
-	override function updateGamePosition():Void
-	{
-		FlxG.game.x = FlxG.game.y = 0;
-	}
-}
+class FillScaleMode extends BaseScaleMode {}

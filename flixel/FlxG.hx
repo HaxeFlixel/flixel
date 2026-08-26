@@ -489,7 +489,7 @@ class FlxG
 	 */
 	public static function addChildBelowMouse<T:DisplayObject>(child:T, indexModifier = 0):T
 	{
-		var index = game.getChildIndex(game._inputContainer);
+		var index = game.getChildIndex(game.inputContainer);
 		var max = game.numChildren;
 
 		index = FlxMath.maxAdd(index, indexModifier, max);
@@ -557,7 +557,7 @@ class FlxG
 		#end
 
 		#if FLX_MOUSE
-		mouse = inputs.addInput(new FlxMouse(game._inputContainer));
+		mouse = inputs.addInput(new FlxMouse(game.inputContainer));
 		#end
 
 		#if FLX_TOUCH
