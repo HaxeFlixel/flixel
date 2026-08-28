@@ -1,5 +1,6 @@
 package flixel.math;
 
+import flixel.FlxObject;
 import flixel.FlxSprite;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouch;
@@ -222,47 +223,60 @@ class FlxVelocity
 	/**
 	 * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
 	 *
-	 * @param	Velocity		Any component of velocity (e.g. 20).
-	 * @param	Acceleration		Rate at which the velocity is changing.
-	 * @param	Drag			Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
-	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
-	 * @param	Elapsed			The amount of time passed in to the latest update cycle
-	 * @return	The altered Velocity value.
+	 * @param   velocity      Any component of velocity (e.g. 20).
+	 * @param   acceleration  Rate at which the velocity is changing.
+	 * @param   drag          Really kind of a deceleration, this is how much the velocity reduces, according to `dragMode`.
+	 * @param   dragMode      Determines when drag is applied.
+	 * @param   max           An absolute value cap for the velocity (0 for no cap).
+	 * @param   elapsed       The amount of time passed in to the latest update cycle
+	 * @return  The altered velocity value.
 	 */
-	public static function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float, Elapsed:Float):Float
+	public static function computeVelocity(velocity:Float, acceleration:Float, drag:Float, dragMode:FlxDragMode, max:Float, elapsed:Float):Float
 	{
-		if (Acceleration != 0)
+		if (acceleration != 0)
 		{
-			Velocity += Acceleration * Elapsed;
+			velocity += acceleration * elapsed;
 		}
-		else if (Drag != 0)
+		
+		final applyDrag = switch(dragMode)
 		{
-			var drag:Float = Drag * Elapsed;
-			if (Velocity - drag > 0)
+			case ALWAYS:
+				true;
+			case INERTIAL:
+				acceleration == 0;
+			case SKID:
+				acceleration == 0 || ((acceleration < 0) == (velocity < 0));
+		}
+		
+		if (drag != 0 && applyDrag)
+		{
+			final frameDrag = drag * elapsed;
+			if (velocity - frameDrag > 0)
 			{
-				Velocity -= drag;
+				velocity -= frameDrag;
 			}
-			else if (Velocity + drag < 0)
+			else if (velocity + frameDrag < 0)
 			{
-				Velocity += drag;
+				velocity += frameDrag;
 			}
 			else
 			{
-				Velocity = 0;
+				velocity = 0;
 			}
 		}
-		if ((Velocity != 0) && (Max != 0))
+		
+		if ((velocity != 0) && (max != 0))
 		{
-			if (Velocity > Max)
+			if (velocity > max)
 			{
-				Velocity = Max;
+				velocity = max;
 			}
-			else if (Velocity < -Max)
+			else if (velocity < -max)
 			{
-				Velocity = -Max;
+				velocity = -max;
 			}
 		}
-		return Velocity;
+		return velocity;
 	}
 
 	/**
