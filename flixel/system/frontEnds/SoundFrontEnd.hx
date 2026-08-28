@@ -445,7 +445,7 @@ class SoundFrontEnd
 	}
 
 	/**
-	 * Stops currently playing sounds.
+	 * Stops the current music and all sounds currently playing.
 	 */
 	public function stopAll():Void
 	{
