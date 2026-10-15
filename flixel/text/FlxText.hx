@@ -13,7 +13,6 @@ import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
-import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.geom.ColorTransform;
 import openfl.text.TextField;
