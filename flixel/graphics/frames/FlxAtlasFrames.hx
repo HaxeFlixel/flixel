@@ -420,6 +420,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 			if (atlas.border.equals(border))
 				return atlas;
 
+		border.putWeak();
 		return null;
 	}
 
