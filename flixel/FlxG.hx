@@ -27,6 +27,7 @@ import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.Stage;
 import openfl.display.StageDisplayState;
+import openfl.events.Event;
 import openfl.net.URLRequest;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
@@ -529,6 +530,7 @@ class FlxG
 	 * Called by `FlxGame` to set up `FlxG` during `FlxGame`'s constructor.
 	 */
 	@:allow(flixel.FlxGame.new)
+	@:haxe.warning("-WDeprecated")
 	static function init(game:FlxGame, width:Int, height:Int):Void
 	{
 		if (width < 0)
@@ -586,6 +588,8 @@ class FlxG
 		#if FLX_SOUND_SYSTEM
 		sound = new SoundFrontEnd();
 		#end
+		
+		assets.onChange.add(()->bitmap.onAssetsReload(new Event(Event.CHANGE)));
 	}
 
 	static function initRenderMethod():Void

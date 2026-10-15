@@ -1,23 +1,33 @@
 package flixel.system.frontEnds;
 
-import openfl.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 import massive.munit.Assert;
+import openfl.display.BitmapData;
 
 class BitmapFrontEndTest
 {
 	@Test
 	function testGetUniqueKey()
 	{
-		var key = "test";
+		final key = "test";
 
-		Assert.isFalse(FlxG.bitmap.checkCache(key));
+		Assert.isFalse(FlxG.bitmap.exists(key));
 		Assert.areEqual(key, FlxG.bitmap.getUniqueKey(key));
 
 		FlxG.bitmap.add(FlxGraphic.fromBitmapData(new BitmapData(1, 1)), true, key);
-		Assert.isTrue(FlxG.bitmap.checkCache(key));
+		Assert.isTrue(FlxG.bitmap.exists(key));
 
-		var newKey = FlxG.bitmap.getUniqueKey("test");
+		var newKey = FlxG.bitmap.getUniqueKey(key);
 		Assert.areNotEqual(key, newKey);
+	}
+	
+	@Test
+	function testExists()
+	{
+		final key = "testExists";
+		
+		Assert.isFalse(FlxG.bitmap.exists(key));
+		FlxG.bitmap.add(new BitmapData(1, 1), true, key);
+		Assert.isTrue(FlxG.bitmap.exists(key));
 	}
 }
