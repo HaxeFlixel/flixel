@@ -429,6 +429,8 @@ class FlxGamepadManager implements IFlxInputManager
 		name = name.toLowerCase().remove("-").remove("_");
 		return if (name.contains("ouya"))
 				OUYA; // "OUYA Game Controller"
+			else if (name.contains("xbox wireless controller"))
+				XINPUT;
 			else if (name.contains("ps5") || name.contains('dualsense'))
 				PS5;
 			else if (name.contains("wireless controller") || name.contains("ps4") || name.contains("dualshock 4"))
