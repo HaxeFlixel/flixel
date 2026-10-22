@@ -1640,9 +1640,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		for (camera in getCameras())
 		{
 			var relativePos = getRelativePosition(pointer, camera);
-			var overlapsCamera = relativePos.x >= 0 && relativePos.x < width && relativePos.y >= 0 && relativePos.y < height;
+			var pointerOverlaps = relativePos.x >= 0 && relativePos.x < width && relativePos.y >= 0 && relativePos.y < height;
 			relativePos.put();
-			if (overlapsCamera)
+			if (pointerOverlaps)
 			{
 				if (_pointerCamera == null)
 					_pointerCamera = camera;
@@ -1794,7 +1794,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		if (camera == null)
 			camera = _pointerCamera;
-
+		
 		var pointerPos = pointer.getWorldPosition(camera, FlxPoint.get());
 		var result = transformWorldToPixels(pointerPos, camera);
 		pointerPos.put();
