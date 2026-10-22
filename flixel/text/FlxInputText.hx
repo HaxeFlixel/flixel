@@ -254,6 +254,17 @@ class FlxInputText extends FlxText implements IFlxInputText
 	var _justGainedFocus:Bool = false;
 	
 	/**
+	 * Stores the origin that sprites were last positioned with, used for checking
+	 * if they need to be updated.
+	 */
+	var _lastOrigin:FlxPoint = FlxPoint.get();
+	/**
+	 * Stores the scale that sprites were last positioned with, used for checking
+	 * if they need to be updated.
+	 */
+	var _lastScale:FlxPoint = FlxPoint.get(1, 1);
+	
+	/**
 	 * Internal variable that holds the camera that the text field is being pressed on.
 	 */
 	var _pointerCamera:FlxCamera;
@@ -466,6 +477,13 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		regenGraphic();
 
+		if (!_lastScale.equals(scale) || !_lastOrigin.equals(origin))
+		{
+			_lastScale.copyFrom(scale);
+			_lastOrigin.copyFrom(origin);
+			updateSpritePositions();
+		}
+	
 		drawSprite(_fieldBorderSprite);
 		drawSprite(_backgroundSprite);
 
@@ -493,6 +511,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 		_backgroundSprite = FlxDestroyUtil.destroy(_backgroundSprite);
 		_caret = FlxDestroyUtil.destroy(_caret);
 		_fieldBorderSprite = FlxDestroyUtil.destroy(_fieldBorderSprite);
+		_lastOrigin = FlxDestroyUtil.put(_lastOrigin);
+		_lastScale = FlxDestroyUtil.put(_lastScale);
 		_pointerCamera = null;
 		while (_selectionBoxes.length > 0)
 			FlxDestroyUtil.destroy(_selectionBoxes.pop());
@@ -631,7 +651,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		{
 			bounds = bounds.clipTo(clipRect);
 		}
-		bounds.offset(x - sprite.x, y - sprite.y);
+		bounds.offset(-worldToFrameX(sprite.x), -worldToFrameY(sprite.y));
 		
 		sprite.clipRect = rect.clipTo(bounds);
 		
@@ -646,11 +666,49 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (sprite != null && sprite.visible)
 		{
 			sprite.scrollFactor.copyFrom(scrollFactor);
+			sprite.scale.copyFrom(scale);
+			sprite.origin.set(0, 0);
 			sprite._cameras = _cameras;
 			sprite.draw();
 		}
 	}
 
+	/**
+	 * Gets the X position in the world of the specified X position in the text field,
+	 * takes `scale` and `origin` into account.
+	 */
+	inline function frameToWorldX(frameX:Float):Float
+	{
+		return x + origin.x + (frameX - origin.x) * scale.x;
+	}
+	
+	/**
+	 * Gets the Y position in the world of the specified Y position in the text field,
+	 * takes `scale` and `origin` into account.
+	 */
+	inline function frameToWorldY(frameY:Float):Float
+	{
+		return y + origin.y + (frameY - origin.y) * scale.y;
+	}
+	
+	/**
+	 * Gets the X position in the text field of the specified X position in the world,
+	 * takes `scale` and `origin` into account.
+	 */
+	inline function worldToFrameX(worldX:Float):Float
+	{
+		return (worldX - x - origin.x) / scale.x + origin.x;
+	}
+	
+	/**
+	 * Gets the Y position in the text field of the specified Y position in the world,
+	 * takes `scale` and `origin` into account.
+	 */
+	inline function worldToFrameY(worldY:Float):Float
+	{
+		return (worldY - y - origin.y) / scale.y + origin.y;
+	}
+	
 	/**
 	 * Returns the specified text filtered using `forceCase` and `filterMode`.
 	 * @param newText   The string to filter.
@@ -1200,8 +1258,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (!background)
 			return;
 			
-		_fieldBorderSprite.setPosition(x - fieldBorderThickness, y - fieldBorderThickness);
-		_backgroundSprite.setPosition(x, y);
+		_fieldBorderSprite.setPosition(frameToWorldX(-fieldBorderThickness), frameToWorldY(-fieldBorderThickness));
+		_backgroundSprite.setPosition(frameToWorldX(0), frameToWorldY(0));
 		clipSprite(_fieldBorderSprite, true);
 		clipSprite(_backgroundSprite);
 	}
@@ -1216,25 +1274,25 @@ class FlxInputText extends FlxText implements IFlxInputText
 			
 		if (text.length == 0)
 		{
-			_caret.setPosition(x + getCaretOffsetX(), y + GUTTER);
+			_caret.setPosition(frameToWorldX(getCaretOffsetX()), frameToWorldY(GUTTER));
 		}
 		else
 		{
 			var boundaries = getCharBoundaries(_caretIndex - 1);
 			if (boundaries != null)
 			{
-				_caret.setPosition(x + boundaries.right - scrollH, y + boundaries.y - getScrollVOffset());
+				_caret.setPosition(frameToWorldX(boundaries.right - scrollH), frameToWorldY(boundaries.y - getScrollVOffset()));
 			}
 			else
 			{
 				boundaries = getCharBoundaries(_caretIndex);
 				if (boundaries != null)
 				{
-					_caret.setPosition(x + boundaries.x - scrollH, y + boundaries.y - getScrollVOffset());
+					_caret.setPosition(frameToWorldX(boundaries.x - scrollH), frameToWorldY(boundaries.y - getScrollVOffset()));
 				}
 				else // end of line
 				{
-					_caret.setPosition(x + getCaretOffsetX(), y + GUTTER + getLineY(getLineIndexOfChar(_caretIndex)) - getScrollVOffset());
+					_caret.setPosition(frameToWorldX(getCaretOffsetX()), frameToWorldY(GUTTER + getLineY(getLineIndexOfChar(_caretIndex)) - getScrollVOffset()));
 				}
 			}
 		}
@@ -1416,7 +1474,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 						startBoundaries.height);
 					boxRect.clipTo(FlxRect.weak(0, 0, width, height)); // clip the selection box inside the text sprite
 					
-					box.setPosition(x + boxRect.x, y + boxRect.y);
+					box.setPosition(frameToWorldX(boxRect.x), frameToWorldY(boxRect.y));
 					box.makeGraphic(Std.int(boxRect.width), Std.int(boxRect.height));
 					clipSprite(box);
 					box.visible = true;
@@ -1728,7 +1786,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		var pointerPos = pointer.getWorldPosition(_pointerCamera, FlxPoint.get());
 		getScreenPosition(_point, _pointerCamera);
-		var result = FlxPoint.get((pointerPos.x - _pointerCamera.scroll.x) - _point.x, (pointerPos.y - _pointerCamera.scroll.y) - _point.y);
+		var result = FlxPoint.get((pointerPos.x - _pointerCamera.scroll.x - _point.x - origin.x) / scale.x + origin.x,
+			(pointerPos.y - _pointerCamera.scroll.y - _point.y - origin.y) / scale.y + origin.y);
 		pointerPos.put();
 		return result;
 	}
