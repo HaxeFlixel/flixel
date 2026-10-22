@@ -259,6 +259,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	var _lastOrigin:FlxPoint = FlxPoint.get();
 	/**
+	 * Stores the offset that sprites were last positioned with, used for checking
+	 * if they need to be updated.
+	 */
+	var _lastOffset:FlxPoint = FlxPoint.get();
+	/**
 	 * Stores the scale that sprites were last positioned with, used for checking
 	 * if they need to be updated.
 	 */
@@ -477,10 +482,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		regenGraphic();
 
-		if (!_lastScale.equals(scale) || !_lastOrigin.equals(origin))
+		if (!_lastScale.equals(scale) || !_lastOrigin.equals(origin) || !_lastOffset.equals(offset))
 		{
 			_lastScale.copyFrom(scale);
 			_lastOrigin.copyFrom(origin);
+			_lastOffset.copyFrom(offset);
 			updateSpritePositions();
 		}
 	
@@ -511,6 +517,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		_backgroundSprite = FlxDestroyUtil.destroy(_backgroundSprite);
 		_caret = FlxDestroyUtil.destroy(_caret);
 		_fieldBorderSprite = FlxDestroyUtil.destroy(_fieldBorderSprite);
+		_lastOffset = FlxDestroyUtil.put(_lastOffset);
 		_lastOrigin = FlxDestroyUtil.put(_lastOrigin);
 		_lastScale = FlxDestroyUtil.put(_lastScale);
 		_pointerCamera = null;
@@ -675,38 +682,38 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 	/**
 	 * Gets the X position in the world of the specified X position in the text field,
-	 * takes `scale` and `origin` into account.
+	 * takes `scale`, `origin` and `offset` into account.
 	 */
 	inline function frameToWorldX(frameX:Float):Float
 	{
-		return x + origin.x + (frameX - origin.x) * scale.x;
+		return x - offset.x + origin.x + (frameX - origin.x) * scale.x;
 	}
 	
 	/**
 	 * Gets the Y position in the world of the specified Y position in the text field,
-	 * takes `scale` and `origin` into account.
+	 * takes `scale`, `origin` and `offset` into account.
 	 */
 	inline function frameToWorldY(frameY:Float):Float
 	{
-		return y + origin.y + (frameY - origin.y) * scale.y;
+		return y - offset.y + origin.y + (frameY - origin.y) * scale.y;
 	}
 	
 	/**
 	 * Gets the X position in the text field of the specified X position in the world,
-	 * takes `scale` and `origin` into account.
+	 * takes `scale`, `origin` and `offset` into account.
 	 */
 	inline function worldToFrameX(worldX:Float):Float
 	{
-		return (worldX - x - origin.x) / scale.x + origin.x;
+		return (worldX - x + offset.x - origin.x) / scale.x + origin.x;
 	}
 	
 	/**
 	 * Gets the Y position in the text field of the specified Y position in the world,
-	 * takes `scale` and `origin` into account.
+	 * takes `scale`, `origin` and `offset` into account.
 	 */
 	inline function worldToFrameY(worldY:Float):Float
 	{
-		return (worldY - y - origin.y) / scale.y + origin.y;
+		return (worldY - y + offset.y - origin.y) / scale.y + origin.y;
 	}
 	
 	/**
@@ -1630,11 +1637,12 @@ class FlxInputText extends FlxText implements IFlxInputText
 	function checkPointerOverlap(pointer:FlxPointer):Bool
 	{
 		var overlap = false;
-		var pointerPos = FlxPoint.get();
 		for (camera in getCameras())
 		{
-			pointer.getWorldPosition(camera, pointerPos);
-			if (overlapsPoint(pointerPos, true, camera))
+			var relativePos = getRelativePosition(pointer, camera);
+			var overlapsCamera = relativePos.x >= 0 && relativePos.x < width && relativePos.y >= 0 && relativePos.y < height;
+			relativePos.put();
+			if (overlapsCamera)
 			{
 				if (_pointerCamera == null)
 					_pointerCamera = camera;
@@ -1643,7 +1651,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 			}
 		}
 
-		pointerPos.put();
 		return overlap;
 	}
 	
@@ -1780,14 +1787,16 @@ class FlxInputText extends FlxText implements IFlxInputText
 	}
 	
 	/**
-	 * Returns the position of the pointer relative to the text field.
+	 * Returns the position of the pointer relative to the text field, using
+	 * `_pointerCamera` if `camera` is `null`.
 	 */
-	function getRelativePosition(pointer:FlxPointer):FlxPoint
+	function getRelativePosition(pointer:FlxPointer, ?camera:FlxCamera):FlxPoint
 	{
-		var pointerPos = pointer.getWorldPosition(_pointerCamera, FlxPoint.get());
-		getScreenPosition(_point, _pointerCamera);
-		var result = FlxPoint.get((pointerPos.x - _pointerCamera.scroll.x - _point.x - origin.x) / scale.x + origin.x,
-			(pointerPos.y - _pointerCamera.scroll.y - _point.y - origin.y) / scale.y + origin.y);
+		if (camera == null)
+			camera = _pointerCamera;
+
+		var pointerPos = pointer.getWorldPosition(camera, FlxPoint.get());
+		var result = transformWorldToPixels(pointerPos, camera);
 		pointerPos.put();
 		return result;
 	}
