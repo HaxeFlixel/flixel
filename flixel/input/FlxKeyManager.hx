@@ -58,6 +58,11 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	var _keyListMap:Map<Int, FlxInput<Key>> = new Map<Int, FlxInput<Key>>();
 
 	/**
+	 * Interngal storage of held input keys, populated by OpenFl events.
+	 */
+	var _heldKeyList:Array<Bool> = [];
+
+	/**
 	 * Check to see if at least one key from an array of keys is pressed.
 	 *
 	 * @param	KeyArray 	An array of key names
@@ -233,6 +238,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		
 		_keyListArray = null;
 		_keyListMap = null;
+		_heldKeyList = null;
 	}
 
 	/**
@@ -307,6 +313,8 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 
 		if (enabled)
 		{
+			_heldKeyList[c] = false;
+
 			updateKeyStates(c, false);
 		}
 	}
@@ -319,8 +327,10 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		var c:Int = resolveKeyCode(event);
 		handlePreventDefaultKeys(c, event);
 
-		if (enabled)
+		if (enabled && !_heldKeyList[c])
 		{
+			_heldKeyList[c] = true;
+
 			updateKeyStates(c, true);
 		}
 	}
