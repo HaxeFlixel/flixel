@@ -1,9 +1,11 @@
 package flixel.system.replay;
 
+import flixel.util.FlxDestroyUtil;
+
 /**
  * Helper class for the new replay system.  Represents all the game inputs for one "frame" or "step" of the game loop.
  */
-class FrameRecord
+class FrameRecord implements IFlxDestroyable
 {
 	/**
 	 * Which frame of the game loop this record is from or for.
