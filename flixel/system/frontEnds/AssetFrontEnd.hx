@@ -3,6 +3,7 @@ package flixel.system.frontEnds;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.debug.log.LogStyle;
+import flixel.util.FlxSignal;
 import haxe.Json;
 import haxe.io.Bytes;
 import haxe.io.Path;
@@ -45,6 +46,11 @@ using StringTools;
  */
 class AssetFrontEnd
 {
+	/**
+	 * Dispatched whenever the availability or the contents of assets change
+	 */
+	public final onChange = new FlxSignal();
+	
 	#if FLX_CUSTOM_ASSETS_DIRECTORY
 	/**
 	 * The target directory
@@ -63,6 +69,7 @@ class AssetFrontEnd
 		// Verify valid directory
 		if (sys.FileSystem.exists(directory) == false)
 			throw 'Error finding custom asset directory:"$directory" from given path: $rawPath';
+		
 		// remove final "/assets" since the id typically contains it
 		final split = directory.split("/");
 		split.pop();
@@ -82,7 +89,10 @@ class AssetFrontEnd
 		return id.startsWith("flixel/") || id.contains(':');
 	}
 	#else
-	public function new () {}
+	public function new ()
+	{
+		lime.utils.Assets.onChange.add(()->onChange.dispatch());
+	}
 	#end
 	
 	#if (FLX_DEFAULT_SOUND_EXT == "1" || FLX_NO_DEFAULT_SOUND_EXT)
@@ -246,6 +256,7 @@ class AssetFrontEnd
 		#else
 		if (useOpenflAssets(id))
 			return Assets.exists(id, type.toOpenFlType());
+		
 		// Can't verify contents match expected type without
 		return sys.FileSystem.exists(getPath(id));
 		#end
