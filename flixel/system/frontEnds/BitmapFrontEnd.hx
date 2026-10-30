@@ -17,6 +17,8 @@ import lime.graphics.opengl.GL;
  * 
  * Accessed via `FlxG.bitmap`.
  */
+@:nullSafety(Strict)
+@:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("onAssetsReload", "onAssetsReload is deprecated, use onAssetsChange, instead"))
 class BitmapFrontEnd
 {
 	#if FLX_OPENGL_AVAILABLE
@@ -37,23 +39,28 @@ class BitmapFrontEnd
 	public var whitePixel(get, never):FlxFrame;
 
 	@:allow(flixel.system.frontEnds.BitmapLogFrontEnd)
-	var _cache:Map<String, FlxGraphic>;
-
-	var _whitePixel:FlxFrame;
-
+	final _cache = new Map<String, FlxGraphic>();
+	
+	var _whitePixel:Null<FlxFrame>;
+	
 	var _lastUniqueKeyIndex:Int = 0;
-
+	
 	public function new()
 	{
 		reset();
 	}
 
+	@:deprecated("onAssetsReload is deprecated, use onAssetsChange, instead")
 	public function onAssetsReload(_):Void
 	{
-		for (key in _cache.keys())
+		onAssetsChange();
+	}
+	
+	public function onAssetsChange():Void
+	{
+		for (key => obj in _cache)
 		{
-			var obj = _cache.get(key);
-			if (obj != null && obj.canBeRefreshed)
+			if (obj.canBeRefreshed)
 			{
 				obj.onAssetsReload();
 			}
@@ -66,6 +73,7 @@ class BitmapFrontEnd
 	 * @param   key  The key identifying the bitmap.
 	 * @return  Whether or not this file can be found in the cache.
 	 */
+	@:deprecated("checkCache is deprecated, use exists, instead")
 	public inline function checkCache(key:String):Bool
 	{
 		return get(key) != null;
@@ -126,23 +134,33 @@ class BitmapFrontEnd
 	 * @param   key  The FlxGraphics key (or name).
 	 * @return  The FlxGraphic with the specified key, or null if the object doesn't exist.
 	 */
-	public inline function get(key:String):FlxGraphic
+	public inline function get(key:String):Null<FlxGraphic>
 	{
 		return _cache.get(key);
 	}
-
+	
+	/**
+	 * Checks whether a bitmap exists with the given key.
+	 * 
+	 * @param   key  The FlxGraphics key (or name).
+	 * @since 6.2.0
+	 */
+	public inline function exists(key:String):Bool
+	{
+		return _cache.exists(key);
+	}
+	
 	/**
 	 * Gets a key from a cached BitmapData.
 	 *
 	 * @param   bmd  BitmapData to find in the cache.
 	 * @return  The BitmapData's key or null if there isn't such BitmapData in cache.
 	 */
-	public function findKeyForBitmap(bmd:BitmapData):String
+	public function findKeyForBitmap(bmd:BitmapData):Null<String>
 	{
-		for (key in _cache.keys())
+		for (key => obj in _cache)
 		{
-			var obj = _cache.get(key);
-			if (obj != null && obj.bitmap == bmd)
+			if (obj.bitmap == bmd)
 				return key;
 		}
 		return null;
@@ -167,14 +185,11 @@ class BitmapFrontEnd
 	 * @param   unique     Whether generated key should be unique or not.
 	 * @return  Created key.
 	 */
-	public function generateKey(systemKey:String, userKey:String, unique = false):String
+	public function generateKey(systemKey:Null<String>, userKey:Null<String>, unique = false):String
 	{
-		var key:String = userKey;
-		if (key == null)
-			key = systemKey;
-
+		final key = userKey != null ? userKey : systemKey;
 		if (unique || key == null)
-			key = getUniqueKey(key);
+			return getUniqueKey(key);
 
 		return key;
 	}
@@ -185,12 +200,9 @@ class BitmapFrontEnd
 	 * @param   baseKey  key's prefix.
 	 * @return  unique key.
 	 */
-	public function getUniqueKey(?baseKey:String):String
+	public function getUniqueKey(baseKey = "pixels"):String
 	{
-		if (baseKey == null)
-			baseKey = "pixels";
-
-		if (!checkCache(baseKey))
+		if (!exists(baseKey))
 			return baseKey;
 
 		var i:Int = _lastUniqueKeyIndex;
@@ -200,7 +212,7 @@ class BitmapFrontEnd
 			i++;
 			uniqueKey = baseKey + i;
 		}
-		while (checkCache(uniqueKey));
+		while (exists(uniqueKey));
 
 		_lastUniqueKeyIndex = i;
 		return uniqueKey;
@@ -256,19 +268,17 @@ class BitmapFrontEnd
 	 */
 	public function removeByKey(key:String):Void
 	{
-		if (key != null)
+		final obj = get(key);
+		if (obj != null)
 		{
-			var obj = get(key);
 			removeKey(key);
-
-			if (obj != null)
-				obj.destroy();
+			obj.destroy();
 		}
 	}
 
 	public function removeIfNoUse(graphic:FlxGraphic):Void
 	{
-		if (graphic != null && graphic.useCount == 0 && !graphic.persist)
+		if (graphic.useCount == 0 && !graphic.persist)
 			remove(graphic);
 	}
 
@@ -278,16 +288,9 @@ class BitmapFrontEnd
 	 */
 	public function clearCache():Void
 	{
-		if (_cache == null)
+		for (key => obj in _cache)
 		{
-			_cache = new Map();
-			return;
-		}
-
-		for (key in _cache.keys())
-		{
-			var obj = get(key);
-			if (obj != null && !obj.persist && obj.useCount <= 0)
+			if (!obj.persist && obj.useCount <= 0)
 			{
 				removeKey(key);
 				obj.destroy();
@@ -297,11 +300,8 @@ class BitmapFrontEnd
 
 	inline function removeKey(key:String):Void
 	{
-		if (key != null)
-		{
-			Assets.cache.removeBitmapData(key);
-			_cache.remove(key);
-		}
+		FlxG.assets.removeAssetUnsafe(key, IMAGE);
+		_cache.remove(key);
 	}
 
 	/**
@@ -309,19 +309,10 @@ class BitmapFrontEnd
 	 */
 	public function reset():Void
 	{
-		if (_cache == null)
+		for (key => obj in _cache)
 		{
-			_cache = new Map();
-			return;
-		}
-
-		for (key in _cache.keys())
-		{
-			var obj = get(key);
 			removeKey(key);
-
-			if (obj != null)
-				obj.destroy();
+			obj.destroy();
 		}
 	}
 
@@ -331,10 +322,9 @@ class BitmapFrontEnd
 	 */
 	public function clearUnused():Void
 	{
-		for (key in _cache.keys())
+		for (key => obj in _cache)
 		{
-			var obj = _cache.get(key);
-			if (obj != null && obj.useCount <= 0 && !obj.persist && obj.destroyOnNoUse)
+			if (obj.useCount <= 0 && !obj.persist && obj.destroyOnNoUse)
 			{
 				removeByKey(key);
 			}
@@ -359,8 +349,8 @@ class BitmapFrontEnd
 		if (_whitePixel == null)
 		{
 			var bd = new BitmapData(10, 10, true, FlxColor.WHITE);
-			var graphic:FlxGraphic = FlxG.bitmap.add(bd, true, "whitePixels");
-			graphic.persist = true;
+			var graphic:FlxGraphic = add(bd, true, "whitePixels");
+			graphic.persist = true; 
 			_whitePixel = graphic.imageFrame.frame;
 		}
 
