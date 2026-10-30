@@ -412,14 +412,28 @@ class FlxAtlasFrames extends FlxFramesCollection
 	public static function findFrame(graphic:FlxGraphic, ?border:FlxPoint):FlxAtlasFrames
 	{
 		if (border == null)
-			border = FlxPoint.weak();
-
-		var atlasFrames:Array<FlxAtlasFrames> = cast graphic.getFramesCollections(FlxFrameCollectionType.ATLAS);
-
+			return findFrameWithBorder(graphic, 0, 0);
+		
+		final result = findFrameWithBorder(graphic, Math.round(border.x), Math.round(border.y));
+		border.putWeak();
+		return result;
+	}
+	
+	/**
+	 * Returns the `FlxAtlasFrame` of the specified `FlxGraphic` object with the specified border.
+	 *
+	 * @param   graphic   `FlxGraphic` object to find the `FlxAtlasFrames` collection for.
+	 * @return  `FlxAtlasFrames` collection for the specified `FlxGraphic` object
+	 *          Could be `null` if `FlxGraphic` doesn't have it yet, or no atlas has the target border size.
+	 */
+	static function findFrameWithBorder(graphic:FlxGraphic, borderX:Int, borderY:Int):Null<FlxAtlasFrames> // TODO: Make public in next minor version (6.3.0)
+	{
+		final atlasFrames:Array<FlxAtlasFrames> = cast graphic.getFramesCollections(FlxFrameCollectionType.ATLAS);
+		
 		for (atlas in atlasFrames)
-			if (atlas.border.equals(border))
+			if (Math.round(atlas.border.x) == borderX && Math.round(atlas.border.y) == borderY)
 				return atlas;
-
+		
 		return null;
 	}
 
