@@ -158,6 +158,23 @@ class FlxSave implements IFlxDestroyable
 	}
 
 	/**
+	 * Returns `true` if a save file exists at the given location.
+	 * Note this does not parse the save file or check its validity.
+	 *
+	 * @param   name          The name of the save (should be the same each time to access old data).
+	 *                        May not contain spaces or any of the following characters:
+	 *                        `~ % & \ ; : " ' , < > ? #`
+	 * @param   path          The full or partial path to the file that created the shared object.
+	 *                        Mainly used to differentiate from other FlxSaves. If you do not specify
+	 *                        this parameter, the company name specified in your Project.xml is used.
+	 * @return  Whether a file exists at the location.
+	 */
+	public static function exists(name, ?path:String):Bool
+	{
+		return FlxSharedObject.exists(name, path);
+	}
+
+	/**
 	 * Automatically creates or reconnects to locally saved data.
 	 *
 	 * @param   name          The name of the save (should be the same each time to access old data).
@@ -651,7 +668,7 @@ private class FlxSharedObject extends SharedObject
 	 */
 	public static inline function exists(name:String, ?localPath:String)
 	{
-		return newExists(localPath, name)
+		return newExists(name, localPath)
 			|| legacyExists(localPath, name);
 	}
 	
