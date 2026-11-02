@@ -402,11 +402,11 @@ class FlxQuadTree extends FlxRect
 	 * @param	List			A int flag indicating the list to which you want to add the objects.  Options are A_LIST and B_LIST.
 	 */
 	@:access(flixel.group.FlxTypedGroup.resolveGroup)
-	public function add(ObjectOrGroup:FlxBasic, list:Int):Void
+	public function add(objectOrGroup:FlxBasic, list:Int):Void
 	{
 		_list = list;
 
-		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup);
+		var group = FlxTypedGroup.resolveGroup(objectOrGroup);
 		if (group != null)
 		{
 			var i:Int = 0;
@@ -423,7 +423,7 @@ class FlxQuadTree extends FlxRect
 					{
 						add(group, list);
 					}
-					else
+					else if (basic is FlxObject)
 					{
 						_object = cast basic;
 						if (_object.exists && _object.allowCollisions != NONE)
@@ -438,9 +438,9 @@ class FlxQuadTree extends FlxRect
 				}
 			}
 		}
-		else
+		else if (objectOrGroup is FlxObject)
 		{
-			_object = cast ObjectOrGroup;
+			_object = cast objectOrGroup;
 			if (_object.exists && _object.allowCollisions != NONE)
 			{
 				_objectLeftEdge = _object.x;
