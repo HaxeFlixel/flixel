@@ -1,3 +1,21 @@
+### 6.2.1 (Nov 03, 2026)
+
+#### Changes and improvements:
+- `FlxSpriteGroup`: Call `clipToViewBounds` on members ([#3629](https://github.com/HaxeFlixel/flixel/pull/3629))
+- `FlxVersionMacro`: Fix build error by null checking some values ([#3644](https://github.com/HaxeFlixel/flixel/pull/3644))
+- `FlxG`: Improve `set_drawFramerate` ([#3648](https://github.com/HaxeFlixel/flixel/pull/3648))
+- `FlxGamepadManager`: Add gamepad model lookup ([#3653](https://github.com/HaxeFlixel/flixel/pull/3653))
+- `FlxBitmapText`: Cull characters outside the `clipRect` ([#3655](https://github.com/HaxeFlixel/flixel/pull/3655))
+- `FlxGamepadManager`: Support xbox wireless controller ([#3664](https://github.com/HaxeFlixel/flixel/pull/3664))
+- `FlxBitmapText`: Ensure min textHeight of 0 ([#3623](https://github.com/HaxeFlixel/flixel/pull/3623))
+
+#### Bugfixes:
+- `FlxTileFrames`: Cleanup points ([#3637](https://github.com/HaxeFlixel/flixel/pull/3637))
+- `FlxSound`: Cancel `fadeTween` on `destroy` ([#3639](https://github.com/HaxeFlixel/flixel/pull/3639))
+- `FlxBar`: Refresh rendering when fill direction changes ([#3663](https://github.com/HaxeFlixel/flixel/pull/3663))
+- `FlxAtlasFrames`: Fix `findFrame` leak ([#3649](https://github.com/HaxeFlixel/flixel/pull/3649))
+- `FlxQuadTree`: Prevent crashes on non-colliding FlxBasics ([#3668](https://github.com/HaxeFlixel/flixel/pull/3668))
+
 ## 6.2.0 (July 20, 2026)
 
 #### New features:
