@@ -656,7 +656,10 @@ class FlxG
 	static function set_scaleMode(value:BaseScaleMode):BaseScaleMode
 	{
 		scaleMode = value;
-		game.onResize(null);
+		
+		if (game != null)
+			game.onResize(null);
+		
 		return value;
 	}
 
