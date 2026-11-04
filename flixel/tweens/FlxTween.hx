@@ -1,16 +1,16 @@
 package flixel.tweens;
 
-import flixel.tweens.misc.ShakeTween;
-import flixel.util.FlxAxes;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
 import flixel.tweens.misc.FlickerTween;
 import flixel.tweens.misc.NumTween;
+import flixel.tweens.misc.ShakeTween;
 import flixel.tweens.misc.VarTween;
 import flixel.tweens.motion.CircularMotion;
 import flixel.tweens.motion.CubicMotion;
@@ -19,9 +19,9 @@ import flixel.tweens.motion.LinearPath;
 import flixel.tweens.motion.QuadMotion;
 import flixel.tweens.motion.QuadPath;
 import flixel.util.FlxArrayUtil;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.math.FlxPoint;
 
 /** @since 4.5.0 **/
 enum abstract FlxTweenType(Int) from Int to Int
@@ -642,16 +642,19 @@ class FlxTween implements IFlxDestroyable
 		{
 			scale = ease(scale);
 		}
+		
 		if (backward)
 		{
 			scale = 1 - scale;
 		}
+		
 		if (_secondsSinceStart > delay && !_running)
 		{
 			_running = true;
 			if (onStart != null)
 				onStart(this);
 		}
+		
 		if (_secondsSinceStart >= duration + delay)
 		{
 			scale = (backward) ? 0 : 1;
@@ -742,8 +745,8 @@ class FlxTween implements IFlxDestroyable
 
 		if (type == FlxTweenType.LOOPING || type == FlxTweenType.PINGPONG)
 		{
-			_secondsSinceStart = (_secondsSinceStart - _delayToUse) % duration + _delayToUse;
-			scale = Math.max((_secondsSinceStart - _delayToUse), 0) / duration;
+			_secondsSinceStart = _secondsSinceStart % (duration + _delayToUse);
+			scale = Math.max((_secondsSinceStart - loopDelay), 0) / duration;
 
 			if (ease != null && scale > 0 && scale < 1)
 			{
