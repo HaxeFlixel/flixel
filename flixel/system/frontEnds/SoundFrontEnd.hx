@@ -445,6 +445,25 @@ class SoundFrontEnd
 	}
 
 	/**
+	 * Stops the current music and all sounds currently playing.
+	 */
+	public function stopAll():Void
+	{
+		if (music != null && music.exists && music.active)
+		{
+			music.stop();
+		}
+		
+		for (sound in list.members)
+		{
+			if (sound != null && sound.exists && sound.active)
+			{
+				sound.stop();
+			}
+		}
+	}
+
+	/**
 	 * Called by FlxGame on state changes to stop and destroy sounds.
 	 *
 	 * @param   forceDestroy  Kill sounds even if persist is true.
