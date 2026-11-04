@@ -3,6 +3,7 @@ package flixel.system.frontEnds;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.debug.log.LogStyle;
+import flixel.util.FlxSignal;
 import haxe.Json;
 import haxe.io.Bytes;
 import haxe.io.Path;
@@ -45,6 +46,11 @@ using StringTools;
  */
 class AssetFrontEnd
 {
+	/**
+	 * Dispatched whenever the availability or the contents of assets change
+	 */
+	public final onChange = new FlxSignal();
+	
 	#if FLX_CUSTOM_ASSETS_DIRECTORY
 	/**
 	 * The target directory
@@ -82,7 +88,10 @@ class AssetFrontEnd
 		return id.startsWith("flixel/") || id.contains(':');
 	}
 	#else
-	public function new () {}
+	public function new ()
+	{
+		lime.utils.Assets.onChange.add(()->onChange.dispatch());
+	}
 	#end
 	
 	#if (FLX_DEFAULT_SOUND_EXT == "1" || FLX_NO_DEFAULT_SOUND_EXT)
@@ -223,6 +232,18 @@ class AssetFrontEnd
 			case IMAGE: Assets.loadBitmapData(id, useCache);
 			case SOUND: Assets.loadSound(id, useCache);
 			case FONT: Assets.loadFont(id, useCache);
+		}
+	}
+	
+	dynamic public function removeAssetUnsafe(id:String, type:FlxAssetType)
+	{
+		switch(type)
+		{
+			case TEXT:
+			case BINARY:
+			case IMAGE: Assets.cache.removeBitmapData(id);
+			case SOUND: Assets.cache.removeSound(id);
+			case FONT: Assets.cache.removeFont(id);
 		}
 	}
 	
@@ -747,6 +768,41 @@ class AssetFrontEnd
 	public inline function parseXml(xmlText:String)
 	{
 		return Xml.parse(xmlText);
+	}
+	
+	public inline function removeAsset(id:String, type:FlxAssetType, ?logStyle:LogStyle)
+	{
+		if (logStyle == null)
+			logStyle = FlxG.log.styles.error;
+		
+		final log = FlxG.log.advanced.bind(_, logStyle);
+		
+		if (exists(id, type))
+		{
+			// if (isLocal(id, type))
+				removeAssetUnsafe(id, type);
+			// else
+			// 	log('$type asset "$id" exists, but only asynchronously');
+		}
+		else
+		{
+			log('Could not find a $type asset with ID \'$id\'.');
+		}
+	}
+	
+	public inline function removeBitmapData(id, ?logStyle)
+	{
+		removeAsset(id, IMAGE, logStyle);
+	}
+	
+	public inline function removeSound(id, ?logStyle)
+	{
+		removeAsset(id, SOUND, logStyle);
+	}
+	
+	public inline function removeFont(id, ?logStyle)
+	{
+		removeAsset(id, FONT, logStyle);
 	}
 	
 	inline function wrapFuture<T1, T2>(future:Future<T1>, converter:(T1)->T2):Future<T2>

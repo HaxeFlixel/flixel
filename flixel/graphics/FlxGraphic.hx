@@ -25,9 +25,9 @@ class FlxGraphic implements IFlxDestroyable
 	public static var defaultPersist:Bool = false;
 
 	/**
-	 * Creates and caches FlxGraphic object from openfl.Assets key string.
+	 * Creates and caches FlxGraphic object from asset key string.
 	 *
-	 * @param   Source   `openfl.Assets` key string. For example: `"assets/image.png"`.
+	 * @param   Source   Asset key string. For example: `"assets/image.png"`.
 	 * @param   Unique   Ensures that the `BitmapData` uses a new slot in the cache.
 	 *                   If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
 	 * @param   Key      Force the cache to use a specific key to index the bitmap.
