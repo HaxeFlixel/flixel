@@ -128,28 +128,20 @@ class FlxArrayUtil
 	 * WARNING: Does not attempt to properly destroy the contents.
 	 *
 	 * @param	array		The array to clear out
-	 * @param	Recursive	Whether to search for arrays inside of arr and clear them out, too
+	 * @param	recursive	Whether to search for arrays inside of arr and clear them out, too
 	 */
 	public static function clearArray<T>(array:Array<T>, recursive:Bool = false):Array<T>
 	{
 		if (array == null)
 			return array;
-
-		if (recursive)
+		
+		while (array.length > 0)
 		{
-			while (array.length > 0)
-			{
-				var thing:T = array.pop();
-				if ((thing is Array))
-					clearArray(array, recursive);
-			}
+			var thing:T = array.pop();
+			if (recursive && (thing is Array))
+				clearArray(cast thing, true);
 		}
-		else
-		{
-			while (array.length > 0)
-				array.pop();
-		}
-
+		
 		return array;
 	}
 
