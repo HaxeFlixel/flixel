@@ -12,7 +12,7 @@ import openfl.geom.ColorTransform;
 
 inline var VERTICES_PER_QUAD = 4;
 
-@:nullSafety(Strict)
+#if !flash @:nullSafety(Strict) #end
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 {
 	static inline var VERTICES_PER_QUAD = 4;
