@@ -116,10 +116,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 @:forward
 private abstract RectVector(Vector<Float>)
 {
-	inline public function new ()
-	{
-		this = new Vector<Float>();
-	}
+	inline public function new () this = new Vector<Float>();
 	
 	inline public function clear()
 	{
@@ -148,10 +145,7 @@ private abstract RectVector(Vector<Float>)
 @:forward
 private abstract MatrixVector(Vector<Float>)
 {
-	inline public function new ()
-	{
-		this = new Vector<Float>();
-	}
+	inline public function new () this = new Vector<Float>();
 	
 	inline public function clear()
 	{
@@ -210,7 +204,7 @@ private abstract AlphaVector(Array<Float>)
 }
 
 @:forward
-private abstract ColorMultVector(Array<Float>)
+private abstract ColorVector(Array<Float>)
 {
 	public var numQuads(get, never):Int;
 	inline function get_numQuads() return Math.round(this.length / VERTICES_PER_QUAD / 4);
@@ -218,66 +212,6 @@ private abstract ColorMultVector(Array<Float>)
 	inline public function new ()
 	{
 		this = new Array<Float>();
-	}
-	
-	inline public function padTo(newLength:Int)
-	{
-		final length = numQuads;
-		while (newLength-- > length)
-			pushDefault();
-	}
-	
-	inline public function clear()
-	{
-		this.resize(0);
-	}
-	
-	overload public inline extern function push(red:Float, green:Float, blue:Float)
-	{
-		for (i in 0...VERTICES_PER_QUAD)
-		{
-			this.push(red);
-			this.push(green);
-			this.push(blue);
-			this.push(1);
-		}
-	}
-	
-	inline public function pushDefault()
-	{
-		push(1, 1, 1);
-	}
-	
-	overload public inline extern function push(transform:Null<ColorTransform>)
-	{
-		if (transform == null)
-			pushDefault();
-		else
-			push(transform.redMultiplier, transform.greenMultiplier, transform.blueMultiplier);
-	}
-	
-	inline public function toShaderValue():Array<Float>
-	{
-		return this;
-	}
-}
-
-@:forward
-private abstract ColorOffsetVector(Array<Float>)
-{
-	public var numQuads(get, never):Int;
-	inline function get_numQuads() return Math.round(this.length / VERTICES_PER_QUAD / 4);
-	
-	inline public function new ()
-	{
-		this = new Array<Float>();
-	}
-	
-	inline public function padTo(newLength:Int)
-	{
-		final length = numQuads;
-		while (newLength-- > length)
-			pushDefault();
 	}
 	
 	inline public function clear()
@@ -296,9 +230,27 @@ private abstract ColorOffsetVector(Array<Float>)
 		}
 	}
 	
+	inline public function toShaderValue():Array<Float>
+	{
+		return this;
+	}
+}
+
+@:forward
+private abstract ColorMultVector(ColorVector)
+{
+	inline public function new () this = new ColorVector();
+	
+	inline public function padTo(newLength:Int)
+	{
+		final length = this.numQuads;
+		while (newLength-- > length)
+			pushDefault();
+	}
+	
 	inline public function pushDefault()
 	{
-		push(0, 0, 0, 0);
+		this.push(1, 1, 1, 1);
 	}
 	
 	overload public inline extern function push(transform:Null<ColorTransform>)
@@ -306,11 +258,32 @@ private abstract ColorOffsetVector(Array<Float>)
 		if (transform == null)
 			pushDefault();
 		else
-			push(transform.redOffset, transform.greenOffset, transform.blueOffset, transform.alphaOffset);
+			this.push(transform.redMultiplier, transform.greenMultiplier, transform.blueMultiplier, 1);
+	}
+}
+
+@:forward
+private abstract ColorOffsetVector(ColorVector)
+{
+	inline public function new () this = new ColorVector();
+	
+	inline public function padTo(newLength:Int)
+	{
+		final length = this.numQuads;
+		while (newLength-- > length)
+			pushDefault();
 	}
 	
-	inline public function toShaderValue():Array<Float>
+	inline public function pushDefault()
 	{
-		return this;
+		this.push(0, 0, 0, 0);
+	}
+	
+	overload public inline extern function push(transform:Null<ColorTransform>)
+	{
+		if (transform == null)
+			pushDefault();
+		else
+			this.push(transform.redOffset, transform.greenOffset, transform.blueOffset, transform.alphaOffset);
 	}
 }
