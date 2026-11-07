@@ -35,9 +35,6 @@ class FlxGraphicsShader extends GraphicsShader
 		vec4 flixel_texture2D(sampler2D bitmap, vec2 coord)
 		{
 			vec4 color = texture2D(bitmap, coord);
-			if (!(hasColorMults || hasColorOffsets || openfl_HasColorTransform))
-				return color;
-			
 			if (color.a == 0.0)
 				return vec4(0.0, 0.0, 0.0, 0.0);
 			
