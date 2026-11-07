@@ -15,7 +15,7 @@ import openfl.geom.ColorTransform;
 
 typedef DrawData<T> = openfl.Vector<T>;
 
-inline final INDICES_PER_QUAD = 6;
+private inline final INDICES_PER_QUAD = 6;
 
 /**
  * @author Zaphod
@@ -62,20 +62,13 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
 		shader.bitmap.wrap = REPEAT; // in order to prevent breaking tiling behaviour in classes that use drawTriangles
 		shader.alpha.value = alphas.toShaderValue();
+		shader.colorMultiplier.value = colored ? colorMultipliers.toShaderValue() : null;
+		shader.colorOffset.value = hasColorOffsets ? colorOffsets.toShaderValue() : null;
 		
-		if (colored || hasColorOffsets)
-		{
-			shader.colorMultiplier.value = colorMultipliers.toShaderValue();
-			shader.colorOffset.value = colorOffsets.toShaderValue();
-		}
-		else
-		{
-			shader.colorMultiplier.value = null;
-			shader.colorOffset.value = null;
-		}
-		
-		setParameterValue(shader.hasTransform, true);
-		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
+		setParameterValue(shader.hasTransform, true); // TODO: Remove
+		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets); // TODO: Remove
+		setParameterValue(shader.hasColorMults, colored);
+		setParameterValue(shader.hasColorOffsets, hasColorOffsets);
 		
 		camera.canvas.graphics.overrideBlendMode(blend);
 		
@@ -186,15 +179,19 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			
 			alphas.push(indicesLength, transform);
 			
-			if (colored || hasColorOffsets)
+			if (colored)
 			{
-				if (colorMultipliers.numIndices < indicesLength)
-					colorMultipliers.padTo(indicesLength);
-				
 				if (colorOffsets.numIndices < indicesLength)
 					colorOffsets.padTo(indicesLength);
 				
 				colorMultipliers.push(indicesLength, transform);
+			}
+			
+			if (hasColorOffsets)
+			{
+				if (colorOffsets.numIndices < indicesLength)
+					colorOffsets.padTo(indicesLength);
+				
 				colorOffsets.push(indicesLength, transform);
 			}
 			
@@ -274,16 +271,20 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		indices[prevIndicesPos + 5] = prevNumberOfVertices + 3; // BR
 
 		alphas.push(INDICES_PER_QUAD, transform);
-			
-		if (colored || hasColorOffsets)
+		
+		if (colored)
 		{
 			if (colorMultipliers.numIndices < indicesPosition)
 				colorMultipliers.padTo(indicesPosition);
 			
+			colorMultipliers.push(INDICES_PER_QUAD, transform);
+		}
+		
+		if (hasColorOffsets)
+		{
 			if (colorOffsets.numIndices < indicesPosition)
 				colorOffsets.padTo(indicesPosition);
 			
-			colorMultipliers.push(INDICES_PER_QUAD, transform);
 			colorOffsets.push(INDICES_PER_QUAD, transform);
 		}
 

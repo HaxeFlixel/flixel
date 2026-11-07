@@ -10,7 +10,7 @@ import openfl.Vector;
 import openfl.display.ShaderParameter;
 import openfl.geom.ColorTransform;
 
-inline var VERTICES_PER_QUAD = 4;
+private inline var VERTICES_PER_QUAD = 4;
 
 #if !flash @:nullSafety(Strict) #end
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
@@ -59,15 +59,19 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		transforms.push(matrix);
 		alphas.push(transform);
 		
-		if (colored || hasColorOffsets)
+		if (colored)
 		{
 			if (colorMultipliers.numQuads < prevQuads)
 				colorMultipliers.padTo(prevQuads);
 			
+			colorMultipliers.push(transform);
+		}
+		
+		if (hasColorOffsets)
+		{
 			if (colorOffsets.numQuads < prevQuads)
 				colorOffsets.padTo(prevQuads);
 			
-			colorMultipliers.push(transform);
 			colorOffsets.push(transform);
 		}
 	}
@@ -87,14 +91,13 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
 		shader.alpha.value = alphas.toShaderValue();
 		
-		if (colored || hasColorOffsets)
-		{
-			shader.colorMultiplier.value = colorMultipliers.toShaderValue();
-			shader.colorOffset.value = colorOffsets.toShaderValue();
-		}
-		
-		setParameterValue(shader.hasTransform, true);
-		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
+		shader.colorMultiplier.value = colored ? colorMultipliers.toShaderValue() : cast null;
+		shader.colorOffset.value = hasColorOffsets ? colorOffsets.toShaderValue() : cast null;
+
+		setParameterValue(shader.hasTransform, true); // TODO: Remove
+		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets); // TODO: Remove
+		setParameterValue(shader.hasColorMults, colored);
+		setParameterValue(shader.hasColorOffsets, hasColorOffsets);
 		
 		camera.canvas.graphics.overrideBlendMode(blend);
 		camera.canvas.graphics.beginShaderFill(shader);

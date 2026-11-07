@@ -8,38 +8,40 @@ class FlxGraphicsShader extends GraphicsShader
 		attribute float alpha;
 		attribute vec4 colorMultiplier;
 		attribute vec4 colorOffset;
-		uniform bool hasColorTransform;
+		uniform bool hasColorTransform; // deprecated
+		uniform bool hasColorMults;
+		uniform bool hasColorOffsets;
 	", true)
 	@:glVertexBody("
 		openfl_Alphav = openfl_Alpha * alpha;
 		
-		if (hasColorTransform)
+		if (!openfl_HasColorTransform)
 		{
-			if (openfl_HasColorTransform)
-			{
-				openfl_ColorOffsetv = (openfl_ColorOffsetv * colorMultiplier) + (colorOffset / 255.0);
-				openfl_ColorMultiplierv *= colorMultiplier;
-			}
-			else
-			{
-				openfl_ColorOffsetv = colorOffset / 255.0;
-				openfl_ColorMultiplierv = colorMultiplier;
-			}
+			openfl_ColorMultiplierv = vec4(1.0);
+			openfl_ColorOffsetv = vec4(0.0);
 		}
+		
+		if (hasColorMults)
+			openfl_ColorMultiplierv *= colorMultiplier;
+		
+		if (hasColorOffsets)
+			openfl_ColorOffsetv += (colorOffset / 255.0);
 	", true)
 	@:glFragmentHeader("
-		uniform bool hasTransform;  // TODO: Is this still needed? Apparently, yes!
-		uniform bool hasColorTransform;
+		uniform bool hasTransform; // deprecated
+		uniform bool hasColorTransform; // deprecated
+		uniform bool hasColorMults;
+		uniform bool hasColorOffsets;
 		vec4 flixel_texture2D(sampler2D bitmap, vec2 coord)
 		{
 			vec4 color = texture2D(bitmap, coord);
-			if (!(hasTransform || openfl_HasColorTransform))
+			if (!(hasColorMults || hasColorOffsets || openfl_HasColorTransform))
 				return color;
 			
 			if (color.a == 0.0)
 				return vec4(0.0, 0.0, 0.0, 0.0);
 			
-			if (openfl_HasColorTransform || hasColorTransform)
+			if (openfl_HasColorTransform || hasColorMults || hasColorOffsets)
 			{
 				color = vec4 (color.rgb / color.a, color.a);
 				vec4 mult = vec4 (openfl_ColorMultiplierv.rgb, 1.0);
