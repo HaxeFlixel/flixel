@@ -4,108 +4,71 @@ import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import openfl.Vector;
 import openfl.display.ShaderParameter;
 import openfl.geom.ColorTransform;
 
+inline var VERTICES_PER_QUAD = 4;
+
+@:nullSafety(Strict)
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 {
 	static inline var VERTICES_PER_QUAD = 4;
-
-	public var shader:FlxShader;
-
-	var rects:Vector<Float>;
-	var transforms:Vector<Float>;
-	var alphas:Array<Float>;
-	var colorMultipliers:Array<Float>;
-	var colorOffsets:Array<Float>;
-
+	
+	public var shader:Null<FlxShader> = null;
+	
+	final rects = new RectVector();
+	final transforms = new MatrixVector();
+	final colorMultipliers = new ColorMultVector();
+	final colorOffsets = new ColorOffsetVector();
+	final alphas = new AlphaVector();
+	
 	public function new()
 	{
 		super();
 		type = FlxDrawItemType.TILES;
-		rects = new Vector<Float>();
-		transforms = new Vector<Float>();
-		alphas = [];
 	}
-
+	
 	override public function reset():Void
 	{
 		super.reset();
-		rects.length = 0;
-		transforms.length = 0;
-		alphas.splice(0, alphas.length);
-		if (colorMultipliers != null)
-			colorMultipliers.splice(0, colorMultipliers.length);
-		if (colorOffsets != null)
-			colorOffsets.splice(0, colorOffsets.length);
+		rects.clear();
+		transforms.clear();
+		alphas.clear();
+		colorMultipliers.clear();
+		colorOffsets.clear();
 	}
-
+	
 	override public function dispose():Void
 	{
 		super.dispose();
-		rects = null;
-		transforms = null;
-		alphas = null;
-		colorMultipliers = null;
-		colorOffsets = null;
+		rects.clear();
+		transforms.clear();
+		alphas.clear();
+		colorMultipliers.clear();
+		colorOffsets.clear();
 	}
-
+	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
-		var rect = frame.frame;
-		rects.push(rect.x);
-		rects.push(rect.y);
-		rects.push(rect.width);
-		rects.push(rect.height);
-
-		transforms.push(matrix.a);
-		transforms.push(matrix.b);
-		transforms.push(matrix.c);
-		transforms.push(matrix.d);
-		transforms.push(matrix.tx);
-		transforms.push(matrix.ty);
-
-		var alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
-		for (i in 0...VERTICES_PER_QUAD)
-			alphas.push(alphaMultiplier);
-
+		final prevQuads = Math.round(rects.length / VERTICES_PER_QUAD);
+		
+		rects.push(frame.frame);
+		transforms.push(matrix);
+		alphas.push(transform);
+		
 		if (colored || hasColorOffsets)
 		{
-			if (colorMultipliers == null)
-				colorMultipliers = [];
-
-			if (colorOffsets == null)
-				colorOffsets = [];
-
-			for (i in 0...VERTICES_PER_QUAD)
-			{
-				if (transform != null)
-				{
-					colorMultipliers.push(transform.redMultiplier);
-					colorMultipliers.push(transform.greenMultiplier);
-					colorMultipliers.push(transform.blueMultiplier);
-
-					colorOffsets.push(transform.redOffset);
-					colorOffsets.push(transform.greenOffset);
-					colorOffsets.push(transform.blueOffset);
-					colorOffsets.push(transform.alphaOffset);
-				}
-				else
-				{
-					colorMultipliers.push(1);
-					colorMultipliers.push(1);
-					colorMultipliers.push(1);
-
-					colorOffsets.push(0);
-					colorOffsets.push(0);
-					colorOffsets.push(0);
-					colorOffsets.push(0);
-				}
-
-				colorMultipliers.push(1);
-			}
+			if (colorMultipliers.numQuads < prevQuads)
+				colorMultipliers.padTo(prevQuads);
+			
+			if (colorOffsets.numQuads < prevQuads)
+				colorOffsets.padTo(prevQuads);
+			
+			colorMultipliers.push(transform);
+			colorOffsets.push(transform);
 		}
 	}
 
@@ -122,20 +85,20 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		final shader = shader != null ? shader : graphics.shader;
 		shader.bitmap.input = graphics.bitmap;
 		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
-		shader.alpha.value = alphas;
-
+		shader.alpha.value = alphas.toShaderValue();
+		
 		if (colored || hasColorOffsets)
 		{
-			shader.colorMultiplier.value = colorMultipliers;
-			shader.colorOffset.value = colorOffsets;
+			shader.colorMultiplier.value = colorMultipliers.toShaderValue();
+			shader.colorOffset.value = colorOffsets.toShaderValue();
 		}
-
+		
 		setParameterValue(shader.hasTransform, true);
 		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
-
+		
 		camera.canvas.graphics.overrideBlendMode(blend);
 		camera.canvas.graphics.beginShaderFill(shader);
-		camera.canvas.graphics.drawQuads(rects, null, transforms);
+		camera.canvas.graphics.drawQuads(rects.toShaderValue(), null, transforms.toShaderValue());
 		camera.canvas.graphics.endFill();
 		super.render(camera);
 	}
@@ -144,7 +107,210 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	{
 		if (parameter.value == null)
 			parameter.value = [];
+		
 		parameter.value[0] = value;
 	}
 	#end
+}
+
+@:forward
+private abstract RectVector(Vector<Float>)
+{
+	inline public function new ()
+	{
+		this = new Vector<Float>();
+	}
+	
+	inline public function clear()
+	{
+		this.splice(0, this.length);
+	}
+	
+	overload public inline extern function push(x:Float, y:Float, width:Float, height:Float)
+	{
+		this.push(x);
+		this.push(y);
+		this.push(width);
+		this.push(height);
+	}
+	
+	overload public inline extern function push(rect:FlxRect)
+	{
+		push(rect.x, rect.y, rect.width, rect.height);
+	}
+	
+	inline public function toShaderValue():Vector<Float>
+	{
+		return this;
+	}
+}
+
+@:forward
+private abstract MatrixVector(Vector<Float>)
+{
+	inline public function new ()
+	{
+		this = new Vector<Float>();
+	}
+	
+	inline public function clear()
+	{
+		this.splice(0, this.length);
+	}
+	
+	overload public inline extern function push(a:Float, b:Float, c:Float, d:Float, tx:Float, ty:Float)
+	{
+		this.push(a);
+		this.push(b);
+		this.push(c);
+		this.push(d);
+		this.push(tx);
+		this.push(ty);
+	}
+	
+	overload public inline extern function push(matrix:FlxMatrix)
+	{
+		push(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+	}
+	
+	inline public function toShaderValue():Vector<Float>
+	{
+		return this;
+	}
+}
+
+@:forward
+private abstract AlphaVector(Array<Float>)
+{
+	inline public function new ()
+	{
+		this = new Array<Float>();
+	}
+	
+	inline public function clear()
+	{
+		this.resize(0);
+	}
+	
+	overload public inline extern function push(alpha:Float)
+	{
+		for (i in 0...VERTICES_PER_QUAD)
+			this.push(alpha);
+	}
+	
+	overload public inline extern function push(transform:Null<ColorTransform>)
+	{
+		push(transform == null ? 1.0 : transform.alphaMultiplier);
+	}
+	
+	inline public function toShaderValue():Array<Float>
+	{
+		return this;
+	}
+}
+
+@:forward
+private abstract ColorMultVector(Array<Float>)
+{
+	public var numQuads(get, never):Int;
+	inline function get_numQuads() return Math.round(this.length / VERTICES_PER_QUAD / 4);
+	
+	inline public function new ()
+	{
+		this = new Array<Float>();
+	}
+	
+	inline public function padTo(newLength:Int)
+	{
+		final length = numQuads;
+		while (newLength-- > length)
+			pushDefault();
+	}
+	
+	inline public function clear()
+	{
+		this.resize(0);
+	}
+	
+	overload public inline extern function push(red:Float, green:Float, blue:Float)
+	{
+		for (i in 0...VERTICES_PER_QUAD)
+		{
+			this.push(red);
+			this.push(green);
+			this.push(blue);
+			this.push(1);
+		}
+	}
+	
+	inline public function pushDefault()
+	{
+		push(1, 1, 1);
+	}
+	
+	overload public inline extern function push(transform:Null<ColorTransform>)
+	{
+		if (transform == null)
+			pushDefault();
+		else
+			push(transform.redMultiplier, transform.greenMultiplier, transform.blueMultiplier);
+	}
+	
+	inline public function toShaderValue():Array<Float>
+	{
+		return this;
+	}
+}
+
+@:forward
+private abstract ColorOffsetVector(Array<Float>)
+{
+	public var numQuads(get, never):Int;
+	inline function get_numQuads() return Math.round(this.length / VERTICES_PER_QUAD / 4);
+	
+	inline public function new ()
+	{
+		this = new Array<Float>();
+	}
+	
+	inline public function padTo(newLength:Int)
+	{
+		final length = numQuads;
+		while (newLength-- > length)
+			pushDefault();
+	}
+	
+	inline public function clear()
+	{
+		this.resize(0);
+	}
+	
+	overload public inline extern function push(red:Float, green:Float, blue:Float, alpha:Float)
+	{
+		for (i in 0...VERTICES_PER_QUAD)
+		{
+			this.push(red);
+			this.push(green);
+			this.push(blue);
+			this.push(alpha);
+		}
+	}
+	
+	inline public function pushDefault()
+	{
+		push(0, 0, 0, 0);
+	}
+	
+	overload public inline extern function push(transform:Null<ColorTransform>)
+	{
+		if (transform == null)
+			pushDefault();
+		else
+			push(transform.redOffset, transform.greenOffset, transform.blueOffset, transform.alphaOffset);
+	}
+	
+	inline public function toShaderValue():Array<Float>
+	{
+		return this;
+	}
 }
