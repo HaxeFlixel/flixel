@@ -179,16 +179,16 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			
 			if (colored)
 			{
-				if (colorOffsets.numIndices < indicesLength)
-					colorOffsets.padTo(indicesLength);
+				if (colorMultipliers.numIndices < indicesPosition)
+					colorMultipliers.padTo(indicesPosition);
 				
 				colorMultipliers.push(indicesLength, transform);
 			}
 			
 			if (hasColorOffsets)
 			{
-				if (colorOffsets.numIndices < indicesLength)
-					colorOffsets.padTo(indicesLength);
+				if (colorOffsets.numIndices < indicesPosition)
+					colorOffsets.padTo(indicesPosition);
 				
 				colorOffsets.push(indicesLength, transform);
 			}
