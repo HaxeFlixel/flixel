@@ -119,6 +119,7 @@ private abstract RectVector(Vector<Float>)
 {
 	inline public function new () this = new Vector<Float>();
 	
+	/** Removes all items */
 	inline public function clear()
 	{
 		this.splice(0, this.length);
@@ -148,6 +149,7 @@ private abstract MatrixVector(Vector<Float>)
 {
 	inline public function new () this = new Vector<Float>();
 	
+	/** Removes all items */
 	inline public function clear()
 	{
 		this.splice(0, this.length);
@@ -182,6 +184,7 @@ private abstract AlphaVector(Array<Float>)
 		this = new Array<Float>();
 	}
 	
+	/** Removes all items */
 	inline public function clear()
 	{
 		this.resize(0);
@@ -207,6 +210,9 @@ private abstract AlphaVector(Array<Float>)
 @:forward
 private abstract ColorVector(Array<Float>)
 {
+	/**
+	 * The number of quad colors in this list
+	 */
 	public var numQuads(get, never):Int;
 	inline function get_numQuads() return Math.round(this.length / VERTICES_PER_QUAD / 4);
 	
@@ -215,11 +221,15 @@ private abstract ColorVector(Array<Float>)
 		this = new Array<Float>();
 	}
 	
+	/** Removes all items */
 	inline public function clear()
 	{
 		this.resize(0);
 	}
 	
+	/**
+	 * Adds the color offset
+	 */
 	overload public inline extern function push(red:Float, green:Float, blue:Float, alpha:Float)
 	{
 		for (i in 0...VERTICES_PER_QUAD)
@@ -242,6 +252,9 @@ private abstract ColorMultVector(ColorVector)
 {
 	inline public function new () this = new ColorVector();
 	
+	/**
+	 * Adds colors to this list until it has the desired length
+	 */
 	inline public function padTo(newLength:Int)
 	{
 		final length = this.numQuads;
@@ -249,11 +262,17 @@ private abstract ColorMultVector(ColorVector)
 			pushDefault();
 	}
 	
+	/**
+	 * Adds the default color multiplier
+	 */
 	inline public function pushDefault()
 	{
 		this.push(1, 1, 1, 1);
 	}
 	
+	/**
+	 * Adds the color multiplier
+	 */
 	overload public inline extern function push(transform:Null<ColorTransform>)
 	{
 		if (transform == null)
@@ -268,6 +287,9 @@ private abstract ColorOffsetVector(ColorVector)
 {
 	inline public function new () this = new ColorVector();
 	
+	/**
+	 * Adds colors to this list until it has the desired length
+	 */
 	inline public function padTo(newLength:Int)
 	{
 		final length = this.numQuads;
@@ -275,6 +297,9 @@ private abstract ColorOffsetVector(ColorVector)
 			pushDefault();
 	}
 	
+	/**
+	 * Adds the default color offset
+	 */
 	inline public function pushDefault()
 	{
 		this.push(0, 0, 0, 0);

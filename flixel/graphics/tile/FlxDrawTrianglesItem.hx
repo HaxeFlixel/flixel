@@ -175,14 +175,14 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 				this.indices[prevIndicesLength + i] = indices[i] + prevNumberOfVertices;
 			}
 			
-			alphas.push(indicesLength, transform);
+			alphas.pushMany(indicesLength, transform);
 			
 			if (colored)
 			{
 				if (colorMultipliers.numIndices < indicesPosition)
 					colorMultipliers.padTo(indicesPosition);
 				
-				colorMultipliers.push(indicesLength, transform);
+				colorMultipliers.pushMany(indicesLength, transform);
 			}
 			
 			if (hasColorOffsets)
@@ -190,7 +190,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 				if (colorOffsets.numIndices < indicesPosition)
 					colorOffsets.padTo(indicesPosition);
 				
-				colorOffsets.push(indicesLength, transform);
+				colorOffsets.pushMany(indicesLength, transform);
 			}
 			
 			verticesPosition += verticesLength;
@@ -268,14 +268,14 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		indices[prevIndicesPos + 4] = prevNumberOfVertices + 2; // BL
 		indices[prevIndicesPos + 5] = prevNumberOfVertices + 3; // BR
 
-		alphas.push(INDICES_PER_QUAD, transform);
+		alphas.pushMany(INDICES_PER_QUAD, transform);
 		
 		if (colored)
 		{
 			if (colorMultipliers.numIndices < indicesPosition)
 				colorMultipliers.padTo(indicesPosition);
 			
-			colorMultipliers.push(INDICES_PER_QUAD, transform);
+			colorMultipliers.pushMany(INDICES_PER_QUAD, transform);
 		}
 		
 		if (hasColorOffsets)
@@ -283,7 +283,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			if (colorOffsets.numIndices < indicesPosition)
 				colorOffsets.padTo(indicesPosition);
 			
-			colorOffsets.push(INDICES_PER_QUAD, transform);
+			colorOffsets.pushMany(INDICES_PER_QUAD, transform);
 		}
 
 		verticesPosition += 8;
@@ -309,20 +309,29 @@ private abstract AlphaVector(Array<Float>)
 		this = new Array<Float>();
 	}
 	
+	/** Removes all items */
 	inline public function clear()
 	{
 		this.resize(0);
 	}
 	
-	overload public inline extern function push(numIndices:Int, alpha:Float)
+	
+	/**
+	 * Adds the alpha for the given number of indices
+	 */
+	overload public inline extern function pushMany(numIndices:Int, alpha:Float)
 	{
 		for (i in 0...numIndices)
 			this.push(alpha);
 	}
 	
-	overload public inline extern function push(numIndices:Int, transform:Null<ColorTransform>)
+	
+	/**
+	 * Adds the alpha for the given number of indices
+	 */
+	overload public inline extern function pushMany(numIndices:Int, transform:Null<ColorTransform>)
 	{
-		push(numIndices, transform == null ? 1.0 : transform.alphaMultiplier);
+		pushMany(numIndices, transform == null ? 1.0 : transform.alphaMultiplier);
 	}
 	
 	inline public function toShaderValue():Array<Float>
@@ -334,6 +343,9 @@ private abstract AlphaVector(Array<Float>)
 @:forward
 private abstract ColorMultVector(Array<Float>)
 {
+	/**
+	 * The number of indice color multipliers in this list
+	 */
 	public var numIndices(get, never):Int;
 	inline function get_numIndices() return Math.round(this.length / 4);
 	
@@ -342,33 +354,59 @@ private abstract ColorMultVector(Array<Float>)
 		this = new Array<Float>();
 	}
 	
+	/**
+	 * Adds colors to this list until it has the desired length
+	 */
 	inline public function padTo(newLength:Int)
 	{
-		pushDefault(newLength - numIndices);
+		pushDefaults(newLength - numIndices);
 	}
 	
+	/** Removes all items */
 	inline public function clear()
 	{
 		this.resize(0);
 	}
 	
-	overload public inline extern function push(numIndices:Int, red:Float, green:Float, blue:Float)
+	/**
+	 * Adds the color multiplier
+	 */
+	public inline function push(red:Float, green:Float, blue:Float, alpha = 1.0)
+	{
+		this.push(red);
+		this.push(green);
+		this.push(blue);
+		this.push(alpha);
+	}
+	
+	/**
+	 * Adds the color multiplier for the given number of indices
+	 */
+	overload public inline extern function pushMany(numIndices:Int, red:Float, green:Float, blue:Float, alpha = 1.0)
 	{
 		for (i in 0...numIndices)
-		{
-			this.push(red);
-			this.push(green);
-			this.push(blue);
-			this.push(1);
-		}
+			push(red, green, blue, alpha);
 	}
 	
-	inline public function pushDefault(numIndices:Int)
+	/**
+	 * Adds the default color multiplier for the given number of indices
+	 */
+	inline public function pushDefaults(numIndices:Int)
 	{
-		push(numIndices, 1, 1, 1);
+		pushMany(numIndices, 1, 1, 1);
 	}
 	
-	overload public inline extern function push(numIndices:Int, transform:Null<ColorTransform>)
+	/**
+	 * Adds the color multiplier for the given number of indices
+	 */
+	overload public inline extern function pushMany(numIndices:Int, transform:Null<ColorTransform>)
+	{
+		if (transform == null)
+			pushDefaults(numIndices);
+		else
+			pushMany(numIndices, transform.redMultiplier, transform.greenMultiplier, transform.blueMultiplier);
+	}
+	
 	{
 		if (transform == null)
 			pushDefault(numIndices);
@@ -385,6 +423,9 @@ private abstract ColorMultVector(Array<Float>)
 @:forward
 private abstract ColorOffsetVector(Array<Float>)
 {
+	/**
+	 * The number of indice color offsets in this list
+	 */
 	public var numIndices(get, never):Int;
 	inline function get_numIndices() return Math.round(this.length / 4);
 	
@@ -393,38 +434,57 @@ private abstract ColorOffsetVector(Array<Float>)
 		this = new Array<Float>();
 	}
 	
+	/**
+	 * Adds colors to this list until it has the desired length
+	 */
 	inline public function padTo(newLength:Int)
 	{
-		pushDefault(newLength - numIndices);
+		pushDefaults(newLength - numIndices);
 	}
 	
+	/** Removes all items */
 	inline public function clear()
 	{
 		this.resize(0);
 	}
 	
-	overload public inline extern function push(numIndices:Int, red:Float, green:Float, blue:Float, alpha:Float)
+	/**
+	 * Adds the color offset
+	 */
+	public inline function push(red:Float, green:Float, blue:Float, alpha = 1.0)
+	{
+		this.push(red);
+		this.push(green);
+		this.push(blue);
+		this.push(alpha);
+	}
+	
+	/**
+	 * Adds the color offset for the given number of indices
+	 */
+	overload public inline extern function pushMany(numIndices:Int, red:Float, green:Float, blue:Float, alpha:Float)
 	{
 		for (i in 0...numIndices)
-		{
-			this.push(red);
-			this.push(green);
-			this.push(blue);
-			this.push(alpha);
-		}
+			push(red, green, blue, alpha);
 	}
 	
-	inline public function pushDefault(numIndices:Int)
+	/**
+	 * Adds the default color offset for the given number of indices
+	 */
+	inline public function pushDefaults(numIndices:Int)
 	{
-		push(numIndices, 0, 0, 0, 0);
+		pushMany(numIndices, 0, 0, 0, 0);
 	}
 	
-	overload public inline extern function push(numIndices:Int, transform:Null<ColorTransform>)
+	/**
+	 * Adds the color offset for the given number of indices
+	 */
+	overload public inline extern function pushMany(numIndices:Int, transform:Null<ColorTransform>)
 	{
 		if (transform == null)
-			pushDefault(numIndices);
+			pushDefaults(numIndices);
 		else
-			push(numIndices, transform.redOffset, transform.greenOffset, transform.blueOffset, transform.alphaOffset);
+			pushMany(numIndices, transform.redOffset, transform.greenOffset, transform.blueOffset, transform.alphaOffset);
 	}
 	
 	inline public function toShaderValue():Array<Float>
