@@ -5,10 +5,10 @@ import openfl.display.GraphicsShader;
 class FlxGraphicsShader extends GraphicsShader
 {
 	@:glVertexHeader("
+		const bool hasColorTransform = true; // deprecated
 		attribute float alpha;
 		attribute vec4 colorMultiplier;
 		attribute vec4 colorOffset;
-		uniform bool hasColorTransform; // deprecated
 		uniform bool hasColorMults;
 		uniform bool hasColorOffsets;
 	", true)
@@ -28,8 +28,8 @@ class FlxGraphicsShader extends GraphicsShader
 			openfl_ColorOffsetv += (colorOffset / 255.0);
 	", true)
 	@:glFragmentHeader("
-		uniform bool hasTransform; // deprecated
-		uniform bool hasColorTransform; // deprecated
+		const bool hasTransform = true; // deprecated
+		const bool hasColorTransform = true; // deprecated
 		uniform bool hasColorMults;
 		uniform bool hasColorOffsets;
 		vec4 flixel_texture2D(sampler2D bitmap, vec2 coord)

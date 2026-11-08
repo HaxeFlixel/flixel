@@ -93,9 +93,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		
 		shader.colorMultiplier.value = colored ? colorMultipliers.toShaderValue() : cast null;
 		shader.colorOffset.value = hasColorOffsets ? colorOffsets.toShaderValue() : cast null;
-
-		setParameterValue(shader.hasTransform, true); // TODO: Remove
-		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets); // TODO: Remove
+		
 		setParameterValue(shader.hasColorMults, colored);
 		setParameterValue(shader.hasColorOffsets, hasColorOffsets);
 		
