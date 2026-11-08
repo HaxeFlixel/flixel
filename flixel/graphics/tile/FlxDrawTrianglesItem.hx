@@ -182,7 +182,13 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 				if (colorMultipliers.numIndices < indicesPosition)
 					colorMultipliers.padTo(indicesPosition);
 				
-				colorMultipliers.pushMany(indicesLength, transform);
+				if (colors != null && colors.length < indicesLength && colors.length > 0)
+					FlxG.log.warn('Expected a color for each indice pair ($indicesLength), got ${colors.length}');
+				
+				if (colors != null && colors.length == indicesLength)
+					colorMultipliers.pushColors(colors, transform);
+				else
+					colorMultipliers.pushMany(indicesLength, transform);
 			}
 			
 			if (hasColorOffsets)
@@ -407,11 +413,27 @@ private abstract ColorMultVector(Array<Float>)
 			pushMany(numIndices, transform.redMultiplier, transform.greenMultiplier, transform.blueMultiplier);
 	}
 	
+	/**
+	 * Adds the given list of color multipliers and applies the transform's multipliers, if not null
+	 */
+	public inline function pushColors(colors:DrawData<Int>, transform:Null<ColorTransform>)
 	{
 		if (transform == null)
-			pushDefault(numIndices);
+		{
+			for (c in colors)
+			{
+				final color:FlxColor = c;
+				push(color.redFloat, color.greenFloat, color.blueFloat);
+			}
+		}
 		else
-			push(numIndices, transform.redMultiplier, transform.greenMultiplier, transform.blueMultiplier);
+		{
+			for (c in colors)
+			{
+				final color:FlxColor = c;
+				push(transform.redMultiplier * color.redFloat, transform.greenMultiplier * color.greenFloat, transform.blueMultiplier * color.blueFloat);
+			}
+		}
 	}
 	
 	inline public function toShaderValue():Array<Float>
