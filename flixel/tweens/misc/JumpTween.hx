@@ -3,6 +3,11 @@ package flixel.tweens.misc;
 import flixel.FlxObject;
 import flixel.tweens.FlxTween;
 
+/**
+ * Make an object "jump" forom their current position and follow a set path with a constant gravity
+ * 
+ * **NOTE:** Not meant for collision as the objects velocity and acceleration never change
+ */
 class JumpTween extends FlxTween
 {
 	public var object:FlxObject;
