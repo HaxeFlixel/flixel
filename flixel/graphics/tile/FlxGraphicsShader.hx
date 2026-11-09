@@ -28,13 +28,16 @@ class FlxGraphicsShader extends GraphicsShader
 			openfl_ColorOffsetv += (colorOffset / 255.0);
 	", true)
 	@:glFragmentHeader("
-		const bool hasTransform = true; // deprecated
 		const bool hasColorTransform = true; // deprecated
+		uniform bool hasTransform;
 		uniform bool hasColorMults;
 		uniform bool hasColorOffsets;
 		vec4 flixel_texture2D(sampler2D bitmap, vec2 coord)
 		{
 			vec4 color = texture2D(bitmap, coord);
+			if (!(hasTransform || openfl_HasColorTransform || hasColorMults || hasColorOffsets))
+				return color;
+			
 			if (color.a == 0.0)
 				return vec4(0.0, 0.0, 0.0, 0.0);
 			
