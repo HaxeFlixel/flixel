@@ -962,7 +962,7 @@ class FlxSound extends FlxBasic
 	
 	inline function get_time():Float
 	{
-		return _time;
+		return (playing) ? _channel.position : _time;
 	}
 	
 	function set_time(time:Float):Float
