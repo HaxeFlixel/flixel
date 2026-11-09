@@ -29,13 +29,13 @@ class FlxGraphicsShader extends GraphicsShader
 	", true)
 	@:glFragmentHeader("
 		const bool hasColorTransform = true; // deprecated
-		uniform bool hasTransform;
+		uniform bool hasAlpha; // true on sprite batches, false on camera filters
 		uniform bool hasColorMults;
 		uniform bool hasColorOffsets;
 		vec4 flixel_texture2D(sampler2D bitmap, vec2 coord)
 		{
 			vec4 color = texture2D(bitmap, coord);
-			if (!(hasTransform || openfl_HasColorTransform || hasColorMults || hasColorOffsets))
+			if (!hasAlpha)
 				return color;
 			
 			if (color.a == 0.0)

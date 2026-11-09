@@ -65,7 +65,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		shader.colorMultiplier.value = colored ? colorMultipliers.toShaderValue() : null;
 		shader.colorOffset.value = hasColorOffsets ? colorOffsets.toShaderValue() : null;
 		
-		setParameterValue(shader.hasTransform, true);
+		setParameterValue(shader.hasAlpha, true);
 		setParameterValue(shader.hasColorMults, colored);
 		setParameterValue(shader.hasColorOffsets, hasColorOffsets);
 		
