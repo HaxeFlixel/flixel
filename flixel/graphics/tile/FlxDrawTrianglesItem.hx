@@ -15,6 +15,8 @@ import openfl.geom.ColorTransform;
 
 typedef DrawData<T> = openfl.Vector<T>;
 
+private inline final INDICES_PER_QUAD = 6;
+
 /**
  * @author Zaphod
  */
@@ -23,68 +25,64 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	static inline final INDICES_PER_QUAD = 6;
 	static var point:FlxPoint = FlxPoint.get();
 	static var rect:FlxRect = FlxRect.get();
-
+	
 	public var shader:FlxShader;
-	var alphas:Array<Float>;
-	var colorMultipliers:Array<Float>;
-	var colorOffsets:Array<Float>;
-
+		
+	final colorMultipliers = new ColorMultVector();
+	final colorOffsets = new ColorOffsetVector();
+	final alphas = new AlphaVector();
+	
 	public var vertices:DrawData<Float> = new DrawData<Float>();
 	public var indices:DrawData<Int> = new DrawData<Int>();
 	public var uvtData:DrawData<Float> = new DrawData<Float>();
 	@:deprecated("colors is deprecated, use colorMultipliers and colorOffsets")
 	public var colors:DrawData<Int> = new DrawData<Int>();
-
+	
 	public var verticesPosition:Int = 0;
 	public var indicesPosition:Int = 0;
 	@:deprecated("colorsPosition is deprecated")
 	public var colorsPosition:Int = 0;
-
+	
 	var bounds:FlxRect = FlxRect.get();
-
+	
 	public function new()
 	{
 		super();
 		type = FlxDrawItemType.TRIANGLES;
-		alphas = [];
 	}
-
+	
 	override public function render(camera:FlxCamera):Void
 	{
 		if (numTriangles <= 0)
 			return;
-
+		
 		#if !flash
 		var shader = shader != null ? shader : graphics.shader;
 		shader.bitmap.input = graphics.bitmap;
 		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
 		shader.bitmap.wrap = REPEAT; // in order to prevent breaking tiling behaviour in classes that use drawTriangles
-		shader.alpha.value = alphas;
-
-		if (colored || hasColorOffsets)
-		{
-			shader.colorMultiplier.value = colorMultipliers;
-			shader.colorOffset.value = colorOffsets;
-		}
-		else
-		{
-			shader.colorMultiplier.value = null;
-			shader.colorOffset.value = null;
-		}
-
+		shader.alpha.value = alphas.toShaderValue();
+		shader.colorMultiplier.value = colored ? colorMultipliers.toShaderValue() : null;
+		shader.colorOffset.value = hasColorOffsets ? colorOffsets.toShaderValue() : null;
+		
+		setParameterValue(shader.hasAlpha, true);
+		setParameterValue(shader.hasColorMults, colored);
+		setParameterValue(shader.hasColorOffsets, hasColorOffsets);
+		
+		// deprecated
 		setParameterValue(shader.hasTransform, true);
 		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
-
+		
 		camera.canvas.graphics.overrideBlendMode(blend);
-
+		
 		camera.canvas.graphics.beginShaderFill(shader);
 		#else
 		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
 		#end
-
+		
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
 		camera.canvas.graphics.endFill();
-
+		
 		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
 		{
@@ -106,11 +104,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 
 		verticesPosition = 0;
 		indicesPosition = 0;
-		alphas.splice(0, alphas.length);
-		if (colorMultipliers != null)
-			colorMultipliers.splice(0, colorMultipliers.length);
-		if (colorOffsets != null)
-			colorOffsets.splice(0, colorOffsets.length);
+		alphas.clear();
+		colorMultipliers.clear();
+		colorOffsets.clear();
 	}
 
 	override public function dispose():Void
@@ -121,9 +117,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		indices = null;
 		uvtData = null;
 		bounds = null;
-		alphas = null;
-		colorMultipliers = null;
-		colorOffsets = null;
+		alphas.clear();
+		colorMultipliers.clear();
+		colorOffsets.clear();
 	}
 
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint,
@@ -184,45 +180,28 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 				this.indices[prevIndicesLength + i] = indices[i] + prevNumberOfVertices;
 			}
 			
-			final alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
-			for (_ in 0...indicesLength)
-				alphas.push(alphaMultiplier);
+			alphas.pushMany(indicesLength, transform);
 			
-			if (colored || hasColorOffsets)
+			if (colored)
 			{
-				if (colorMultipliers == null)
-					colorMultipliers = [];
+				if (colorMultipliers.numIndices < indicesPosition)
+					colorMultipliers.padTo(indicesPosition);
 				
-				if (colorOffsets == null)
-					colorOffsets = [];
+				if (colors != null && colors.length < indicesLength && colors.length > 0)
+					FlxG.log.warn('Expected a color for each indice pair ($indicesLength), got ${colors.length}');
 				
-				for (_ in 0...indicesLength)
-				{
-					if (transform != null)
-					{
-						colorMultipliers.push(transform.redMultiplier);
-						colorMultipliers.push(transform.greenMultiplier);
-						colorMultipliers.push(transform.blueMultiplier);
-						
-						colorOffsets.push(transform.redOffset);
-						colorOffsets.push(transform.greenOffset);
-						colorOffsets.push(transform.blueOffset);
-						colorOffsets.push(transform.alphaOffset);
-					}
-					else
-					{
-						colorMultipliers.push(1);
-						colorMultipliers.push(1);
-						colorMultipliers.push(1);
-						
-						colorOffsets.push(0);
-						colorOffsets.push(0);
-						colorOffsets.push(0);
-						colorOffsets.push(0);
-					}
-					
-					colorMultipliers.push(1);
-				}
+				if (colors != null && colors.length == indicesLength)
+					colorMultipliers.pushColors(colors, transform);
+				else
+					colorMultipliers.pushMany(indicesLength, transform);
+			}
+			
+			if (hasColorOffsets)
+			{
+				if (colorOffsets.numIndices < indicesPosition)
+					colorOffsets.padTo(indicesPosition);
+				
+				colorOffsets.pushMany(indicesLength, transform);
 			}
 			
 			verticesPosition += verticesLength;
@@ -300,45 +279,22 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		indices[prevIndicesPos + 4] = prevNumberOfVertices + 2; // BL
 		indices[prevIndicesPos + 5] = prevNumberOfVertices + 3; // BR
 
-		final alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
-		for (i in 0...INDICES_PER_QUAD)
-			alphas.push(alphaMultiplier);
-			
-		if (colored || hasColorOffsets)
+		alphas.pushMany(INDICES_PER_QUAD, transform);
+		
+		if (colored)
 		{
-			if (colorMultipliers == null)
-				colorMultipliers = [];
-				
-			if (colorOffsets == null)
-				colorOffsets = [];
-				
-			for (i in 0...INDICES_PER_QUAD)
-			{
-				if (transform != null)
-				{
-					colorMultipliers.push(transform.redMultiplier);
-					colorMultipliers.push(transform.greenMultiplier);
-					colorMultipliers.push(transform.blueMultiplier);
-					
-					colorOffsets.push(transform.redOffset);
-					colorOffsets.push(transform.greenOffset);
-					colorOffsets.push(transform.blueOffset);
-					colorOffsets.push(transform.alphaOffset);
-				}
-				else
-				{
-					colorMultipliers.push(1);
-					colorMultipliers.push(1);
-					colorMultipliers.push(1);
-					
-					colorOffsets.push(0);
-					colorOffsets.push(0);
-					colorOffsets.push(0);
-					colorOffsets.push(0);
-				}
-				
-				colorMultipliers.push(1);
-			}
+			if (colorMultipliers.numIndices < indicesPosition)
+				colorMultipliers.padTo(indicesPosition);
+			
+			colorMultipliers.pushMany(INDICES_PER_QUAD, transform);
+		}
+		
+		if (hasColorOffsets)
+		{
+			if (colorOffsets.numIndices < indicesPosition)
+				colorOffsets.padTo(indicesPosition);
+			
+			colorOffsets.pushMany(INDICES_PER_QUAD, transform);
 		}
 
 		verticesPosition += 8;
@@ -353,5 +309,213 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	override function get_numTriangles():Int
 	{
 		return Std.int(indices.length / 3);
+	}
+}
+
+@:forward
+private abstract AlphaVector(Array<Float>)
+{
+	inline public function new ()
+	{
+		this = new Array<Float>();
+	}
+	
+	/** Removes all items */
+	inline public function clear()
+	{
+		this.resize(0);
+	}
+	
+	
+	/**
+	 * Adds the alpha for the given number of indices
+	 */
+	overload public inline extern function pushMany(numIndices:Int, alpha:Float)
+	{
+		for (i in 0...numIndices)
+			this.push(alpha);
+	}
+	
+	
+	/**
+	 * Adds the alpha for the given number of indices
+	 */
+	overload public inline extern function pushMany(numIndices:Int, transform:Null<ColorTransform>)
+	{
+		pushMany(numIndices, transform == null ? 1.0 : transform.alphaMultiplier);
+	}
+	
+	inline public function toShaderValue():Array<Float>
+	{
+		return this;
+	}
+}
+
+@:forward
+private abstract ColorMultVector(Array<Float>)
+{
+	/**
+	 * The number of indice color multipliers in this list
+	 */
+	public var numIndices(get, never):Int;
+	inline function get_numIndices() return Math.round(this.length / 4);
+	
+	inline public function new ()
+	{
+		this = new Array<Float>();
+	}
+	
+	/**
+	 * Adds colors to this list until it has the desired length
+	 */
+	inline public function padTo(newLength:Int)
+	{
+		pushDefaults(newLength - numIndices);
+	}
+	
+	/** Removes all items */
+	inline public function clear()
+	{
+		this.resize(0);
+	}
+	
+	/**
+	 * Adds the color multiplier
+	 */
+	public inline function push(red:Float, green:Float, blue:Float, alpha = 1.0)
+	{
+		this.push(red);
+		this.push(green);
+		this.push(blue);
+		this.push(alpha);
+	}
+	
+	/**
+	 * Adds the color multiplier for the given number of indices
+	 */
+	overload public inline extern function pushMany(numIndices:Int, red:Float, green:Float, blue:Float, alpha = 1.0)
+	{
+		for (i in 0...numIndices)
+			push(red, green, blue, alpha);
+	}
+	
+	/**
+	 * Adds the default color multiplier for the given number of indices
+	 */
+	inline public function pushDefaults(numIndices:Int)
+	{
+		pushMany(numIndices, 1, 1, 1);
+	}
+	
+	/**
+	 * Adds the color multiplier for the given number of indices
+	 */
+	overload public inline extern function pushMany(numIndices:Int, transform:Null<ColorTransform>)
+	{
+		if (transform == null)
+			pushDefaults(numIndices);
+		else
+			pushMany(numIndices, transform.redMultiplier, transform.greenMultiplier, transform.blueMultiplier);
+	}
+	
+	/**
+	 * Adds the given list of color multipliers and applies the transform's multipliers, if not null
+	 */
+	public inline function pushColors(colors:DrawData<Int>, transform:Null<ColorTransform>)
+	{
+		if (transform == null)
+		{
+			for (c in colors)
+			{
+				final color:FlxColor = c;
+				push(color.redFloat, color.greenFloat, color.blueFloat);
+			}
+		}
+		else
+		{
+			for (c in colors)
+			{
+				final color:FlxColor = c;
+				push(transform.redMultiplier * color.redFloat, transform.greenMultiplier * color.greenFloat, transform.blueMultiplier * color.blueFloat);
+			}
+		}
+	}
+	
+	inline public function toShaderValue():Array<Float>
+	{
+		return this;
+	}
+}
+
+@:forward
+private abstract ColorOffsetVector(Array<Float>)
+{
+	/**
+	 * The number of indice color offsets in this list
+	 */
+	public var numIndices(get, never):Int;
+	inline function get_numIndices() return Math.round(this.length / 4);
+	
+	inline public function new ()
+	{
+		this = new Array<Float>();
+	}
+	
+	/**
+	 * Adds colors to this list until it has the desired length
+	 */
+	inline public function padTo(newLength:Int)
+	{
+		pushDefaults(newLength - numIndices);
+	}
+	
+	/** Removes all items */
+	inline public function clear()
+	{
+		this.resize(0);
+	}
+	
+	/**
+	 * Adds the color offset
+	 */
+	public inline function push(red:Float, green:Float, blue:Float, alpha = 1.0)
+	{
+		this.push(red);
+		this.push(green);
+		this.push(blue);
+		this.push(alpha);
+	}
+	
+	/**
+	 * Adds the color offset for the given number of indices
+	 */
+	overload public inline extern function pushMany(numIndices:Int, red:Float, green:Float, blue:Float, alpha:Float)
+	{
+		for (i in 0...numIndices)
+			push(red, green, blue, alpha);
+	}
+	
+	/**
+	 * Adds the default color offset for the given number of indices
+	 */
+	inline public function pushDefaults(numIndices:Int)
+	{
+		pushMany(numIndices, 0, 0, 0, 0);
+	}
+	
+	/**
+	 * Adds the color offset for the given number of indices
+	 */
+	overload public inline extern function pushMany(numIndices:Int, transform:Null<ColorTransform>)
+	{
+		if (transform == null)
+			pushDefaults(numIndices);
+		else
+			pushMany(numIndices, transform.redOffset, transform.greenOffset, transform.blueOffset, transform.alphaOffset);
+	}
+	
+	inline public function toShaderValue():Array<Float>
+	{
+		return this;
 	}
 }
