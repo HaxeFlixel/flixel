@@ -28,7 +28,8 @@ class FlxGraphicsShader extends GraphicsShader
 			openfl_ColorOffsetv += (colorOffset / 255.0);
 	", true)
 	@:glFragmentHeader("
-		const bool hasColorTransform = true; // deprecated
+		uniform bool hasColorTransform; // deprecated
+		uniform bool hasTransform; // deprecated
 		uniform bool hasAlpha; // true on sprite batches, false on camera filters
 		uniform bool hasColorMults;
 		uniform bool hasColorOffsets;

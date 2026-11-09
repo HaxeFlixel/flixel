@@ -69,6 +69,10 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		setParameterValue(shader.hasColorMults, colored);
 		setParameterValue(shader.hasColorOffsets, hasColorOffsets);
 		
+		// deprecated
+		setParameterValue(shader.hasTransform, true);
+		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
+		
 		camera.canvas.graphics.overrideBlendMode(blend);
 		
 		camera.canvas.graphics.beginShaderFill(shader);
