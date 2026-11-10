@@ -154,7 +154,7 @@ class FlxSound extends FlxBasic
 	 * At which point to stop playing the sound, in milliseconds.
 	 * If not set / `null`, the sound completes normally.
 	 * 
-	 * **NOTE:** Time vs endtime is checked in `sound.update()`, sounds are usually
+	 * **NOTE:** `time` vs `endTime` is checked in `sound.update()`, sounds are usually
 	 * updated via sound groups. To use sound groups use `FlxG.sound` methods.
 	 * 
 	 * @since 4.2.0
