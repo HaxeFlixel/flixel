@@ -1,11 +1,11 @@
 package flixel.system.frontEnds;
 
-import openfl.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxSignal.FlxTypedSignal;
+import openfl.geom.Rectangle;
 
 using flixel.util.FlxArrayUtil;
 
@@ -62,17 +62,17 @@ class CameraFrontEnd
 	 *                            `FlxBasics` will not render to it unless you add it to their `cameras` list.
 	 * @return	This FlxCamera instance.
 	 */
-	public function add<T:FlxCamera>(NewCamera:T, DefaultDrawTarget:Bool = true):T
+	public function add<T:FlxCamera>(cam:T, defaultDrawTarget = true):T
 	{
-		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
+		FlxG.game.cameraContainer.addChild(cam.flashSprite);
 		
-		list.push(NewCamera);
-		if (DefaultDrawTarget)
-			defaults.push(NewCamera);
+		list.push(cam);
+		if (defaultDrawTarget)
+			defaults.push(cam);
 		
-		NewCamera.ID = list.length - 1;
-		cameraAdded.dispatch(NewCamera);
-		return NewCamera;
+		cam.ID = list.length - 1;
+		cameraAdded.dispatch(cam);
+		return cam;
 	}
 	
 	/**
