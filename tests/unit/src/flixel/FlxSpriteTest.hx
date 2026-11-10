@@ -544,6 +544,24 @@ class FlxSpriteTest extends FlxTest
 		#end
 	}
 	
+	// https://github.com/HaxeFlixel/flixel/issues/3568
+	@Test
+	function testGetPixelAtClipRect()
+	{
+		
+		sprite1.x = 100;
+		sprite1.y = 0;
+		sprite1.makeGraphic(100, 100, FlxColor.WHITE);
+		sprite1.graphic.bitmap.fillRect(new openfl.geom.Rectangle(50, 50, 50, 50), FlxColor.BLACK);
+		sprite1.clipRect = new FlxRect(25, 25, 50, 50);
+		
+		final worldPos = FlxPoint.get();
+		
+		Assert.isNull(sprite1.getPixelAt(worldPos.set(105, 25)));
+		FlxAssert.colorsEqual(FlxColor.WHITE, sprite1.getPixelAt(worldPos.set(145, 25)));
+		worldPos.put();
+	}
+	
 	@Test
 	function testClipToWorldBounds()
 	{

@@ -267,6 +267,7 @@ enum abstract FlxType(Int)
 	var SPRITEGROUP = 4;
 }
 
+@:deprecated("IFlxBasic is deprecated and never used")
 interface IFlxBasic
 {
 	var ID:Int;

@@ -29,6 +29,7 @@ import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.Stage;
 import openfl.display.StageDisplayState;
+import openfl.events.Event;
 import openfl.net.URLRequest;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
@@ -548,6 +549,7 @@ class FlxG
 	 * Called by `FlxGame` to set up `FlxG` during `FlxGame`'s constructor.
 	 */
 	@:allow(flixel.FlxGame.new)
+	@:haxe.warning("-WDeprecated")
 	static function init(game:FlxGame, width:Int, height:Int):Void
 	{
 		if (width < 0)
@@ -607,6 +609,7 @@ class FlxG
 		#end
 		
 		FlxNullUtil.onFail = defaultOnFail;
+		assets.onChange.add(()->bitmap.onAssetsReload(new Event(Event.CHANGE)));
 	}
 	
 	static function defaultOnFail(level:FlxNullSafetyFailLevel, logId:String, ?pos)
@@ -687,7 +690,10 @@ class FlxG
 	static function set_scaleMode(value:BaseScaleMode):BaseScaleMode
 	{
 		scaleMode = value;
-		game.onResize(null);
+		
+		if (game != null)
+			game.onResize(null);
+		
 		return value;
 	}
 
@@ -735,17 +741,17 @@ class FlxG
 		if (value > updateFramerate)
 			log.warn("FlxG.drawFramerate: the update framerate shouldn't be smaller than the draw framerate," + " since it can stop your game from updating.");
 
-		drawFramerate = Std.int(Math.abs(value));
+		value = Std.int(Math.abs(value));
 
 		if (game.stage != null)
-			game.stage.frameRate = drawFramerate;
+			game.stage.frameRate = value;
 
-		game._maxAccumulation = 2000 / drawFramerate - 1;
+		game._maxAccumulation = 2000 / value - 1;
 
 		if (game._maxAccumulation < game._stepMS)
 			game._maxAccumulation = game._stepMS;
 
-		return value;
+		return drawFramerate = value;
 	}
 
 	static function get_fullscreen():Bool

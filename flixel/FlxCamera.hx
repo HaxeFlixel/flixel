@@ -582,12 +582,16 @@ class FlxCamera extends FlxBasic
 		if (_currentDrawItem != null
 			&& _currentDrawItem.type == FlxDrawItemType.TILES
 			&& _headTiles.graphics == graphic
-			&& _headTiles.colored == colored
-			&& _headTiles.hasColorOffsets == hasColorOffsets
 			&& _headTiles.blend == blend
 			&& _headTiles.antialiasing == smooth
 			&& _headTiles.shader == shader)
 		{
+			if (colored && _headTiles.colored == false)
+				_headTiles.colored = true;
+			
+			if (hasColorOffsets && _headTiles.hasColorOffsets == false)
+				_headTiles.hasColorOffsets = true;
+			
 			return _headTiles;
 		}
 
@@ -640,12 +644,16 @@ class FlxCamera extends FlxBasic
 			&& _currentDrawItem.type == FlxDrawItemType.TRIANGLES
 			&& _headTriangles.graphics == graphic
 			&& _headTriangles.antialiasing == smoothing
-			&& _headTriangles.colored == isColored
 			&& _headTriangles.blend == blend
-			&& _headTriangles.hasColorOffsets == hasColorOffsets
 			&& _headTriangles.shader == shader
 			)
 		{
+			if (isColored && _headTriangles.colored == false)
+				_headTriangles.colored = true;
+			
+			if (hasColorOffsets && _headTriangles.hasColorOffsets == false)
+				_headTriangles.hasColorOffsets = true;
+			
 			return _headTriangles;
 		}
 
@@ -760,8 +768,8 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			var isColored = (transform != null #if !html5 && transform.hasRGBMultipliers() #end);
-			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+			final isColored = transform != null && transform.hasRGBMultipliers();
+			final hasColorOffsets = transform != null && transform.hasRGBAOffsets();
 
 			#if FLX_RENDER_TRIANGLE
 			final drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend, hasColorOffsets, shader);
@@ -804,8 +812,8 @@ class FlxCamera extends FlxBasic
 			_helperMatrix.identity();
 			_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
 
-			var isColored = (transform != null && transform.hasRGBMultipliers());
-			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+			final isColored = (transform != null && transform.hasRGBMultipliers());
+			final hasColorOffsets = (transform != null && transform.hasRGBAOffsets());
 
 			#if FLX_RENDER_TRIANGLE
 			final drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend, hasColorOffsets, shader);
@@ -1093,6 +1101,11 @@ class FlxCamera extends FlxBasic
 		scroll = FlxDestroyUtil.put(scroll);
 		targetOffset = FlxDestroyUtil.put(targetOffset);
 		deadzone = FlxDestroyUtil.put(deadzone);
+		followLead = FlxDestroyUtil.put(followLead);
+		_flashOffset = FlxDestroyUtil.put(_flashOffset);
+		_lastTargetPosition = FlxDestroyUtil.put(_lastTargetPosition);
+		_scrollTarget = FlxDestroyUtil.put(_scrollTarget);
+		_point = FlxDestroyUtil.put(_point);
 
 		target = null;
 		flashSprite = null;
@@ -2195,7 +2208,7 @@ class FlxCamera extends FlxBasic
 	 * screen coordinates.
 	 * @since 4.3.0
 	 */
-	public inline function containsPoint(point:FlxPoint, width:Float = 0, height:Float = 0):Bool
+	public function containsPoint(point:FlxPoint, width:Float = 0, height:Float = 0):Bool
 	{
 		var contained = (point.x + width > viewMarginLeft) && (point.x < viewMarginRight)
 			&& (point.y + height > viewMarginTop) && (point.y < viewMarginBottom);
@@ -2207,7 +2220,7 @@ class FlxCamera extends FlxBasic
 	 * Checks whether this camera contains a given rectangle, in screen coordinates.
 	 * @since 4.11.0
 	 */
-	public inline function containsRect(rect:FlxRect):Bool
+	public function containsRect(rect:FlxRect):Bool
 	{
 		var contained = (rect.right > viewMarginLeft) && (rect.x < viewMarginRight)
 			&& (rect.bottom > viewMarginTop) && (rect.y < viewMarginBottom);

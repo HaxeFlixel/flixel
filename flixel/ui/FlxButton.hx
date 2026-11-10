@@ -176,7 +176,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 
 	/**
 	 * What animation should be played for each status.
-	 * Default is ["normal", "highlight", "pressed"].
+	 * Default is ["normal", "highlight", "pressed", "disabled"].
 	 */
 	@:deprecated("statusAnimations is deprecated, use status.toString(), instead")
 	public var statusAnimations:Array<String> = ["normal", "highlight", "pressed", "disabled"];
@@ -203,7 +203,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 
 	/**
 	 * Shows the current state of the button, either `NORMAL`,
-	 * `HIGHLIGHT` or `PRESSED`.
+	 * `HIGHLIGHT`, `PRESSED` or `DISABLED`.
 	 */
 	public var status(default, set):FlxButtonState;
 
@@ -530,8 +530,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		if (_spriteLabel != null) // Label positioning
 		{
-			_spriteLabel.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status.toInt()].x;
-			_spriteLabel.y = (pixelPerfectPosition ? Math.floor(y) : y) + labelOffsets[status.toInt()].y;
+			_spriteLabel.x = (pixelPerfectPosition ? Math.round(x) : x) + labelOffsets[status.toInt()].x;
+			_spriteLabel.y = (pixelPerfectPosition ? Math.round(y) : y) + labelOffsets[status.toInt()].y;
 		}
 	}
 

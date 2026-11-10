@@ -66,4 +66,19 @@ class CameraFrontEndTest extends FlxTest
 
 		FlxG.cameras.cameraRemoved.removeAll();
 	}
+
+	
+	@Test // #3605
+	function testInsert()
+	{
+		final cam1 = new FlxCamera();
+		FlxG.cameras.add(cam1, false);
+		@:privateAccess
+		Assert.isFalse(FlxG.cameras.defaults.contains(cam1), "Unexpected defaultDrawTarget");
+		
+		final cam2 = new FlxCamera();
+		FlxG.cameras.add(cam2, true);
+		@:privateAccess
+		Assert.isTrue(FlxG.cameras.defaults.contains(cam2), "Expected defaultDrawTarget");
+	}
 }

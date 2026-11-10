@@ -55,8 +55,8 @@ class FlxMatrixSprite extends FlxSprite
 		
 		if (isPixelPerfectRender(camera))
 		{
-			matrix.tx = Math.floor(matrix.tx);
-			matrix.ty = Math.floor(matrix.ty);
+			matrix.tx = Math.round(matrix.tx);
+			matrix.ty = Math.round(matrix.ty);
 		}
 	}
 }

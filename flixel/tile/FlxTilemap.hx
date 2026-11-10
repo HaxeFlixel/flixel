@@ -467,7 +467,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 					+ "Using `@:bitmap` assets on html5 is not recommended");
 			}
 			#end
-			frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(tileWidth, tileHeight));
+			frames = FlxTileFrames.fromGraphic(graph, tileWidth, tileHeight);
 		}
 	}
 
@@ -1025,7 +1025,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	@:access(flixel.FlxCamera)
 	function drawTilemap(buffer:FlxTilemapBuffer, camera:FlxCamera):Void
 	{
-		var isColored:Bool = (alpha != 1) || (color != 0xffffff);
+		var isColored:Bool = #if html5 true #else (alpha != 1) || (color != 0xffffff) #end;
 
 		// only used for renderTile
 		var drawX:Float = 0;
@@ -1042,8 +1042,8 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		{
 			getScreenPosition(_point, camera).subtract(offset).copyTo(_helperPoint);
 
-			_helperPoint.x = isPixelPerfectRender(camera) ? Math.floor(_helperPoint.x) : _helperPoint.x;
-			_helperPoint.y = isPixelPerfectRender(camera) ? Math.floor(_helperPoint.y) : _helperPoint.y;
+			_helperPoint.x = isPixelPerfectRender(camera) ? Math.round(_helperPoint.x) : _helperPoint.x;
+			_helperPoint.y = isPixelPerfectRender(camera) ? Math.round(_helperPoint.y) : _helperPoint.y;
 
 			scaledWidth = scaledTileWidth;
 			scaledHeight = scaledTileHeight;

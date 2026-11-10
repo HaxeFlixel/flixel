@@ -223,7 +223,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	public function onEmit():Void {}
 }
 
-interface IFlxParticle extends IFlxSprite
+interface IFlxParticle
 {
 	var lifespan:Float;
 	var age(default, null):Float;

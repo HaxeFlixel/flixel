@@ -76,7 +76,9 @@ class FlxVersionMacro
 				final libPath = getLibraryPath(id);
 				final sha = getGitSHA(libPath);
 				final branchRaw = getGitBranch(libPath);
-				final defaultBranch = getGitDefaultBranch(libPath).split("/").pop();
+				var defaultBranch = getGitDefaultBranch(libPath);
+				if (defaultBranch != null)
+					defaultBranch = defaultBranch.split("/").pop();
 				
 				final branch = branchRaw == defaultBranch ? null : branchRaw;
 				
@@ -124,13 +126,20 @@ class FlxVersionMacro
 	
 	public static function getGitBranch(path:String):Null<String>
 	{
-		return getProcessOutput("git", ["-C", path, "rev-parse", "--abbrev-ref", "HEAD"]).trim();
+		final output = getProcessOutput("git", ["-C", path, "rev-parse", "--abbrev-ref", "HEAD"]);
+		if (output != null)
+			output.trim();
+
+		return output;
 	}
-	
 	
 	public static function getGitDefaultBranch(path:String):Null<String>
 	{
-		return getProcessOutput("git", ["-C", path, "symbolic-ref", "--short", "refs/remotes/origin/HEAD"]).trim();
+		final output = getProcessOutput("git", ["-C", path, "symbolic-ref", "--short", "refs/remotes/origin/HEAD"]);
+		if (output != null)
+			output.trim();
+
+		return output;
 	}
 	
 	public static function getProcessOutput(cmd:String, args:Array<String>):Null<String>

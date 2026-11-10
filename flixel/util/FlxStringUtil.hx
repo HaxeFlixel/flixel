@@ -637,7 +637,7 @@ class FlxStringUtil
 	 */
 	overload public static inline extern function imageToCSV(graphic:FlxGraphicAsset, whiteIsSolid = false, scale = 1):String
 	{
-		return bitmapToCSVHelper(graphic.resolveBitmapData(), scale, whiteIsSolid ? invertColorMap : defaultColorMap, true);
+		return bitmapToCSVHelper(graphic.assertBitmapData(), scale, whiteIsSolid ? invertColorMap : defaultColorMap, true);
 	}
 	
 	/**
@@ -651,7 +651,7 @@ class FlxStringUtil
 	 */
 	overload public static inline extern function imageToCSV(graphic:FlxGraphicAsset, scale = 1, colorMap:Array<FlxColor>):String
 	{
-		return bitmapToCSVHelper(graphic.resolveBitmapData(), scale, colorMap, true);
+		return bitmapToCSVHelper(graphic.assertBitmapData(), scale, colorMap, true);
 	}
 	
 	/**
@@ -665,7 +665,7 @@ class FlxStringUtil
 	 */
 	overload public static inline extern function image32ToCSV(graphic:FlxGraphicAsset, scale = 1, colorMap:Array<FlxColor>):String
 	{
-		return bitmapToCSVHelper(graphic.resolveBitmapData(), scale, colorMap, false);
+		return bitmapToCSVHelper(graphic.assertBitmapData(), scale, colorMap, false);
 	}
 
 	/**
