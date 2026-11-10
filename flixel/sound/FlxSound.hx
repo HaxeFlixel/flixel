@@ -153,6 +153,10 @@ class FlxSound extends FlxBasic
 	/**
 	 * At which point to stop playing the sound, in milliseconds.
 	 * If not set / `null`, the sound completes normally.
+	 * 
+	 * **NOTE:** `time` vs `endTime` is checked in `sound.update()`, sounds are usually
+	 * updated via sound groups. To use sound groups use `FlxG.sound` methods.
+	 * 
 	 * @since 4.2.0
 	 */
 	public var endTime:Null<Float>;
@@ -962,7 +966,7 @@ class FlxSound extends FlxBasic
 	
 	inline function get_time():Float
 	{
-		return _time;
+		return (playing) ? _channel.position : _time;
 	}
 	
 	function set_time(time:Float):Float
