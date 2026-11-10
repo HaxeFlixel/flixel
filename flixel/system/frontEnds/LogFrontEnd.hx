@@ -3,9 +3,10 @@ package flixel.system.frontEnds;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.debug.log.FlxLogStyle;
-import flixel.system.debug.log.FlxLogStylesList;
 import flixel.system.debug.log.LogStyle;
 import haxe.PosInfos;
+
+typedef FlxLogStylesList = flixel.system.debug.log.FlxLogStylesList;
 
 /**
  * Accessed via `FlxG.log`.
