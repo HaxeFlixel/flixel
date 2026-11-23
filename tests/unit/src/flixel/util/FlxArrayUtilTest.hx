@@ -128,6 +128,28 @@ class FlxArrayUtilTest
 	}
 
 	@Test
+	function testClearArray()
+	{
+		final subArray = [0, 1, 2];
+		final array = [];
+		
+		array.push(subArray);
+		array.clearArray();// false
+		Assert.areNotEqual(subArray.length, 0);
+		Assert.areEqual(array.length, 0);
+		
+		array.push(subArray);
+		array.clearArray(false);
+		Assert.areNotEqual(subArray.length, 0);
+		Assert.areEqual(array.length, 0);
+		
+		array.push(subArray);
+		array.clearArray(true);
+		Assert.areEqual(subArray.length, 0);
+		Assert.areEqual(array.length, 0);
+	}
+
+	@Test
 	@:haxe.warning("-WDeprecated")
 	function testSetLength()
 	{
