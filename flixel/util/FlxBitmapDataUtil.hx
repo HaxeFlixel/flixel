@@ -1,12 +1,15 @@
 package flixel.util;
 
-import openfl.display.BitmapData;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
+import Math.round;
 import flixel.math.FlxAngle;
+import flixel.math.FlxIntPoint;
+import flixel.math.FlxIntRect;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import openfl.display.BitmapData;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 /**
  * Just a collection of BitmapData utility methods.
@@ -313,7 +316,7 @@ class FlxBitmapDataUtil
 
 		return positions;
 	}
-
+	
 	/**
 	 * Gets image without spaces between tiles and generates new one with spaces and adds borders around them.
 	 * @param	bitmapData	original image without spaces between tiles.
@@ -323,59 +326,69 @@ class FlxBitmapDataUtil
 	 * @param	region		region of image to use as a source graphics for spritesheet. Default value is null, which means that whole image will be used.
 	 * @return	Image for spritesheet with inserted spaces between tiles.
 	 */
-	public static function addSpacesAndBorders(bitmapData:BitmapData, ?frameSize:FlxPoint, ?spacing:FlxPoint, ?border:FlxPoint, ?region:FlxRect):BitmapData
+	@:deprecated("addSpacesAndBorders is now overloaded to take FlxIntPoints rather than FlxPoints")
+	overload public static inline extern function addSpacesAndBorders(bitmapData:BitmapData, ?frameSize:FlxPoint, ?spacing:FlxPoint, ?border:FlxPoint, ?region:FlxRect):BitmapData
+	{
+		final region = region == null ? null : new FlxIntRect(round(region.x), round(region.y), round(region.width), round(region.height));
+		return addSpacesAndBordersHelper(bitmapData, toIntPoint(frameSize), toIntPoint(spacing), toIntPoint(border), region);
+	}
+	
+	inline static function toIntPoint(p:Null<FlxPoint>)
+	{
+		return p == null ? null : new FlxIntPoint(round(p.x), round(p.y));
+	}
+	
+	/**
+	 * Gets image without spaces between tiles and generates new one with spaces and adds borders around them.
+	 * @param	bitmapData	original image without spaces between tiles.
+	 * @param	frameSize	the size of tile in spritesheet.
+	 * @param	spacing		spaces between tiles to add.
+	 * @param	border		how many times to copy border of tiles.
+	 * @param	region		region of image to use as a source graphics for spritesheet. Default value is null, which means that whole image will be used.
+	 * @return	Image for spritesheet with inserted spaces between tiles.
+	 */
+	overload public static inline extern function addSpacesAndBorders(bitmapData:BitmapData, ?frameSize:FlxIntPoint, ?spacing:FlxIntPoint, ?border:FlxIntPoint, ?region:FlxIntRect):BitmapData
+	{
+		return addSpacesAndBordersHelper(bitmapData, frameSize, spacing, border, region);
+	}
+	
+	static function addSpacesAndBordersHelper(bitmapData:BitmapData, ?frameSize:FlxIntPoint, ?spacing:FlxIntPoint, ?border:FlxIntPoint, ?region:FlxIntRect):BitmapData
 	{
 		if (region == null)
-		{
-			region = FlxRect.get(0, 0, bitmapData.width, bitmapData.height);
-		}
+			region = new FlxIntRect(0, 0, bitmapData.width, bitmapData.height);
+		
+		final frameWidth = frameSize == null ? region.width : frameSize.x;
+		final frameHeight = frameSize == null ? region.height : frameSize.y;
+		
+		final numHorizontalFrames:Int = Std.int(region.width / frameWidth);
+		final numVerticalFrames:Int = Std.int(region.height / frameHeight);
+		
+		if (spacing == null)
+			spacing = new FlxIntPoint(0, 0);
+		
+		if (border == null)
+			border = new FlxIntPoint(0, 0);
 
-		var frameWidth:Int = Std.int(region.width);
-		var frameHeight:Int = Std.int(region.height);
-
-		if (frameSize != null)
-		{
-			frameWidth = Std.int(frameSize.x);
-			frameHeight = Std.int(frameSize.y);
-		}
-
-		var numHorizontalFrames:Int = Std.int(region.width / frameWidth);
-		var numVerticalFrames:Int = Std.int(region.height / frameHeight);
-
-		var spaceX:Int = 0;
-		var spaceY:Int = 0;
-
-		if (spacing != null)
-		{
-			spaceX = Std.int(spacing.x);
-			spaceY = Std.int(spacing.y);
-		}
-
-		var borderX:Int = 0;
-		var borderY:Int = 0;
-
-		if (border != null)
-		{
-			borderX = Std.int(border.x);
-			borderY = Std.int(border.y);
-		}
-
-		var result = new BitmapData(Std.int(region.width + (numHorizontalFrames - 1) * spaceX + 2 * numHorizontalFrames * borderX),
-			Std.int(region.height + (numVerticalFrames - 1) * spaceY + 2 * numVerticalFrames * borderY), true, FlxColor.TRANSPARENT);
+		final result = new BitmapData
+		(
+			region.width + (numHorizontalFrames - 1) * spacing.x + 2 * numHorizontalFrames * border.x,
+			region.height + (numVerticalFrames - 1) * spacing.y + 2 * numVerticalFrames * border.y,
+			true, FlxColor.TRANSPARENT
+		);
 
 		result.lock();
-		var tempRect:Rectangle = new Rectangle(0, 0, frameWidth, frameHeight);
-		var tempPoint:Point = new Point();
+		final tempRect = new Rectangle(0, 0, frameWidth, frameHeight);
+		final tempPoint = new Point();
 
 		// insert spaces
 		for (i in 0...numHorizontalFrames)
 		{
-			tempPoint.x = i * (frameWidth + spaceX + 2 * borderX) + borderX;
+			tempPoint.x = i * (frameWidth + spacing.x + 2 * border.x) + border.x;
 			tempRect.x = i * frameWidth + region.x;
 
 			for (j in 0...numVerticalFrames)
 			{
-				tempPoint.y = j * (frameHeight + spaceY + 2 * borderY) + borderY;
+				tempPoint.y = j * (frameHeight + spacing.y + 2 * border.y) + border.y;
 				tempRect.y = j * frameHeight + region.y;
 				result.copyPixels(bitmapData, tempRect, tempPoint);
 			}
@@ -383,7 +396,7 @@ class FlxBitmapDataUtil
 		result.unlock();
 
 		// copy borders
-		copyBorderPixels(result, frameWidth, frameHeight, spaceX, spaceY, borderX, borderY, numHorizontalFrames, numVerticalFrames);
+		copyBorderPixels(result, frameWidth, frameHeight, spacing.x, spacing.y, border.x, border.y, numHorizontalFrames, numVerticalFrames);
 		return result;
 	}
 
