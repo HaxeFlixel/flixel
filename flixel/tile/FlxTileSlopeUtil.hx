@@ -121,10 +121,10 @@ class FlxTileSlopeUtil
 	 * @param downV   How much downward velocity should be used to kep the object on the ground
 	 * @param result  Optional result vector, if `null` a new one is created
 	 */
-	static public function computeCollisionOverlap(tile:FlxCollider, object:FlxCollider, edges:FlxSlopeEdges, grade:FlxSlopeGrade, maxOverlap:Float, ?result:FlxPoint)
+	static public function computeOverlap(tile:FlxCollider, object:FlxCollider, edges:FlxSlopeEdges, grade:FlxSlopeGrade, maxOverlap:Float, ?result:FlxPoint)
 	{
 		if (grade == NONE)
-			return FlxColliderUtil.computeCollisionOverlapAabb(tile, object, maxOverlap, result);
+			return FlxColliderUtil.computeOverlapAabb(tile, object, maxOverlap, result);
 		
 		if (result == null)
 			result = FlxPoint.get();
@@ -137,18 +137,18 @@ class FlxTileSlopeUtil
 		// only X
 		if (allowX && !allowY)
 		{
-			final overlapX = computeCollisionOverlapX(tile, object, edges, grade);
+			final overlapX = computeOverlapX(tile, object, edges, grade);
 			return result.set(Math.isFinite(overlapX) ? overlapX : 0, 0);
 		}
 		
 		// only Y
 		if (!allowX && allowY)
 		{
-			final overlapY = computeCollisionOverlapY(tile, object, edges, grade);
+			final overlapY = computeOverlapY(tile, object, edges, grade);
 			return result.set(0, Math.isFinite(overlapY) ? overlapY : 0);
 		}
 		
-		result.set(computeCollisionOverlapX(tile, object, edges, grade), computeCollisionOverlapY(tile, object, edges, grade));
+		result.set(computeOverlapX(tile, object, edges, grade), computeOverlapY(tile, object, edges, grade));
 		
 		if (abs(result.x) > min(tile.width, object.width))
 			result.x = Math.POSITIVE_INFINITY;
@@ -184,21 +184,21 @@ class FlxTileSlopeUtil
 			|| (solidCollisions.up && object.last.y + object.height <= tile.y);
 	}
 	
-	static public function computeCollisionOverlapX(tile:FlxCollider, object:FlxCollider, edges:FlxSlopeEdges, grade:FlxSlopeGrade)
+	static public function computeOverlapX(tile:FlxCollider, object:FlxCollider, edges:FlxSlopeEdges, grade:FlxSlopeGrade)
 	{
 		final overlapY = computeSlopeOverlapY(tile, object, edges, grade);
 		// check if they're hitting the solid edges
 		if (overlapY != 0 && checkHitSolidWallX(tile, object, edges) && tile.bounds.overlaps(object.bounds))
-			return FlxColliderUtil.computeCollisionOverlapXAabb(tile, object);
+			return FlxColliderUtil.computeOverlapXAabb(tile, object);
 		
 		// let y separate
 		return Math.POSITIVE_INFINITY;
 	}
 	
-	static public function computeCollisionOverlapY(tile:FlxCollider, object:FlxCollider, edges:FlxSlopeEdges, grade:FlxSlopeGrade)
+	static public function computeOverlapY(tile:FlxCollider, object:FlxCollider, edges:FlxSlopeEdges, grade:FlxSlopeGrade)
 	{
 		if (checkHitSolidWallY(tile, object, edges) && tile.bounds.overlaps(object.bounds))
-			return FlxColliderUtil.computeCollisionOverlapYAabb(tile, object);
+			return FlxColliderUtil.computeOverlapYAabb(tile, object);
 		
 		return computeSlopeOverlapY(tile, object, edges, grade);
 	}
