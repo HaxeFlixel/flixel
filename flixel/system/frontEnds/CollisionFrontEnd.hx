@@ -75,12 +75,15 @@ class CollisionFrontEnd
 	
 	function overlapHelper<TA:FlxObject, TB:FlxObject>(a:FlxBasic, b:Null<FlxBasic>, notify:Null<(TA, TB)->Void>, process:Null<(TA, TB)->Bool>)
 	{
+		final processFunc = process == null
+			? (a:TA, b:TB)->a.collider.bounds.overlaps(b.collider.bounds)
+			: (a:TA, b:TB)->a.collider.bounds.overlaps(b.collider.bounds) && process(a, b);
 		// TODO: 
-		return FlxCollisionQuadTree.executeOnce(FlxG.worldBounds, FlxG.worldDivisions, 10, a, b, cast notify, cast process);
+		return FlxCollisionQuadTree.executeOnce(FlxG.worldBounds, FlxG.worldDivisions, 10, a, b, cast notify, cast processFunc);
 	}
 	
 	/**
-	 * Call this function to see if one `FlxObject` collides with another within `FlxG.worldBounds`.
+	 * Separates and notifies of all overlapping objects within `FlxG.worldBounds`.
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a FlxGroup (or even bundling groups together!).
@@ -91,11 +94,11 @@ class CollisionFrontEnd
 	 *
 	 * @param   a        The first object or group you want to check.
 	 * @param   b        The second object or group you want to check. Can be the same group as the first.
-	 * @param   notify   Called on every object that overlaps another.
+	 * @param   notify   Called with every overlapping object pair.
 	 * 
 	 * @return  Whether any objects were successfully collided/separated.
 	 */
-	public inline function collide<TA:FlxObject, TB:FlxObject>(?a:FlxBasic, ?b:FlxBasic, ?notify:(TA, TB)->Void)
+	public inline function separateAll<TA:FlxObject, TB:FlxObject>(?a:FlxBasic, ?b:FlxBasic, ?notify:(TA, TB)->Void)
 	{
 		return overlap(a, b, notify, separate);
 	}
@@ -122,8 +125,8 @@ class CollisionFrontEnd
 			colliderA.onBoundsCollide.dispatch(b);
 			colliderB.onBoundsCollide.dispatch(a);
 			
-			if (!colliderA.type.match(SHAPE(_)) || !colliderB.type.match(SHAPE(_)))
-				return true;
+			// if (!colliderA.type.match(SHAPE(_)) || !colliderB.type.match(SHAPE(_)))
+			// 	return true;
 			
 			final overlap = a.computeCollisionOverlap(b, maxOverlap);
 			

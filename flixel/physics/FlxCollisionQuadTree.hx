@@ -215,8 +215,8 @@ class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 		}
 	}
 	
-	static var noNotify = (a, b)->{} ;
-	static var noProcess = (a, b)->true;
+	static final noNotify = (a, b)->{} ;
+	static final noProcess = (a, b)->true;
 	
 	public function execute(objectOrGroup:FlxBasic, ?notifier:NotifyCallback, ?processer:ProcessCallback):Bool
 	{
@@ -271,7 +271,8 @@ class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 		switch data
 		{
 			case LEAF(items):
-				final b = object.getCollider().bounds;
+				final a = FlxRect.get();
+				final b = object.getCollider().getDeltaRect();
 				
 				if (!b.overlaps(rect))
 					return false;
@@ -283,17 +284,18 @@ class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 						continue;
 					
 					checked.push(item);
-					final a = item.getCollider().bounds;
+					item.getCollider().getDeltaRect(a);
 					final overlaps = a.overlaps(b);
-					if (a.overlaps(b) && processer(object, item))
+					if (overlaps && processer(object, item))
 					{
 						notifier(object, item);
-						if (stopAtFirst)
-							return true;
-						
 						found = true;
+						if (stopAtFirst)
+							break;
 					}
 				}
+				a.put();
+				b.put();
 				return found;
 				
 			case BRANCH(children):

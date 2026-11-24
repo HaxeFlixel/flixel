@@ -442,7 +442,17 @@ class FlxColliderUtil
 		if (result == null)
 			result = FlxPoint.get();
 		
-		if (!checkForPenetration(a, b))
+		// if (!checkForPenetration(a, b))
+		// {
+		// 	if (!a.overlapsDelta(b))
+		// 	{
+		// 		FlxG.watch.addQuick("result", '( x: 0 | y: 0 )');
+		// 		// How did we get here? Should we always assume the deltas overlap if this is called?
+		// 		return result.set(0, 0);
+		// 	}
+		// }
+		
+		if (a.bounds.overlaps(b.bounds) == false)
 			return result.set(0, 0);
 		
 		final allowX = checkCollisionEdgesX(a, b);
