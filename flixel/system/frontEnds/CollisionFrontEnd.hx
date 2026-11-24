@@ -128,7 +128,7 @@ class CollisionFrontEnd
 			// if (!colliderA.type.match(SHAPE(_)) || !colliderB.type.match(SHAPE(_)))
 			// 	return true;
 			
-			final overlap = a.computeCollisionOverlap(b, maxOverlap);
+			final overlap = a.computeOverlap(b);
 			
 			if (!overlap.isZero())
 			{

@@ -408,7 +408,7 @@ class FlxColliderUtil
 	 * 
 	 * @param   result  Optional point to use for the result
 	 */
-	public static function computeCollisionOverlap(a:IFlxCollider, b:IFlxCollider, maxOverlap:Float, ?result:FlxPoint):FlxPoint
+	public static function computeOverlap(a:IFlxCollider, b:IFlxCollider, ?result:FlxPoint):FlxPoint
 	{
 		final colliderA = a.getCollider();
 		final colliderB = b.getCollider();
@@ -419,17 +419,17 @@ class FlxColliderUtil
 				{
 					case [CUSTOM(_, func), _]: func(b, result);
 					case [_, CUSTOM(_, func)]: func(a, result).negate();
-					case [AABB, AABB]: computeCollisionOverlapAabb(colliderA, colliderB, maxOverlap, result);
+					case [AABB, AABB]: computeOverlapAabb(colliderA, colliderB, result);
 					case [shapeA, shapeB]: throw 'Unexpected types: [$shapeA, $shapeB]';
 				}
 			case [TILEMAP, TILEMAP]:
 				throw "Cannot compute overlap between two TILEMAP colliders";
 			case [TILEMAP, _]:
 				throw "Cannot compute overlap against TILEMAP colliders";
-				// return computeCollisionOverlapTilemap(cast colliderA, b, result);
+				// return computeOverlapTilemap(cast colliderA, b, result);
 			case [_, TILEMAP]:
 				throw "Cannot compute overlap against TILEMAP colliders";
-				// return computeCollisionOverlapTilemap(cast colliderB, A, result);
+				// return computeOverlapTilemap(cast colliderB, A, result);
 			default:
 				throw "Cannot compute overlap with a MULTI or TILEMAP collider";
 		}
@@ -439,9 +439,9 @@ class FlxColliderUtil
 	
 	// /**
 	//  * Helper to compute the overlap of two objects, this is used when
-	//  * `objectA.computeCollisionOverlap(objectB)` is called on two objects
+	//  * `objectA.computeOverlap(objectB)` is called on two objects
 	//  */
-	// public static function computeCollisionOverlapTilemap(tilemap:FlxBaseTilemap<FlxObject>, b:IFlxCollider, ?result:FlxPoint)
+	// public static function computeOverlapTilemap(tilemap:FlxBaseTilemap<FlxObject>, b:IFlxCollider, ?result:FlxPoint)
 	// {
 	// 	if (result == null)
 	// 		result = FlxPoint.get();
@@ -451,7 +451,7 @@ class FlxColliderUtil
 	// 	final overlap = FlxPoint.get();
 	// 	function each (tile:FlxObject)
 	// 	{
-	// 		FlxColliderUtil.computeCollisionOverlap(tile, b, overlap);
+	// 		FlxColliderUtil.computeOverlap(tile, b, overlap);
 	// 		// if (result.isZero() && (overlap.x != 0 || overlap.y != 0))
 	// 		if (result.lengthSquared < overlap.lengthSquared)
 	// 		{
@@ -472,12 +472,14 @@ class FlxColliderUtil
 	
 	/**
 	 * Helper to compute the overlap of two objects, this is used when
-	 * `a.computeCollisionOverlap(b)` is called on two objects
+	 * `a.computeOverlap(b)` is called on two objects
 	 */
-	public static function computeCollisionOverlapAabb(a:FlxCollider, b:FlxCollider, maxOverlap:Float, ?result:FlxPoint)
+	public static function computeOverlapAabb(a:FlxCollider, b:FlxCollider, ?result:FlxPoint)
 	{
 		if (result == null)
 			result = FlxPoint.get();
+		
+		FlxG.watch.addQuick("result", "-");
 		
 		// if (!checkForPenetration(a, b))
 		// {
@@ -495,16 +497,21 @@ class FlxColliderUtil
 		final allowX = checkCollisionEdgesX(a, b);
 		final allowY = checkCollisionEdgesY(a, b);
 		if (!allowX && !allowY)
+		{
+			FlxG.watch.addQuick("result", '( x: 0 | y: 0 )');
 			return result.set(0, 0);
+		}
 		
 		function abs(n:Float) return n < 0 ? -n : n;
 		
 		// only X
 		if ((allowX && !allowY) || penetratedOnX(a, b))
 		{
-			final overlap = computeCollisionOverlapXAabb(a, b);
+			final overlap = computeOverlapXAabb(a, b);
 			// if (abs(overlap) > maxOverlap)
 				// return result;
+			
+			FlxG.watch.addQuick("result", '( x: $overlap | y: 0 )');
 			
 			return result.set(overlap, 0);
 		}
@@ -512,14 +519,17 @@ class FlxColliderUtil
 		// only Y
 		if ((!allowX && allowY) || penetratedOnY(a, b))
 		{
-			final overlap = computeCollisionOverlapYAabb(a, b);
+			final overlap = computeOverlapYAabb(a, b);
 			// if (abs(overlap) > maxOverlap)
 				// return result;
+			
+			FlxG.watch.addQuick("result", '( x: 0 | y: $overlap)');
 			
 			return result.set(0, overlap);
 		}
 		
-		result.set(computeCollisionOverlapXAabb(a, b), computeCollisionOverlapYAabb(a, b));
+		result.set(computeOverlapXAabb(a, b), computeOverlapYAabb(a, b));
+		FlxG.watch.addQuick("result", result);
 		
 		final absX = abs(result.x);
 		final absY = abs(result.y);
@@ -595,9 +605,9 @@ class FlxColliderUtil
 	
 	/**
 	 * Helper to compute the X overlap of two objects, this is used when
-	 * `a.computeCollisionOverlapX(b)` is called on two objects
+	 * `a.computeOverlapX(b)` is called on two objects
 	 */
-	public static function computeCollisionOverlapXAabb(a:FlxCollider, b:FlxCollider):Float
+	public static function computeOverlapXAabb(a:FlxCollider, b:FlxCollider):Float
 	{
 		if (a.deltaX > b.deltaX)
 			return a.x + a.width - b.x;
@@ -607,9 +617,9 @@ class FlxColliderUtil
 	
 	/**
 	 * Helper to compute the Y overlap of two objects, this is used when
-	 * `a.computeCollisionOverlapY(b)` is called on two objects
+	 * `a.computeOverlapY(b)` is called on two objects
 	 */
-	public static function computeCollisionOverlapYAabb(a:FlxCollider, b:FlxCollider):Float
+	public static function computeOverlapYAabb(a:FlxCollider, b:FlxCollider):Float
 	{
 		if (a.deltaY > b.deltaY)
 			return a.y + a.height - b.y;
