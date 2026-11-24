@@ -288,6 +288,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	function new()
 	{
 		super();
+		this.collider.type = TILEMAP;
 
 		if (FlxG.renderTile)
 		{

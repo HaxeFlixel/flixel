@@ -7,6 +7,8 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxSignal;
 
+using flixel.physics.FlxCollider.FlxColliderUtil;
+
 typedef ProcessCallback = (IFlxCollider, IFlxCollider)->Bool;
 typedef Processer = (a:IFlxCollider, b:IFlxCollider, callback:ProcessCallback)->Bool;
 typedef OverlapComputer = (a:IFlxCollider, b:IFlxCollider, result:FlxPoint)->FlxPoint;
@@ -394,6 +396,14 @@ class FlxColliderUtil
 					case [AABB, AABB]: computeCollisionOverlapAabb(colliderA, colliderB, maxOverlap, result);
 					case [shapeA, shapeB]: throw 'Unexpected types: [$shapeA, $shapeB]';
 				}
+			case [TILEMAP, TILEMAP]:
+				throw "Cannot compute overlap between two TILEMAP colliders";
+			case [TILEMAP, _]:
+				throw "Cannot compute overlap against TILEMAP colliders";
+				// return computeCollisionOverlapTilemap(cast colliderA, b, result);
+			case [_, TILEMAP]:
+				throw "Cannot compute overlap against TILEMAP colliders";
+				// return computeCollisionOverlapTilemap(cast colliderB, A, result);
 			default:
 				throw "Cannot compute overlap with a MULTI or TILEMAP collider";
 		}
@@ -405,7 +415,7 @@ class FlxColliderUtil
 	//  * Helper to compute the overlap of two objects, this is used when
 	//  * `objectA.computeCollisionOverlap(objectB)` is called on two objects
 	//  */
-	// public static function computeCollisionOverlapTilemap(tilemap:FlxBaseTilemap<FlxObject>, b:FlxObject, ?result:FlxPoint)
+	// public static function computeCollisionOverlapTilemap(tilemap:FlxBaseTilemap<FlxObject>, b:IFlxCollider, ?result:FlxPoint)
 	// {
 	// 	if (result == null)
 	// 		result = FlxPoint.get();
