@@ -3,7 +3,7 @@ package flixel.system.scaleModes;
 import flixel.FlxG;
 
 /**
- * `FixedScaleAdjustSizeScaleMode` is a scaling mode which maintains the game's scene at a fixed size.
+ * `ExpandedScaleSize` is a scaling mode which maintains the game's scene at a fixed size.
  * This will clip off the edges of the scene for dimensions which are too small.
  * However, unlike `FixedScaleMode`, this mode will extend the width of the current scene to match the window scale.
  * The result is that objects that would be offscreen on smaller window sizes will be visible in larger ones.
@@ -11,9 +11,9 @@ import flixel.FlxG;
  * Note that compared with `StageSizeScaleMode`, this scale mode aligns with the center of the game's screen,
  * so the coordinates 0,0 may not be located at the top left of your game window.
  * 
- * To enable it in your project, use `FlxG.scaleMode = new FixedScaleAdjustSizeScaleMode();`.
+ * To enable it in your project, use `FlxG.scaleMode = new ExpandedScaleSize();`.
  */
-class FixedScaleAdjustSizeScaleMode extends BaseScaleMode
+class ExpandedScaleSize extends BaseScaleMode
 {
 	var fixedWidth:Bool = false;
 	var fixedHeight:Bool = false;
@@ -54,3 +54,6 @@ class FixedScaleAdjustSizeScaleMode extends BaseScaleMode
 		}
 	}
 }
+
+@:deprecated("Use ExpandedScaleSize instead")
+typedef FixedScaleAdjustSizeScaleMode = ExpandedScaleSize;
