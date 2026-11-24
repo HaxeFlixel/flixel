@@ -353,7 +353,8 @@ class FlxColliderUtil
 	{
 		final colliderA = a.getCollider();
 		final colliderB = b.getCollider();
-		return func(a, b) && processSub(a, b, colliderA, colliderB, func);
+		// Note: was &&, caused double func calls on two shapes, is there a case where we still wanna process subs there?
+		return func(a, b) || processSub(a, b, colliderA, colliderB, func);
 	}
 	
 	static function processSub(a:IFlxCollider, b:IFlxCollider, colliderA:FlxCollider, colliderB:FlxCollider, func:(IFlxCollider, IFlxCollider)->Bool):Bool
