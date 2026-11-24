@@ -13,6 +13,11 @@ typedef ProcessCallback = (IFlxCollider, IFlxCollider)->Bool;
 typedef Processer = (a:IFlxCollider, b:IFlxCollider, callback:ProcessCallback)->Bool;
 typedef OverlapComputer = (a:IFlxCollider, b:IFlxCollider, result:FlxPoint)->FlxPoint;
 
+/**
+ * Various collision shapes that are handled by flixel, and a CUSTOM shape allowing you to handle shapes yourself
+ * 
+ * @since 6.3.0
+ */
 enum FlxColliderShape
 {
 	/** Axis-aligned bounding box, a rectangle that cannot rotate. The default shape */
@@ -30,6 +35,11 @@ enum FlxColliderShape
 	CUSTOM(name:String, computeOverlap:(collider:IFlxCollider, ?result:FlxPoint)->FlxPoint);
 }
 
+/**
+ * Various collision types used when handling collision between colliders and groups of colliders
+ * 
+ * @since 6.3.0
+ */
 enum FlxColliderType
 {
 	/** Colliders that contain a single shape */
@@ -48,6 +58,11 @@ enum FlxColliderType
 	MULTI(processer:(collider:IFlxCollider, func:(IFlxCollider)->Bool)->Bool);
 }
 
+/**
+ * The core collision object in flixel
+ * 
+ * @since 6.3.0
+ */
 class FlxCollider
 {
 	/**  The axis-aligned world bounds of this collider */
@@ -284,6 +299,11 @@ class FlxCollider
 	inline function get_deltaY():Float { return y - last.y; }
 }
 
+/**
+ * Various collision helpers
+ * 
+ * @since 6.3.0
+ */
 class FlxColliderUtil
 {
 	/**
@@ -382,6 +402,12 @@ class FlxColliderUtil
 		}
 	}
 	
+	/**
+	 * Calculates the minimum amount of motion needed to separate the two colliders.
+	 * This will Take their latest movement into account when determing which direction(s) to separate
+	 * 
+	 * @param   result  Optional point to use for the result
+	 */
 	public static function computeCollisionOverlap(a:IFlxCollider, b:IFlxCollider, maxOverlap:Float, ?result:FlxPoint):FlxPoint
 	{
 		final colliderA = a.getCollider();
@@ -666,6 +692,11 @@ class FlxColliderUtil
 	}
 }
 
+/**
+ * Interface for object with colliders
+ * 
+ * @since 6.3.0
+ */
 interface IFlxCollider
 {
 	/**
@@ -677,6 +708,8 @@ interface IFlxCollider
 
 /**
  * Determines when to apply collision drag to one object that collided with another.
+ * 
+ * @since 6.3.0
  */
 enum abstract FlxCollisionDragType(Int)
 {
@@ -693,13 +726,28 @@ enum abstract FlxCollisionDragType(Int)
 	var HEAVIER = 3;
 }
 
+/**
+ * Various ways to constrain or apply forces to a moving object
+ * 
+ * @since 6.3.0
+ */
 enum FlxForceType
 {
+	/** Applies no force */
 	NONE;
+	
+	/** Applies two separate forces on the x and y axis */
 	ORTHO(x:Float, y:Float);
+	
+	/** Applies a force along the direction of movement */
 	LINEAR(amount:Float);
 }
 
+/**
+ * Various ways to apply drag to a collider
+ * 
+ * @since 6.3.0
+ */
 enum FlxDragMode
 {
 	/** Drag is applied every frame */
