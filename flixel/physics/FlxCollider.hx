@@ -466,8 +466,8 @@ class FlxColliderUtil
 		if ((allowX && !allowY) || penetratedOnX(a, b))
 		{
 			final overlap = computeCollisionOverlapXAabb(a, b);
-			if (abs(overlap) > maxOverlap)
-				return result;
+			// if (abs(overlap) > maxOverlap)
+				// return result;
 			
 			return result.set(overlap, 0);
 		}
@@ -476,8 +476,8 @@ class FlxColliderUtil
 		if ((!allowX && allowY) || penetratedOnY(a, b))
 		{
 			final overlap = computeCollisionOverlapYAabb(a, b);
-			if (abs(overlap) > maxOverlap)
-				return result;
+			// if (abs(overlap) > maxOverlap)
+				// return result;
 			
 			return result.set(0, overlap);
 		}
@@ -491,14 +491,14 @@ class FlxColliderUtil
 		if (absX > absY)
 		{
 			result.x = 0;
-			if (absY > maxOverlap)
-				result.y = 0;
+			// if (absY > maxOverlap)
+			// 	result.y = 0;
 		}
 		else
 		{
 			result.y = 0;
-			if (absX > maxOverlap)
-				result.x = 0;
+			// if (absX > maxOverlap)
+			// 	result.x = 0;
 		}
 		
 		return result;
