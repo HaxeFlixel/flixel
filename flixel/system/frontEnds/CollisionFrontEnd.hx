@@ -52,18 +52,14 @@ class CollisionFrontEnd
 	}
 	
 	/**
-	 * Call this function to see if one `FlxObject` overlaps another within `FlxG.worldBounds`.
-	 * Can be called with one object and one group, or two groups, or two objects,
-	 * whatever floats your boat! For maximum performance try bundling a lot of objects
-	 * together using a `FlxGroup` (or even bundling groups together!).
+	 * Call this function to see if any `FlxObject` in the current FlxState overlaps
+	 * another within `FlxG.worldBounds`.
 	 *
 	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
 	 *
 	 * NOTE: this takes the entire area of `FlxTilemap`s into account (including "empty" tiles).
 	 * Use `FlxTilemap#overlaps()` if you don't want that.
 	 *
-	 * @param   a        The first object or group you want to check.
-	 * @param   b        The second object or group you want to check. Can be the same group as the first.
 	 * @param   notify   Called on every object that overlaps another.
 	 * @param   process  Called on every object that overlaps another, determines whether to call the `notify`.
 	 * @return  Whether any overlaps were detected.
@@ -80,6 +76,53 @@ class CollisionFrontEnd
 			: (a:TA, b:TB)->a.collider.bounds.overlaps(b.collider.bounds) && process(a, b);
 		// TODO: 
 		return FlxCollisionQuadTree.executeOnce(FlxG.worldBounds, FlxG.worldDivisions, 10, a, b, cast notify, cast processFunc);
+	}
+	
+	/**
+	 * Call this function to see if one `FlxObject` crossed paths with another within `FlxG.worldBounds`.
+	 * Unlike `overlaps` this will return true even if the objects are not currently overlapping.
+	 * Can be called with one object and one group, or two groups, or two objects,
+	 * whatever floats your boat! For maximum performance try bundling a lot of objects
+	 * together using a `FlxGroup` (or even bundling groups together!).
+	 *
+	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
+	 *
+	 * NOTE: this takes the entire area of `FlxTilemap`s into account (including "empty" tiles).
+	 * Use `FlxTilemap#overlaps()` if you don't want that.
+	 *
+	 * @param   a        The first object or group you want to check.
+	 * @param   b        The second object or group you want to check. Can be the same group as the first.
+	 * @param   notify   Called on every object that overlaps another.
+	 * @param   process  Called on every object that overlaps another, determines whether to call the `notify`.
+	 * @return  Whether any overlaps were detected.
+	 */
+	overload public inline extern function deltasOverlap<TA:FlxObject, TB:FlxObject>(a, ?b, ?notify:(TA, TB)->Void, ?process:(TA, TB)->Bool)
+	{
+		return deltasOverlapHelper(a, b, notify, process);
+	}
+	
+	/**
+	 * Call this function to see if any `FlxObject` in the current FlxState crossed
+	 * paths with another within `FlxG.worldBounds`. Unlike `overlaps` this will return 
+	 * true even if the objects are not currently overlapping
+	 *
+	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
+	 *
+	 * NOTE: this takes the entire area of `FlxTilemap`s into account (including "empty" tiles).
+	 * Use `FlxTilemap#overlaps()` if you don't want that.
+	 *
+	 * @param   notify   Called on every object that overlaps another.
+	 * @param   process  Called on every object that overlaps another, determines whether to call the `notify`.
+	 * @return  Whether any overlaps were detected.
+	 */
+	overload public inline extern function deltasOverlap<TA:FlxObject, TB:FlxObject>(?notify:(TA, TB)->Void, ?process:(TA, TB)->Bool)
+	{
+		return deltasOverlapHelper(FlxG.state, null, notify, process);
+	}
+	
+	function deltasOverlapHelper<TA:FlxObject, TB:FlxObject>(a:FlxBasic, b:Null<FlxBasic>, notify:Null<(TA, TB)->Void>, process:Null<(TA, TB)->Bool>)
+	{
+		return FlxCollisionQuadTree.executeOnce(FlxG.worldBounds, FlxG.worldDivisions, 10, a, b, cast notify, cast process);
 	}
 	
 	/**
