@@ -1,16 +1,17 @@
 package flixel.tweens;
 
-import flixel.tweens.misc.ShakeTween;
-import flixel.util.FlxAxes;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
 import flixel.tweens.misc.FlickerTween;
+import flixel.tweens.misc.JumpTween;
 import flixel.tweens.misc.NumTween;
+import flixel.tweens.misc.ShakeTween;
 import flixel.tweens.misc.VarTween;
 import flixel.tweens.motion.CircularMotion;
 import flixel.tweens.motion.CubicMotion;
@@ -19,9 +20,9 @@ import flixel.tweens.motion.LinearPath;
 import flixel.tweens.motion.QuadMotion;
 import flixel.tweens.motion.QuadPath;
 import flixel.util.FlxArrayUtil;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.math.FlxPoint;
 
 /** @since 4.5.0 **/
 enum abstract FlxTweenType(Int) from Int to Int
@@ -277,6 +278,39 @@ class FlxTween implements IFlxDestroyable
 	}
 
 	/**
+	 * Makes an object "jump" from their current position with the specified velocity and gravity
+	 * 
+	 * @param   target     The jumping object
+	 * @param   velocityX  The initial velocity of the object
+	 * @param   velocityY  The initial velocity of the object
+	 * @param   gravity    How fast the object accelerates downward px/s/s
+	 * @param   duration   How long it takes to jump
+	 * @param   options    A structure with tween options
+	 * @since 6.3.0
+	 */
+	public static function jump(object:FlxObject, velocityX:Float, velocityY:Float, gravity:Float, duration:Float, ?options:TweenOptions)
+	{
+		return globalManager.jump(object, velocityX, velocityY, gravity, duration, options);
+	}
+	
+	/**
+	 * Makes an object "jump" from their current position to some apex and,
+	 * eventually, the target position as if affected by some constant gravity
+	 * 
+	 * @param   object    The jumping object
+	 * @param   endX      The end X position
+	 * @param   apexY     The objects highest position during the jump
+	 * @param   endY      The end Y position
+	 * @param   duration  How long it takes to jump
+	 * @param   options    A structure with tween options
+	 * @since 6.3.0
+	 */
+	public static function jumpTo(object:FlxObject, endX:Float, apexY:Float, endY:Float, duration:Float, ?options:TweenOptions)
+	{
+		return globalManager.jumpTo(object, endX, apexY, endY, duration, options);
+	}
+	
+	/**
 	 * Tweens numeric value which represents angle. Shorthand for creating a AngleTween object, starting it and adding it to the TweenManager.
 	 *
 	 * ```haxe
@@ -505,6 +539,7 @@ class FlxTween implements IFlxDestroyable
 	public var active(default, set):Bool = false;
 	public var duration:Float = 0;
 	public var ease:EaseFunction;
+	public var framerate:Float;
 	public var onStart:TweenCallback;
 	public var onUpdate:TweenCallback;
 	public var onComplete:TweenCallback;
@@ -562,6 +597,7 @@ class FlxTween implements IFlxDestroyable
 		onUpdate = Options.onUpdate;
 		onComplete = Options.onComplete;
 		ease = Options.ease;
+		framerate = Options.framerate != null ? Options.framerate : 0;
 		setDelays(Options.startDelay, Options.loopDelay);
 		this.manager = manager != null ? manager : globalManager;
 	}
@@ -619,27 +655,40 @@ class FlxTween implements IFlxDestroyable
 
 	function update(elapsed:Float):Void
 	{
+		var preTick:Float = _secondsSinceStart;
 		_secondsSinceStart += elapsed;
+		var postTick:Float = _secondsSinceStart;
+
 		var delay:Float = (executions > 0) ? loopDelay : startDelay;
 		if (_secondsSinceStart < delay)
 		{
 			return;
 		}
-		scale = Math.max((_secondsSinceStart - delay), 0) / duration;
+
+		if (framerate > 0)
+		{
+			preTick = Math.fround(preTick * framerate) / framerate;
+			postTick = Math.fround(postTick * framerate) / framerate;
+		}
+
+		scale = Math.max((postTick - delay), 0) / duration;
 		if (ease != null)
 		{
 			scale = ease(scale);
 		}
+		
 		if (backward)
 		{
 			scale = 1 - scale;
 		}
+		
 		if (_secondsSinceStart > delay && !_running)
 		{
 			_running = true;
 			if (onStart != null)
 				onStart(this);
 		}
+		
 		if (_secondsSinceStart >= duration + delay)
 		{
 			scale = (backward) ? 0 : 1;
@@ -647,7 +696,7 @@ class FlxTween implements IFlxDestroyable
 		}
 		else
 		{
-			if (onUpdate != null)
+			if (postTick > preTick && onUpdate != null)
 				onUpdate(this);
 		}
 	}
@@ -730,8 +779,8 @@ class FlxTween implements IFlxDestroyable
 
 		if (type == FlxTweenType.LOOPING || type == FlxTweenType.PINGPONG)
 		{
-			_secondsSinceStart = (_secondsSinceStart - _delayToUse) % duration + _delayToUse;
-			scale = Math.max((_secondsSinceStart - _delayToUse), 0) / duration;
+			_secondsSinceStart = _secondsSinceStart % (duration + _delayToUse);
+			scale = Math.max((_secondsSinceStart - loopDelay), 0) / duration;
 
 			if (ease != null && scale > 0 && scale < 1)
 			{
@@ -920,6 +969,12 @@ typedef TweenOptions =
 	@:optional var ease:EaseFunction;
 
 	/**
+	 * Optional set framerate for this tween to update at.
+	 * This also affects how often `onUpdate` is called.
+	 */
+	@:optional var framerate:Null<Float>;
+
+	/**
 	 * Optional start callback function.
 	 */
 	@:optional var onStart:TweenCallback;
@@ -1052,23 +1107,64 @@ class FlxTweenManager extends FlxBasic
 	 * A simple shake effect for FlxSprite. Shorthand for creating a ShakeTween, starting it and adding it to the TweenManager.
 	 *
 	 * ```haxe
-	 * FlxTween.shake(Sprite, 0.1, 2, FlxAxes.XY, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: ONESHOT });
+	 * FlxTween.shake(sprite, 0.1, 2, FlxAxes.XY, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: ONESHOT });
 	 * ```
 	 * 
-	 * @param	Sprite       Sprite to shake.
-	 * @param   Intensity    Percentage representing the maximum distance
-	 *                       that the sprite can move while shaking.
-	 * @param   Duration     The length in seconds that the shaking effect should last.
-	 * @param   Axes         On what axes to shake. Default value is `FlxAxes.XY` / both.
-	 * @param	Options      A structure with tween options.
+	 * @param	sprite     Sprite to shake.
+	 * @param   intensity  Percentage representing the maximum distance
+	 *                     that the sprite can move while shaking.
+	 * @param   duration   The length in seconds that the shaking effect should last.
+	 * @param   axes       On what axes to shake. Default value is `FlxAxes.XY` / both.
+	 * @param   options    A structure with tween options.
 	 */
-	public function shake(Sprite:FlxSprite, Intensity:Float = 0.05, Duration:Float = 1, ?Axes:FlxAxes = XY, ?Options:TweenOptions):ShakeTween
+	public function shake(sprite:FlxSprite, intensity = 0.05, duration = 1.0, ?axes:FlxAxes = XY, ?options:TweenOptions):ShakeTween
 	{
-		var tween = new ShakeTween(Options, this);
-		tween.tween(Sprite, Intensity, Duration, Axes);
+		final tween = new ShakeTween(options, this);
+		tween.tween(sprite, intensity, duration, axes);
 		return add(tween);
 	}
 
+	/**
+	 * Makes an object "jump" from their current position with the specified velocity and gravity.
+	 * 
+	 * **Note:** The object's velocity and acceleration are not changed
+	 * 
+	 * @param   object     The jumping object
+	 * @param   velocityX  The initial velocity of the object
+	 * @param   velocityY  The initial velocity of the object
+	 * @param   gravity    How fast the object accelerates downward px/s/s
+	 * @param   duration   How long it takes to jump
+	 * @param   options    A structure with tween options
+	 * @since 6.3.0
+	 */
+	public function jump(object:FlxObject, velocityX:Float, velocityY:Float, gravity:Float, duration:Float, ?options:TweenOptions)
+	{
+		final tween = new JumpTween(options, this);
+		tween.jump(object, velocityX, velocityY, gravity, duration);
+		return add(tween);
+	}
+	
+	/**
+	 * Makes an object "jump" from their current position to some apex and,
+	 * eventually, the target position as if affected by some constant gravity
+	 * 
+	 * **Note:** The object's velocity and acceleration are not changed
+	 * 
+	 * @param   object    The jumping object
+	 * @param   endX      The end X position
+	 * @param   apexY     The objects highest position during the jump
+	 * @param   endY      The end Y position
+	 * @param   duration  How long it takes to jump
+	 * @param   options    A structure with tween options
+	 * @since 6.3.0
+	 */
+	public function jumpTo(object:FlxObject, endX:Float, apexY:Float, endY:Float, duration:Float, ?options:TweenOptions)
+	{
+		final tween = new JumpTween(options, this);
+		tween.jumpTo(object, endX, apexY, endY, duration);
+		return add(tween);
+	}
+	
 	/**
 	 * Tweens numeric value which represents angle. Shorthand for creating a AngleTween object, starting it and adding it to the TweenManager.
 	 *

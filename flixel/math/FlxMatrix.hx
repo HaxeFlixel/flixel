@@ -1,5 +1,6 @@
 package flixel.math;
 
+import flixel.util.FlxStringUtil;
 import openfl.geom.Matrix;
 
 /**
@@ -9,6 +10,43 @@ import openfl.geom.Matrix;
  */
 class FlxMatrix extends Matrix
 {
+	/**
+	 * Whether this matrix is `[1, 0, 0, 1, 0, 0]` which would have no effect
+	 * 
+	 * @since 6.2.0
+	 */
+	public inline function isIdentity():Bool
+	{
+		return a == 1 && b == 0 && c == 0 && d == 1 && tx == 0 && ty == 0;
+	}
+	
+	/**
+	 * Skews `this` matrix, in radians.
+	 * @param	skewX	Horizontal skew in radians.
+	 * @param	skewY	Vertical skew in radians.
+	 * @return	`this` skewed matrix.
+	 * @since 6.2.0
+	 */
+	public inline function skewRadians(skewX:Float, skewY:Float):FlxMatrix
+	{
+		b = Math.tan(skewY);
+		c = Math.tan(skewX);
+		
+		return this;
+	}
+	
+	/**
+	 * Skews `this` matrix, in degrees.
+	 * @param   skewX  Horizontal skew in degrees.
+	 * @param   skewY  Vertical skew in degrees.
+	 * @return  `this` skewed matrix.
+	 * @since 6.2.0
+	 */
+	public inline function skewDegrees(skewX:Float, skewY:Float):FlxMatrix
+	{
+		return skewRadians(skewX * FlxAngle.TO_RAD, skewY * FlxAngle.TO_RAD);
+	}
+	
 	/**
 	 * Rotates this matrix, but takes the values of sine and cosine,
 	 * so it might be useful when you rotate multiple matrices by the same angle
@@ -104,4 +142,17 @@ class FlxMatrix extends Matrix
 		ty = sourceMatrix.ty;
 	}
 	#end
+	
+	override function toString()
+	{
+		return FlxStringUtil.getDebugString
+		([
+			LabelValuePair.weak("a", a),
+			LabelValuePair.weak("b", b),
+			LabelValuePair.weak("c", c),
+			LabelValuePair.weak("d", d),
+			LabelValuePair.weak("tx", tx),
+			LabelValuePair.weak("ty", ty)
+		]);
+	}
 }

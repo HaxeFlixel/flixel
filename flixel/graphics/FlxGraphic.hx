@@ -25,9 +25,9 @@ class FlxGraphic implements IFlxDestroyable
 	public static var defaultPersist:Bool = false;
 
 	/**
-	 * Creates and caches FlxGraphic object from openfl.Assets key string.
+	 * Creates and caches FlxGraphic object from asset key string.
 	 *
-	 * @param   Source   `openfl.Assets` key string. For example: `"assets/image.png"`.
+	 * @param   Source   Asset key string. For example: `"assets/image.png"`.
 	 * @param   Unique   Ensures that the `BitmapData` uses a new slot in the cache.
 	 *                   If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
 	 * @param   Key      Force the cache to use a specific key to index the bitmap.
@@ -355,6 +355,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * All types of frames collection which had been added to this graphic object.
 	 * It helps to avoid map iteration, which produces a lot of garbage.
 	 */
+	@deprecated("frameCollectionTypes is deprecated, iterate frameCollections, instead")
 	var frameCollectionTypes:Array<FlxFrameCollectionType>;
 
 	/**
@@ -456,11 +457,8 @@ class FlxGraphic implements IFlxDestroyable
 			return;
 
 		var collections:Array<FlxFramesCollection>;
-		for (collectionType in frameCollectionTypes)
-		{
-			collections = cast frameCollections.get(collectionType);
+		for (type => collections in frameCollections)
 			FlxDestroyUtil.destroyArray(collections);
-		}
 
 		frameCollections = null;
 		frameCollectionTypes = null;

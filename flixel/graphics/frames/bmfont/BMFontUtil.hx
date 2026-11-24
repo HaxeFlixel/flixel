@@ -8,7 +8,7 @@ using StringTools;
 @:noCompletion
 class BMFontUtil
 {
-	static var attFinder = ~/(\w+?)=("?)(.*?)\2(?=\s|$)/;
+	static var attFinder = ~/(\w+?)=(\s*)("?)(.*?)\3(?=\s|$)/;
 	
 	public static function forEachAttribute(text:UnicodeString, callback:(key:String, value:UnicodeString)->Void)
 	{
@@ -16,7 +16,7 @@ class BMFontUtil
 		while (attFinder.match(text.substr(index)))
 		{
 			final key = attFinder.matched(1);
-			final value = attFinder.matched(3);
+			final value = attFinder.matched(4);
 			callback(key, value);
 			
 			final nextIndex = text.length - attFinder.matchedRight().length;

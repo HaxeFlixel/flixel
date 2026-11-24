@@ -3,9 +3,9 @@ package flixel.system.debug.console;
 import flixel.FlxG;
 import flixel.system.debug.log.LogStyle;
 
-using flixel.util.FlxStringUtil;
-using flixel.util.FlxArrayUtil;
 using StringTools;
+using flixel.util.FlxArrayUtil;
+using flixel.util.FlxStringUtil;
 
 #if hscript
 import hscript.Expr;
@@ -168,7 +168,7 @@ class ConsoleUtil
 	 */
 	public static inline function log(text:Dynamic):Void
 	{
-		FlxG.log.advanced([text], LogStyle.CONSOLE);
+		FlxG.log.advanced([text], FlxG.log.styles.console);
 	}
 }
 

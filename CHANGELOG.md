@@ -1,4 +1,108 @@
-# 6.1.0 (Apr 28, 2025)
+### 6.2.1 (Nov 03, 2026)
+
+#### Changes and improvements:
+- `FlxSpriteGroup`: Call `clipToViewBounds` on members ([#3629](https://github.com/HaxeFlixel/flixel/pull/3629))
+- `FlxVersionMacro`: Fix build error by null checking some values ([#3644](https://github.com/HaxeFlixel/flixel/pull/3644))
+- `FlxG`: Improve `set_drawFramerate` ([#3648](https://github.com/HaxeFlixel/flixel/pull/3648))
+- `FlxGamepadManager`: Add gamepad model lookup ([#3653](https://github.com/HaxeFlixel/flixel/pull/3653))
+- `FlxBitmapText`: Cull characters outside the `clipRect` ([#3655](https://github.com/HaxeFlixel/flixel/pull/3655))
+- `FlxGamepadManager`: Support xbox wireless controller ([#3664](https://github.com/HaxeFlixel/flixel/pull/3664))
+- `FlxBitmapText`: Ensure min textHeight of 0 ([#3623](https://github.com/HaxeFlixel/flixel/pull/3623))
+
+#### Bugfixes:
+- `FlxTileFrames`: Cleanup points ([#3637](https://github.com/HaxeFlixel/flixel/pull/3637))
+- `FlxSound`: Cancel `fadeTween` on `destroy` ([#3639](https://github.com/HaxeFlixel/flixel/pull/3639))
+- `FlxBar`: Refresh rendering when fill direction changes ([#3663](https://github.com/HaxeFlixel/flixel/pull/3663))
+- `FlxAtlasFrames`: Fix `findFrame` leak ([#3649](https://github.com/HaxeFlixel/flixel/pull/3649))
+- `FlxQuadTree`: Prevent crashes on non-colliding FlxBasics ([#3668](https://github.com/HaxeFlixel/flixel/pull/3668))
+
+## 6.2.0 (July 20, 2026)
+
+#### New features:
+- `FlxTween`: Add `framerate` option ([#3372](https://github.com/HaxeFlixel/flixel/pull/3372))
+- `FlxPoint`: Add `setXY`, deprecate one-arg `set(x)` ([#3490](https://github.com/HaxeFlixel/flixel/pull/3490))
+- `FlxRect`: Add overloaded `pad` methods ([#3533](https://github.com/HaxeFlixel/flixel/pull/3533))
+- `FlxG.log`: Add `FLX_LOG_THROW`, `FLX_LOG_PLAY_SOUND` and `FLX_LOG_OPEN_CONSOLE`, `FlxG.log.styles` and `FlxLogStyle` ([#3534](https://github.com/HaxeFlixel/flixel/pull/3534))
+- `FlxSound`: Rework load method names ([#3479](https://github.com/HaxeFlixel/flixel/pull/3479))
+- `FlxMatrixSprite`: Added ([#3427](https://github.com/HaxeFlixel/flixel/pull/3427))
+- `FlxSprite`: Add `clipToWorldBounds` and converters between: frame, world, view and game ([#3419](https://github.com/HaxeFlixel/flixel/pull/3419))
+- `FlxObject` and `FlxCamera`: Add position converters between: frame, world, view and game ([#3419](https://github.com/HaxeFlixel/flixel/pull/3419))
+- `FlxSound` and `FlxG.sound`: Add support for music streaming ([#3518](https://github.com/HaxeFlixel/flixel/pull/3518))
+- `FlxBaseTilemap`: Add `rayAdvanced` and various `forEachInRay` helpers ([#3335](https://github.com/HaxeFlixel/flixel/pull/3335))
+- `FlxSound`: Add `loopCount` and `loopUntil` ([#3546](https://github.com/HaxeFlixel/flixel/pull/3546))
+- `FlxSound` and `FlxG.sound`: Large refactor of sound initialization ([#3558](https://github.com/HaxeFlixel/flixel/pull/3558)) ([#3586](https://github.com/HaxeFlixel/flixel/pull/3586)) ([#3636](https://github.com/HaxeFlixel/flixel/pull/3636))
+- `AtlasRect`: add `l`, `r`, `t`, `b` getters ([#3588](https://github.com/HaxeFlixel/flixel/pull/3588))
+- `FlxRect`: Add `clone()`, set `_weak` once + doc ([#3587](https://github.com/HaxeFlixel/flixel/pull/3587))
+- `FlxBitmapText` and `FlxText`: Add `OUTLINE_CARDINAL` ([#3593](https://github.com/HaxeFlixel/flixel/pull/3593))
+
+#### Changes and improvements:
+- `FlxG`: Add macro to determine `VERSION` ([#3531](https://github.com/HaxeFlixel/flixel/pull/3531))
+- `FlxText`: Avoid redundant image regen in setters ([#3532](https://github.com/HaxeFlixel/flixel/pull/3532))
+- Deprecate `FlxGraphicSource` in favor of `FlxGraphicAsset` ([#3469](https://github.com/HaxeFlixel/flixel/pull/3469))
+- `FlxStringUtil`: Optimize and improve `bitmapToCSV` and prevent errors when farbling ([#3542](https://github.com/HaxeFlixel/flixel/pull/3542))
+- `FlxBitmapFont`: Allow extra whitespace when parsing bmfont rows ([#3556](https://github.com/HaxeFlixel/flixel/pull/3556))
+- `FlxGamepadManager`: Check ps5 before ps4 ([#3603](https://github.com/HaxeFlixel/flixel/pull/3603))
+- `FlxCamera`: Remove inlines ([#3626](https://github.com/HaxeFlixel/flixel/pull/3626))
+- `FlxRandom` and `FlxArrayUtil`: Remove generic methods ([#3627](https://github.com/HaxeFlixel/flixel/pull/3627))
+- `FlxMath`: deprecate `fastSin` and `fastCos` ([#3628](https://github.com/HaxeFlixel/flixel/pull/3628))
+- `FlxSpriteUtil`: Call `putWeak` to the points in `drawPolygon` ([#3618](https://github.com/HaxeFlixel/flixel/pull/3618))
+- Deprecate `IFlxSprite` and `IFlxBasic`, remove refs ([#3598](https://github.com/HaxeFlixel/flixel/pull/3598))
+- `FlxAtlas`: Fix tilemaps ([#3630](https://github.com/HaxeFlixel/flixel/pull/3630))
+- `pixelPerfectRender`: Round screen position instead of flooring ([#3638](https://github.com/HaxeFlixel/flixel/pull/3638))
+
+#### Bugfixes:
+- `FlxSprite`: Fix null camera check on `clipToViewBounds` ([#3545](https://github.com/HaxeFlixel/flixel/pull/3545))
+- `FlxBitmapText`: Fix alignment when changing text width ([#3548](https://github.com/HaxeFlixel/flixel/pull/3548))
+- `FlxAtlas`: Fix `maxHeight` calculation in constructor ([#3551](https://github.com/HaxeFlixel/flixel/pull/3551))
+- `FlxMouse`: Fix visibility when starting the game unfocused ([#3553](https://github.com/HaxeFlixel/flixel/pull/3553))
+- `FlxAnimationController`: fix off-by-one and negative modulo bugs ([#3554](https://github.com/HaxeFlixel/flixel/pull/3554))
+- `FlxSprite`: Honor `clipRect` in `getPixelAt` ([#3590](https://github.com/HaxeFlixel/flixel/pull/3590))
+- `FlxBitmapText`: Make `fieldWidth` behave as documented ([#3601](https://github.com/HaxeFlixel/flixel/pull/3601))
+- `FlxG.cameras`: Honor `defaultDrawTarget` arg in insert method ([#3605](https://github.com/HaxeFlixel/flixel/pull/3605))
+- `FlxFrame`: replace implicit `to` cast with `@:to` function for Haxe 4.3 compatibility ([#3609](https://github.com/HaxeFlixel/flixel/pull/3609))
+
+### 6.1.2 (December 6, 2025)
+
+#### Changes and improvements:
+- `FlxG.Assets`: Check any sound extension before appending in `getSoundAddExt` ([#3511](https://github.com/HaxeFlixel/flixel/pull/3511))
+- `FlxCamera`: Honor color transformation in `drawTriangles` on `renderBlit` targets ([#3503](https://github.com/HaxeFlixel/flixel/pull/3503))
+- `FlxInputText`: Honor `selectionColor.alphaFloat` ([#3491](https://github.com/HaxeFlixel/flixel/pull/3491))
+- `FlxGraphicsShader`: Remove redundant body glsl ([#3512](https://github.com/HaxeFlixel/flixel/pull/3512))
+- `BaseScaleMode`: Add `setGlobalSize` to allow derived classes to modify `FlxG.width` / `height` ([#3516](https://github.com/HaxeFlixel/flixel/pull/3516))
+- `FlxG`: query maxTextureSize when window is created ([#3522](https://github.com/HaxeFlixel/flixel/pull/3522))
+- `FlxCallbackPoint`: Fix duplicate calls and call xy whenever x or y is set directly ([#3524](https://github.com/HaxeFlixel/flixel/pull/3524))
+
+#### Bugfixes:
+- `FlxDebugger`: Fixed watch window position ([#3506](https://github.com/HaxeFlixel/flixel/pull/3506))
+- `FlxCamera`: Fix filter memory leak ([#3459](https://github.com/HaxeFlixel/flixel/pull/3459))
+- `FlxTilemap`: Fix tilemap debug drawing on `renderBlit` targets([#3509](https://github.com/HaxeFlixel/flixel/issues/3509))
+- `FlxCamera`: Fix FLX_RENDER_TRIANGLE not rendering anything ([#3505](https://github.com/HaxeFlixel/flixel/pull/3505))
+
+### 6.1.1 (Oct 7, 2025)
+
+#### Changes and improvements:
+- `FlxSignal`: Remove antiquated Hashlink workaround ([#3458](https://github.com/HaxeFlixel/flixel/pull/3458))
+- `FlxCollision`: Make result optional in `calcRectExit` ([#3448](https://github.com/HaxeFlixel/flixel/pull/3448))
+- `FlxCamera`: Honor alpha in `flash()` ([#3455](https://github.com/HaxeFlixel/flixel/pull/3455))
+- `FlxGame`: Update inputs before dispatching `FlxG.signals.preUpdate` ([#3442](https://github.com/HaxeFlixel/flixel/pull/3442))
+- `FlxTouchManager`: add null-safety ([#3440](https://github.com/HaxeFlixel/flixel/pull/3440))
+- `FlxCamera`: Improve error message when drawing a destroyed `FlxGraphic` ([#3417](https://github.com/HaxeFlixel/flixel/pull/3417))
+- `FlxCamera`: Remove references to unused `blending` variable ([#3467](https://github.com/HaxeFlixel/flixel/pull/3467))
+- `FlxText`: Improve pixel font support ([#3453](https://github.com/HaxeFlixel/flixel/pull/3453))
+- `FlxDrawQuadsItem`: Call `endFill()` after drawing ([#3462](https://github.com/HaxeFlixel/flixel/pull/3462))
+- `FlxFrame`: Update `uv` in `clip` method ([#3476](https://github.com/HaxeFlixel/flixel/pull/3476))
+- `FlxSignal`: Allow `destroy` during `dispatch` ([#3436](https://github.com/HaxeFlixel/flixel/pull/3436))
+- `FlxG.gamepads`: Extend PS4 mapping to work with PS5 ([#3380](https://github.com/HaxeFlixel/flixel/pull/3380))
+
+#### Bugfixes:
+- `FlxCamera`: Honor `filter` changes when `active = false` ([#3481](https://github.com/HaxeFlixel/flixel/pull/3481))
+- `FlxUVRect`: Fix mixup of `right` and `top` fields ([#3475](https://github.com/HaxeFlixel/flixel/pull/3475))
+- `FlxCamera`: Fix `FlxStrip` disapearing on zoomed out cameras ([#3484](https://github.com/HaxeFlixel/flixel/pull/3484))
+- `FlxFrame`: Fix rotated frames not rendering on Hashlink ([#3454](https://github.com/HaxeFlixel/flixel/pull/3454))
+- `FlxSound`: Prevent paused sounds resuming on focus ([#3316](https://github.com/HaxeFlixel/flixel/pull/3316))
+- `FlxTilemap`: Fix debug draw when zoomed ([#3504](https://github.com/HaxeFlixel/flixel/pull/3504))
+
+## 6.1.0 (Apr 28, 2025)
 
 #### Changes and improvements:
 - Various improvements to debug tools ([#3328](https://github.com/HaxeFlixel/flixel/pull/3328)) ([#3374](https://github.com/HaxeFlixel/flixel/pull/3374)) ([#3375](https://github.com/HaxeFlixel/flixel/pull/3375))

@@ -241,7 +241,7 @@ class FlxAnimationController implements IFlxDestroyable
 		var framesToAdd:Array<Int> = frames;
 		var hasInvalidFrames = false;
 		var i = framesToAdd.length;
-		while (i-- >= 0)
+		while (i-- > 0)
 		{
 			final frame = framesToAdd[i];
 			if (frame >= numFrames)
@@ -819,7 +819,17 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (_sprite.frames != null && numFrames > 0)
 		{
-			Frame = Frame % numFrames;
+			if (Frame < 0)
+			{
+				FlxG.log.warn('frameIndex must be a positive number, got $Frame, using 0, instead');
+				Frame = 0;
+			}
+			else if (Frame >= numFrames)
+			{
+				FlxG.log.warn('frameIndex must be less than $numFrames, got $Frame, wrapping to ${Frame % numFrames}, instead');
+				Frame = Frame % numFrames;
+			}
+
 			_sprite.frame = _sprite.frames.frames[Frame];
 			frameIndex = Frame;
 			fireCallback();

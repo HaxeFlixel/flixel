@@ -1,9 +1,12 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
-import flixel.system.debug.log.LogStyle;
 import flixel.system.FlxAssets;
+import flixel.system.debug.log.FlxLogStyle;
+import flixel.system.debug.log.LogStyle;
 import haxe.PosInfos;
+
+typedef FlxLogStylesList = flixel.system.debug.log.FlxLogStylesList;
 
 /**
  * Accessed via `FlxG.log`.
@@ -14,27 +17,34 @@ class LogFrontEnd
 	 * Whether everything you trace() is being redirected into the log window.
 	 */
 	public var redirectTraces(default, set):Bool = false;
+	
+	/**
+	 * A list of the various log styles, useful for changing individual behaviors
+	 * 
+	 * @since 6.2.0
+	 */
+	public final styles:FlxLogStylesList;
 
 	var _standardTraceFunction:(Dynamic, ?PosInfos)->Void;
 	
 	public inline function add(data:Dynamic, ?pos:PosInfos):Void
 	{
-		advanced(data, LogStyle.NORMAL, false, pos);
+		advanced(data, styles.normal, false, pos);
 	}
 	
 	public inline function warn(data:Dynamic, ?pos:PosInfos):Void
 	{
-		advanced(data, LogStyle.WARNING, true, pos);
+		advanced(data, styles.warning, true, pos);
 	}
 	
 	public inline function error(data:Dynamic, ?pos:PosInfos):Void
 	{
-		advanced(data, LogStyle.ERROR, true, pos);
+		advanced(data, styles.error, true, pos);
 	}
 	
 	public inline function notice(data:Dynamic, ?pos:PosInfos):Void
 	{
-		advanced(data, LogStyle.NOTICE, false, pos);
+		advanced(data, styles.notice, false, pos);
 	}
 	
 	/**
@@ -97,6 +107,7 @@ class LogFrontEnd
 	function new()
 	{
 		_standardTraceFunction = haxe.Log.trace;
+		styles = new FlxLogStylesList();
 	}
 
 	inline function set_redirectTraces(redirect:Bool):Bool
@@ -123,6 +134,6 @@ class LogFrontEnd
 			}
 		}
 
-		advanced(paramArray, LogStyle.NORMAL);
+		advanced(paramArray, styles.normal);
 	}
 }

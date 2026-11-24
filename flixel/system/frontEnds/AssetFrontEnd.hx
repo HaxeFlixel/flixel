@@ -3,17 +3,18 @@ package flixel.system.frontEnds;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.debug.log.LogStyle;
+import flixel.util.FlxSignal;
+import haxe.Json;
 import haxe.io.Bytes;
 import haxe.io.Path;
-import haxe.Json;
 import haxe.xml.Access;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
-import openfl.utils.Assets;
-import openfl.utils.AssetType;
-import openfl.utils.AssetCache;
-import openfl.utils.Future;
 import openfl.text.Font;
+import openfl.utils.AssetCache;
+import openfl.utils.AssetType;
+import openfl.utils.Assets;
+import openfl.utils.Future;
 
 using StringTools;
 
@@ -45,6 +46,11 @@ using StringTools;
  */
 class AssetFrontEnd
 {
+	/**
+	 * Dispatched whenever the availability or the contents of assets change
+	 */
+	public final onChange = new FlxSignal();
+	
 	#if FLX_CUSTOM_ASSETS_DIRECTORY
 	/**
 	 * The target directory
@@ -63,6 +69,7 @@ class AssetFrontEnd
 		// Verify valid directory
 		if (sys.FileSystem.exists(directory) == false)
 			throw 'Error finding custom asset directory:"$directory" from given path: $rawPath';
+		
 		// remove final "/assets" since the id typically contains it
 		final split = directory.split("/");
 		split.pop();
@@ -82,7 +89,10 @@ class AssetFrontEnd
 		return id.startsWith("flixel/") || id.contains(':');
 	}
 	#else
-	public function new () {}
+	public function new ()
+	{
+		lime.utils.Assets.onChange.add(()->onChange.dispatch());
+	}
 	#end
 	
 	#if (FLX_DEFAULT_SOUND_EXT == "1" || FLX_NO_DEFAULT_SOUND_EXT)
@@ -173,12 +183,10 @@ class AssetFrontEnd
 	 */
 	public function getAsset(id:String, type:FlxAssetType, useCache = true, ?logStyle:LogStyle):Null<Any>
 	{
-		inline function log(message:String)
-		{
-			if (logStyle == null)
-				logStyle = LogStyle.ERROR;
-			FlxG.log.advanced(message, logStyle);
-		}
+		if (logStyle == null)
+			logStyle = FlxG.log.styles.error;
+		
+		final log = FlxG.log.advanced.bind(_, logStyle);
 		
 		if (exists(id, type))
 		{
@@ -248,6 +256,7 @@ class AssetFrontEnd
 		#else
 		if (useOpenflAssets(id))
 			return Assets.exists(id, type.toOpenFlType());
+		
 		// Can't verify contents match expected type without
 		return sys.FileSystem.exists(getPath(id));
 		#end
@@ -341,7 +350,7 @@ class AssetFrontEnd
 	 * 
 	 * @param   id        The ID or asset path for the sound
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
-	 * @return  A new `Sound` object Note: Dos not return a `FlxSound`
+	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
 	 */
 	public inline function getSoundUnsafe(id:String, useCache = true):Sound
 	{
@@ -356,7 +365,7 @@ class AssetFrontEnd
 	 * @param   id        The ID or asset path for the sound
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
-	 * @return  A new `Sound` object Note: Dos not return a `FlxSound`
+	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
 	 */
 	public inline function getSound(id:String, useCache = true, ?logStyle:LogStyle):Sound
 	{
@@ -369,7 +378,7 @@ class AssetFrontEnd
 	 * @param   id        The ID or asset path for the sound
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
-	 * @return  A new `Sound` object Note: Dos not return a `FlxSound`
+	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
 	 */
 	public inline function getSoundAddExt(id:String, useCache = true, ?logStyle:LogStyle):Sound
 	{
@@ -385,14 +394,124 @@ class AssetFrontEnd
 		#end
 	}
 	
-	inline function addSoundExt(id:String)
+	public inline function addSoundExt(id:String)
 	{
-		if (!id.endsWith(".mp3") && !id.endsWith(".ogg") && !id.endsWith(".wav"))
+		final needsExt = Path.extension(id).length == 0;
+		if (needsExt)
 			return id + defaultSoundExtension;
 			
 		return id;
 	}
+
+	/**
+	 * Gets an instance of a streamed sound. Unlike its "safe" counterpart, there is no log on missing assets.
+	 * Can be set to a custom function to avoid the existing asset system.
+	 *
+	 * Streamed sounds load and unload chunks of audio data during playback, keeping memory usage low.
+	 * The usage of streamed sounds is only recommended for larger audio tracks, such as music.
+	 * 
+	 * **Note**: Due to a backend limitation, streamed sounds currently only work on native targets and OGG/Vorbis files.
+	 * Trying to stream an unsupported file format will fall back to regular sound loading behavior.
+	 * 
+	 * @param   id        The ID or asset path for the sound
+	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
+	 * @since   6.2.0
+	 */
+	public dynamic function streamSoundUnsafe(id:String):Sound
+	{
+		return Assets.getMusic(addSoundExtIf(id));
+	}
+
+	/**
+	 * Gets an instance of a streamed sound, logs when the asset is not found.
+	 * 
+	 * Streamed sounds load and unload chunks of audio data during playback, keeping memory usage low.
+	 * The usage of streamed sounds is only recommended for larger audio tracks, such as music.
+	 * 
+	 * **Note**: Due to a backend limitation, streamed sounds currently only work on native targets and OGG/Vorbis files.
+	 * Trying to stream an unsupported file format will fall back to regular sound loading behavior.
+	 * 
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
+	 * 
+	 * @param   id        The ID or asset path for the sound
+	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
+	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
+	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
+	 * @since   6.2.0
+	 */
+	public function streamSound(id:String, ?logStyle:LogStyle):Sound
+	{
+		if (logStyle == null)
+			logStyle = FlxG.log.styles.error;
+		
+		final log = FlxG.log.advanced.bind(_, logStyle);
+		
+		if (exists(id, SOUND))
+		{
+			if (!canStreamSound(id))
+			{
+				log('Unable to stream SOUND asset with ID "$id". Expected a .OGG/Vorbis file');
+				return null;
+			}
+			
+			if (isLocal(id, SOUND))
+				return streamSoundUnsafe(id);
+			
+			log('SOUND asset "$id" exists, but only asynchronously');
+			return null;
+		}
+		
+		log('Could not find a SOUND asset with ID \'$id\'.');
+		return null;
+	}
+
+	/**
+	 * Gets an instance of a streamed sound, logs when the asset is not found.
+	 * 
+	 * Streamed sounds load and unload chunks of audio data during playback, keeping memory usage low.
+	 * The usage of streamed sounds is only recommended for larger audio tracks, such as music.
+	 * 
+	 * **Note**: Due to a backend limitation, streamed sounds currently only work on native targets and OGG/Vorbis files.
+	 * Trying to stream an unsupported file format will fall back to regular sound loading behavior.
+	 * 
+	 * @param   id        The ID or asset path for the sound
+	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
+	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
+	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
+	 * @since   6.2.0
+	 */
+	public function streamSoundAddExt(id:String, ?logStyle:LogStyle):Sound
+	{
+		return streamSound(addSoundExt(id));
+	}
 	
+	/**
+	 * Checks whether the sound asset with the specified ID can be streamed.
+	 * 
+	 * **Note**: Due to a backend limitation, streamed sounds currently only work on native targets and OGG/Vorbis files.
+	 * 
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
+	 * 
+	 * @param   file   The ID or asset path for the asset
+	 * @return  Returns whether the sound can be streamed or not.
+	 * @since   6.2.0
+	 */
+	public dynamic function canStreamSound(id:String):Bool
+	{
+		#if lime_vorbis
+		// Check if file is really OGG/Vorbis
+		final vorbis = lime.media.vorbis.VorbisFile.fromFile(Assets.getPath(addSoundExtIf(id)));
+		if (vorbis != null)
+		{
+			vorbis.clear();
+
+			return true;
+		}
+		#end
+
+		return false;
+	}
+
 	/**
 	 * Gets the contents of a text-based asset. Unlike its "safe" counterpart, there is no log
 	 * on missing assets

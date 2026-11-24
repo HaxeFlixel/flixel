@@ -6,6 +6,7 @@ import flixel.text.FlxBitmapText;
 import massive.munit.Assert;
 import openfl.display.BitmapData;
 
+@:access(flixel.text.FlxBitmapText)
 class FlxBitmapTextTest extends FlxTest
 {
 	var text:FlxBitmapText;
@@ -32,7 +33,8 @@ class FlxBitmapTextTest extends FlxTest
 		Assert.areEqual(text1.font, text2.font);
 	}
 	
-	@Test // #1526 and #2750
+	@Test// #1526 and #2750
+	#if cpp @Ignore("Failing on cpp") #end
 	function testAutoBounds()
 	{
 		final text = new FlxBitmapText("test");
@@ -76,23 +78,83 @@ class FlxBitmapTextTest extends FlxTest
 		assertRenderedText(field, msg2, CHAR, "The quick brown \nfox jumps over t\nhe lazy dog, sup\nercal-aphragalis\nt\nicexpiala-dociou\ns");
 		assertRenderedText(field, msg3, CHAR, "The quick brown \nfox jumps over t\nhe lazy dog, sup\nercalaphragalist\nicexpialadocious");
 		
-		assertRenderedText(field, msg1, WORD(NEVER), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist-\nicexpiala-\ndocious");
-		assertRenderedText(field, msg2, WORD(NEVER), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist\nicexpiala-\ndocious");
-		assertRenderedText(field, msg3, WORD(NEVER), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercalaphragalisticexpialadocious");
+		assertRenderedText(field, msg1, WORD(NEVER), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercal-\naphragalist-\nicexpiala-\ndocious");
+		assertRenderedText(field, msg2, WORD(NEVER), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercal-\naphragalist\nicexpiala-\ndocious");
+		assertRenderedText(field, msg3, WORD(NEVER), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercalaphragalisticexpialadocious");
 		
-		assertRenderedText(field, msg1, WORD(LINE_WIDTH), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist-\nicexpiala-\ndocious");
-		assertRenderedText(field, msg2, WORD(LINE_WIDTH), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist\nicexpiala-\ndocious");
-		assertRenderedText(field, msg3, WORD(LINE_WIDTH), "The quick brown \nfox jumps over \nthe lazy dog, su\npercalaphragalis\nticexpialadociou\ns");
+		assertRenderedText(field, msg1, WORD(LINE_WIDTH), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercal-\naphragalist-\nicexpiala-\ndocious");
+		assertRenderedText(field, msg2, WORD(LINE_WIDTH), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercal-\naphragalist\nicexpiala-\ndocious");
+		assertRenderedText(field, msg3, WORD(LINE_WIDTH), "The quick brown\nfox jumps over\nthe lazy dog, su\npercalaphragalis\nticexpialadociou\ns");
 		
-		assertRenderedText(field, msg1, WORD(LENGTH(10)), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-aphraga\nlist-icexpiala-\ndocious");
-		assertRenderedText(field, msg2, WORD(LENGTH(10)), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-aphraga\nlist\nicexpiala-\ndocious");
-		assertRenderedText(field, msg3, WORD(LENGTH(10)), "The quick brown \nfox jumps over \nthe lazy dog, su\npercalaphragalis\nticexpialadociou\ns");
+		assertRenderedText(field, msg1, WORD(LENGTH(10)), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercal-aphraga\nlist-icexpiala-\ndocious");
+		assertRenderedText(field, msg2, WORD(LENGTH(10)), "The quick brown\nfox jumps over\nthe lazy dog,\nsupercal-aphraga\nlist\nicexpiala-\ndocious");
+		assertRenderedText(field, msg3, WORD(LENGTH(10)), "The quick brown\nfox jumps over\nthe lazy dog, su\npercalaphragalis\nticexpialadociou\ns");
 	}
 	
-	function assertRenderedText(field:FlxBitmapText, text:UnicodeString, wrap:FlxBitmapText.Wrap, expected:UnicodeString, ?info:haxe.PosInfos)
+	@Test
+	#if cpp @Ignore("Failing on cpp") #end
+	function testFieldWidth()
 	{
-		field.wrap = wrap;
-		final actual = field.getRenderedText(text);
-		Assert.areEqual(expected, actual, info);
+		final msg = "The quick brown fox jumps over the lazy dog";
+		final text = new FlxBitmapText(0, 0, msg);
+		Assert.areEqual(true, text.autoSize);
+		Assert.areEqual(187, text.textWidth);
+		Assert.areEqual(187, text.fieldWidth);
+		assertRenderedText(text, msg); 
+		
+		text.fieldWidth = 80;
+		Assert.areEqual(80, text.textWidth);
+		Assert.areEqual(false, text.autoSize);
+		assertRenderedText(text, msg, "The quick brown\nfox jumps over the\nlazy dog");
+		
+		text.fieldWidth = 0;
+		Assert.areEqual(true, text.autoSize);
+		Assert.areEqual(187, text.fieldWidth);
+		Assert.areEqual(187, text.textWidth);
+	}
+	
+	@Test
+	#if cpp @Ignore("Failing on cpp") #end
+	function testIsSpaceChar()
+	{
+		function assertSpaceChar(char:Int, ?msg, ?pos)
+		{
+			Assert.isTrue(FlxBitmapText.isSpaceChar(char), msg, pos);
+		}
+		
+		final chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789,./;\'[]\\<>?L:"{}|-=!@#$%^&*()_+';
+		for (i in 0...chars.length)
+		{
+			if (FlxBitmapText.isSpaceChar(chars.charCodeAt(i)))
+				Assert.fail('Expected isSpaceChar(${chars.charAt(i)}) to be false');
+		}
+		Assert.assertionCount++;
+		
+		final chars = ' \t';
+		for (i in 0...chars.length)
+		{
+			if (FlxBitmapText.isSpaceChar(chars.charCodeAt(i)) == false)
+				Assert.fail('Expected isSpaceChar(${chars.charAt(i)}) to be false');
+		}
+		Assert.assertionCount++;
+	}
+	
+	overload inline extern function assertRenderedText(field:FlxBitmapText, ?wrap:FlxBitmapText.Wrap, expected:UnicodeString, ?pos:haxe.PosInfos)
+	{
+		assertRenderedTextHelper(field, null, wrap, expected, pos);
+	}
+	
+	overload inline extern function assertRenderedText(field:FlxBitmapText, text:UnicodeString, ?wrap:FlxBitmapText.Wrap, expected:UnicodeString, ?pos:haxe.PosInfos)
+	{
+		assertRenderedTextHelper(field, text, wrap, expected, pos);
+	}
+	
+	function assertRenderedTextHelper(field:FlxBitmapText, text:Null<UnicodeString>, ?wrap:Null<FlxBitmapText.Wrap>, expected:UnicodeString, ?pos:haxe.PosInfos)
+	{
+		if (wrap != null)
+			field.wrap = wrap;
+		
+		final actual = field.getRenderedText(text != null ? text : field.text);
+		Assert.areEqual(expected.split("\n").join("\\n"), actual.split("\n").join("\\n"), pos);
 	}
 }

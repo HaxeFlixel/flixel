@@ -9,6 +9,7 @@ using StringTools;
 /**
  * Heavily inspired by HaxePunk's HaxeLibInfo.hx
  */
+@:deprecated("FlxGitSHA is deprecated, use FlxVersionMacro or FlxAutoVersion, instead")
 class FlxGitSHA
 {
 	public static function buildGitSHA(library:String):Array<Field>

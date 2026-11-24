@@ -221,6 +221,7 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 interface IFlxPooled extends IFlxDestroyable
 {
 	function put():Void;
+	function putWeak():Void;
 }
 
 interface IFlxPool<T:IFlxDestroyable>

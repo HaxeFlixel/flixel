@@ -106,6 +106,8 @@ class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 		pool.put(this);
 	}
 	
+	inline public function putWeak() {}
+	
 	public function getCount():Int
 	{
 		return switch data

@@ -29,6 +29,7 @@ import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.Stage;
 import openfl.display.StageDisplayState;
+import openfl.events.Event;
 import openfl.net.URLRequest;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
@@ -102,7 +103,9 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(6, 1, 0);
+	#if !macro
+	public static final VERSION:FlxVersion = new flixel.system.FlxAutoVersion<"flixel">();
+	#end
 
 	/**
 	 * Internal tracker for game object.
@@ -627,6 +630,7 @@ class FlxG
 	 * Called by `FlxGame` to set up `FlxG` during `FlxGame`'s constructor.
 	 */
 	@:allow(flixel.FlxGame.new)
+	@:haxe.warning("-WDeprecated")
 	static function init(game:FlxGame, width:Int, height:Int):Void
 	{
 		if (width < 0)
@@ -639,6 +643,10 @@ class FlxG
 		FlxG.height = height;
 
 		initRenderMethod();
+		#if FLX_OPENGL_AVAILABLE
+		// Query once when window is created and cache for later
+		bitmap.get_maxTextureSize();
+		#end
 
 		FlxG.initialWidth = width;
 		FlxG.initialHeight = height;
@@ -680,6 +688,8 @@ class FlxG
 		#if FLX_SOUND_SYSTEM
 		sound = new SoundFrontEnd();
 		#end
+		
+		assets.onChange.add(()->bitmap.onAssetsReload(new Event(Event.CHANGE)));
 	}
 
 	static function initRenderMethod():Void
@@ -750,7 +760,10 @@ class FlxG
 	static function set_scaleMode(value:BaseScaleMode):BaseScaleMode
 	{
 		scaleMode = value;
-		game.onResize(null);
+		
+		if (game != null)
+			game.onResize(null);
+		
 		return value;
 	}
 
@@ -798,17 +811,17 @@ class FlxG
 		if (value > updateFramerate)
 			log.warn("FlxG.drawFramerate: the update framerate shouldn't be smaller than the draw framerate," + " since it can stop your game from updating.");
 
-		drawFramerate = Std.int(Math.abs(value));
+		value = Std.int(Math.abs(value));
 
 		if (game.stage != null)
-			game.stage.frameRate = drawFramerate;
+			game.stage.frameRate = value;
 
-		game._maxAccumulation = 2000 / drawFramerate - 1;
+		game._maxAccumulation = 2000 / value - 1;
 
 		if (game._maxAccumulation < game._stepMS)
 			game._maxAccumulation = game._stepMS;
 
-		return value;
+		return drawFramerate = value;
 	}
 
 	static function get_fullscreen():Bool

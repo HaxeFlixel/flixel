@@ -154,7 +154,7 @@ class FlxSoundTray extends Sprite
 	public function showAnim(volume:Float, ?sound:FlxSoundAsset, duration = 1.0, label = "VOLUME")
 	{
 		if (sound != null)
-			FlxG.sound.play(FlxG.assets.getSoundAddExt(sound));
+			FlxG.sound.play(sound.resolveSound(true, true));
 		
 		_timer = duration;
 		y = 0;

@@ -162,16 +162,8 @@ class FlxObject extends FlxBasic implements IFlxCollider
 	 */
 	public static function separate(object1:FlxObject, object2:FlxObject):Bool
 	{
-		var tmp1 = object1.last.copyTo();
-		var tmp2 = object2.last.copyTo();
 		final separatedX = separateX(object1, object2);
-		object1.last.x = object1.x;
-		object2.last.x = object2.x;
 		final separatedY = separateY(object1, object2);
-		object1.last.copyFrom(tmp1);
-		object2.last.copyFrom(tmp2);
-		tmp1.put();
-		tmp2.put();
 		return separatedX || separatedY;
 		
 		/*
@@ -1079,11 +1071,72 @@ class FlxObject extends FlxBasic implements IFlxCollider
 
 		result.set(x, y);
 		if (pixelPerfectPosition)
-			result.floor();
+			result.round();
 
 		return result.subtract(camera.scroll.x * scrollFactor.x, camera.scroll.y * scrollFactor.y);
 	}
 
+	/**
+	 * Returns the view position of this object
+	 *
+	 * @param   result  Optional arg for the returning poin
+	 * @param   camera  The desired "view" coordinate space. If `null`, `getDefaultCamera()` is used
+	 * @return  The view position of this objects
+	 * @since 6.2.0
+	 */
+	public function getViewPosition(?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	{
+		if (result == null)
+			result = FlxPoint.get();
+		
+		if (camera == null)
+			camera = getDefaultCamera();
+		
+		return result.set(getViewXHelper(camera), getViewYHelper(camera));
+	}
+	
+	/**
+	 * Returns the view position of this object
+	 *
+	 * @param   camera  The desired "view" coordinate space. If `null`, `getDefaultCamera()` is used
+	 * @return  The view position of this object
+	 * @since 6.2.0
+	 */
+	public function getViewX(?camera:FlxCamera)
+	{
+		if (camera == null)
+			camera = getDefaultCamera();
+		
+		return getViewXHelper(camera);
+	}
+	
+	inline function getViewXHelper(camera:FlxCamera)
+	{
+		final x = pixelPerfectPosition ? Math.round(this.x) : this.x;
+		return (x - (camera.scroll.x * scrollFactor.x) - camera.viewMarginX) * camera.zoom;
+	}
+	
+	/**
+	 * Returns the view position of this object
+	 *
+	 * @param   camera  The desired "view" coordinate space. If `null`, `getDefaultCamera()` is used
+	 * @return  The view position of this object
+	 * @since 6.2.0
+	 */
+	public function getViewY(?camera:FlxCamera)
+	{
+		if (camera == null)
+			camera = getDefaultCamera();
+		
+		return getViewYHelper(camera);
+	}
+	
+	inline function getViewYHelper(camera:FlxCamera)
+	{
+		final y = pixelPerfectPosition ? Math.round(this.y) : this.y;
+		return (y - (camera.scroll.y * scrollFactor.y) - camera.viewMarginY) * camera.zoom;
+	}
+	
 	/**
 	 * Returns the world position of this object.
 	 * 
@@ -1132,7 +1185,7 @@ class FlxObject extends FlxBasic implements IFlxCollider
 		wasTouching = FlxDirectionFlags.NONE;
 		setPosition(x, y);
 		last.set(this.x, this.y);
-		velocity.set();
+		velocity.zero();
 		revive();
 	}
 
@@ -1276,10 +1329,21 @@ class FlxObject extends FlxBasic implements IFlxCollider
 		if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			return;
 
-		var rect = getBoundingBox(camera);
-		var gfx:Graphics = beginDrawDebug(camera);
-		drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
-		endDrawDebug(camera);
+		final rect = getBoundingBox(camera);
+		if (FlxG.renderTile)
+		{
+			final view = camera.getViewMarginRect();
+			view.pad(2);
+			rect.clipTo(view);
+			view.put();
+		}
+		
+		if (rect.width > 0 && rect.height > 0)
+		{
+			final gfx = beginDrawDebug(camera);
+			drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
+			endDrawDebug(camera);
+		}
 	}
 
 	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:FlxDirectionFlags, partial:Bool)
@@ -1307,7 +1371,7 @@ class FlxObject extends FlxBasic implements IFlxCollider
 	function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
 	{
 		// fill static graphics object with square shape
-		gfx.lineStyle(1, color, 0.75);
+		gfx.lineStyle(1, color, 0.75, false, null, null, MITER, 255);
 		gfx.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0);
 	}
 
@@ -1341,7 +1405,7 @@ class FlxObject extends FlxBasic implements IFlxCollider
 
 		if (isPixelPerfectRender(camera))
 		{
-			_rect.floor();
+			_rect.round();
 		}
 
 		return _rect;

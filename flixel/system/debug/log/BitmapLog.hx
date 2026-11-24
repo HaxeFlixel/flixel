@@ -165,7 +165,7 @@ class BitmapLog extends Window
 	inline function resetSettings()
 	{
 		zoom = 1;
-		canvasOffset.set();
+		canvasOffset.zero();
 	}
 	
 	function indexOf(bitmap:BitmapData)

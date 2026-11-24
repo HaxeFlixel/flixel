@@ -583,6 +583,8 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		// Call set_visible with the value visible has been initialized with
 		// (unless set in create() of the initial state)
 		set_visible(visible);
+
+		_visibleWhenFocusLost = visible;
 	}
 
 	/**

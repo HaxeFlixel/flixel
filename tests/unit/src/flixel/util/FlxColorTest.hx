@@ -87,6 +87,37 @@ class FlxColorTest extends FlxTest
 		asFloat(function(c) c.blue += 1);
 		asFloat(function(c) c.alpha += 1);
 	}
+	
+	@Test
+	function testDistance()
+	{
+		Assert.areEqual(8         , FlxColor.WHITE.getDistance(0xFFfffff7));
+		Assert.areEqual(8+16      , FlxColor.WHITE.getDistance(0xFFffeff7));
+		Assert.areEqual(8+16+32   , FlxColor.WHITE.getDistance(0xFFdfeff7));
+		Assert.areEqual(8+16+32+64, FlxColor.WHITE.getDistance(0xBFdfeff7));
+		
+		Assert.areEqual(8         , FlxColor.fromInt(0xFFfffff7).getDistance(FlxColor.WHITE));
+		Assert.areEqual(8+16      , FlxColor.fromInt(0xFFffeff7).getDistance(FlxColor.WHITE));
+		Assert.areEqual(8+16+32   , FlxColor.fromInt(0xFFdfeff7).getDistance(FlxColor.WHITE));
+		Assert.areEqual(8+16+32+64, FlxColor.fromInt(0xBFdfeff7).getDistance(FlxColor.WHITE));
+	}
+	
+	@Test
+	function testNearest()
+	{
+		inline function color(col:UInt):FlxColor return col;
+		
+		final colors = [FlxColor.WHITE, FlxColor.RED, FlxColor.GREEN, FlxColor.BLUE, FlxColor.BLACK];
+		
+		//                                               R     G     B     A
+		Assert.areEqual(FlxColor.WHITE, FlxColor.fromRGB(0xf8, 0xf8, 0xf8, 0xF8).nearest(colors));
+		Assert.areEqual(FlxColor.GREEN, FlxColor.fromRGB(0x00, 0xf8, 0x00, 0xF8).nearest(colors)); // note: GREEN is 0xFF008000, LIME is 0xFF00ff00
+		Assert.areEqual(FlxColor.GREEN, FlxColor.fromRGB(0x01, 0x40, 0x01, 0xF8).nearest(colors));
+		Assert.areEqual(FlxColor.RED  , FlxColor.fromRGB(0x81, 0x00, 0x00, 0xF8).nearest(colors));
+		Assert.areEqual(FlxColor.BLACK, FlxColor.fromRGB(0x79, 0x00, 0x00, 0xF8).nearest(colors));
+		Assert.areEqual(FlxColor.BLACK, FlxColor.fromRGB(0x01, 0x00, 0x00, 0xF8).nearest(colors));
+	}
+	
 
 	function asFloat(f:FlxColor->Void)
 	{

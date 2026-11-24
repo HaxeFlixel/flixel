@@ -295,7 +295,88 @@ class FlxFrame implements IFlxDestroyable
 
 		return rotateAndFlip(mat, rotation, doFlipX, doFlipY);
 	}
-
+	
+	/**
+	 * Finds the pixel at the position of this frame
+	 * 
+	 * @param   framePos  The position in this frame
+	 * @return  The color of the pixel on this frame
+	 * @since 6.2.0
+	 */
+	overload public inline extern function getPixelAt(framePos:FlxPoint):Null<FlxColor>
+	{
+		final result = getPixelAt(framePos.x, framePos.y);
+		framePos.putWeak();
+		return result;
+	}
+	
+	/**
+	 * Finds the pixel color at the position of this frame
+	 * 
+	 * @param   frameX  The X position in this frame
+	 * @param   frameY  The Y position in this frame
+	 * @return  The color of the pixel on this frame
+	 * @since 6.2.0
+	 */
+	overload public inline extern function getPixelAt(frameX:Float, frameY:Float):Null<FlxColor>
+	{
+		final sourceX = Std.int(toSourceXHelper(frameX, frameY));
+		final sourceY = Std.int(toSourceYHelper(frameX, frameY));
+		return parent.bitmap.getPixel32(sourceX, sourceY);
+	}
+	
+	/**
+	 * Takes the given frame position and returns the equivalent position on the source image
+	 * 
+	 * @param   framePos  The position in this frame
+	 * @param   result    Optional arg for the returning point
+	 * @since 6.2.0
+	 */
+	public function toSourcePosition(framePos:FlxPoint, ?result:FlxPoint)
+	{
+		if (result == null)
+			result = FlxPoint.get();
+		
+		if (type == FlxFrameType.EMPTY)
+			return result.set(0, 0);
+		
+		final sourceX = Std.int(toSourceXHelper(framePos.x, framePos.y));
+		final sourceY = Std.int(toSourceYHelper(framePos.x, framePos.y));
+		framePos.putWeak();
+		return result.set(sourceX, sourceY);
+	}
+	
+	
+	function toSourceXHelper(frameX:Float, frameY:Float):Float
+	{
+		return frame.x + switch angle
+		{
+			// frame.flipX seems to have no effect on tile or blit targets 
+			// TODO: investigate
+			// case ANGLE_0: flipX ? frame.width - frameX : frameX;
+			// case ANGLE_90: flipX ? frameY : frame.height - frameY;
+			// case ANGLE_270: flipX ? frameY : frame.height - frameY;
+			case ANGLE_0: frameX;
+			case ANGLE_90: frameY;
+			case ANGLE_270: frame.height - frameY;
+		}
+	}
+	
+	function toSourceYHelper(frameX:Float, frameY:Float):Float
+	{
+		return frame.y + switch angle
+		{
+			// frame.flipX seems to have no effect on tile or blit targets 
+			// TODO: investigate
+			// case ANGLE_0: flipY ? frame.height - frameY : frameY;
+			// case ANGLE_90: flipY ? frameX : frame.width - frameX;
+			// case ANGLE_270: flipY ? frame.width - frameX : frameX;
+			case ANGLE_0: frameY;
+			case ANGLE_90: frame.width - frameX;
+			case ANGLE_270: frameX;
+		}
+	}
+	
 	/**
 	 * Draws frame on specified `BitmapData` object.
 	 *
@@ -663,6 +744,8 @@ class FlxFrame implements IFlxDestroyable
 			cacheFrameMatrix();
 		}
 		
+		updateUV();
+		
 		frameRect.put();
 		return this;
 	}
@@ -717,15 +800,21 @@ class FlxFrame implements IFlxDestroyable
 
 	function set_frame(value:FlxRect):FlxRect
 	{
-		if (value != null)
-		{
-			if (uv == null)
-				uv = FlxUVRect.get();
+		frame = value;
+		updateUV();
+		
+		return value;
+	}
+	
+	function updateUV()
+	{
+		if (frame == null)
+			return;
+		
+		if (uv == null)
+			uv = FlxUVRect.get();
 
-			uv.set(value.x / parent.width, value.y / parent.height, value.right / parent.width, value.bottom / parent.height);
-		}
-
-		return frame = value;
+		uv.setFromFrameRect(frame, parent);
 	}
 }
 
@@ -753,21 +842,28 @@ enum abstract FlxFrameAngle(Int) from Int to Int
  * `bottom`. This is for optimization reasons, to reduce arithmetic when drawing vertices
  */
 @:forward(put)
-abstract FlxUVRect(FlxRect) from FlxRect to flixel.util.FlxPool.IFlxPooled
+abstract FlxUVRect(FlxRect) from FlxRect // to flixel.util.FlxPool.IFlxPooled
 {
+	// https://github.com/HaxeFlixel/flixel/pull/3609
+	// Needed to work with hscript-improved
+	@:to inline function toIFlxPooled():flixel.util.FlxPool.IFlxPooled
+	{
+		return this;
+	}
+
 	public var left(get, set):Float;
 	inline function get_left():Float { return this.x; }
 	inline function set_left(value):Float { return this.x = value; }
 	
 	/** Top */
 	public var right(get, set):Float;
-	inline function get_right():Float { return this.y; }
-	inline function set_right(value):Float { return this.y = value; }
+	inline function get_right():Float { return this.width; }
+	inline function set_right(value):Float { return this.width = value; }
 	
 	/** Right */
 	public var top(get, set):Float;
-	inline function get_top():Float { return this.width; }
-	inline function set_top(value):Float { return this.width = value; }
+	inline function get_top():Float { return this.y; }
+	inline function set_top(value):Float { return this.y = value; }
 	
 	/** Bottom */
 	public var bottom(get, set):Float;
@@ -779,6 +875,11 @@ abstract FlxUVRect(FlxRect) from FlxRect to flixel.util.FlxPool.IFlxPooled
 		this.set(l, t, r, b);
 	}
 	
+	public inline function setFromFrameRect(frame:FlxRect, parent:FlxGraphic)
+	{
+		this.set(frame.x / parent.width, frame.y / parent.height, frame.right / parent.width, frame.bottom / parent.height);
+	}
+	
 	public inline function copyTo(uv:FlxUVRect)
 	{
 		uv.set(left, top, right, bottom);
@@ -787,6 +888,16 @@ abstract FlxUVRect(FlxRect) from FlxRect to flixel.util.FlxPool.IFlxPooled
 	public inline function copyFrom(uv:FlxUVRect)
 	{
 		set(uv.left, uv.top, uv.right, uv.bottom);
+	}
+	
+	public inline function toString()
+	{
+		return return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("l", left),
+			LabelValuePair.weak("t", top),
+			LabelValuePair.weak("r", right),
+			LabelValuePair.weak("b", bottom)
+		]);
 	}
 	
 	public static function get(l = 0.0, t = 0.0, r = 0.0, b = 0.0)
@@ -842,7 +953,7 @@ abstract MatrixVector(Vector<Float>)
 		ty = 0;
 	}
 	
-	public inline function set(a = 1.0, b = 0.0, c = 0.0, d = 1.0, tx = 0.0, ty = 0.0)
+	public #if !hl inline #end function set(a = 1.0, b = 0.0, c = 0.0, d = 1.0, tx = 0.0, ty = 0.0)
 	{
 		set_a(a);
 		set_b(b);

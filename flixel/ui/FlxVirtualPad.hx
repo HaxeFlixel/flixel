@@ -1,11 +1,11 @@
 package flixel.ui;
 
-import flixel.ui.FlxAnalog;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.group.FlxSpriteContainer;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
+import flixel.ui.FlxAnalog;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
@@ -78,7 +78,7 @@ class FlxVirtualPad extends FlxSpriteContainer
 	public function new(dPadMode = FlxDPadMode.FULL, actionMode = FlxActionMode.A_B_C)
 	{
 		super();
-		scrollFactor.set();
+		scrollFactor.zero();
 		
 		add(actions = new FlxVirtualActionButtons(0, 0, actionMode));
 		actions.x = FlxG.width - actions.width;
@@ -120,7 +120,7 @@ class FlxVirtualPadButtons extends FlxTypedSpriteContainer<FlxVirtualPadButton>
 	public function new (x = 0.0, y = 0.0)
 	{
 		super(x, y);
-		scrollFactor.set();
+		scrollFactor.zero();
 		
 		#if FLX_DEBUG
 		this.ignoreDrawDebug = true;

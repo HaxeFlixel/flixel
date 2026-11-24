@@ -1,10 +1,14 @@
 package flixel.graphics.frames;
 
 import flixel.FlxSprite;
+import flixel.graphics.frames.FlxFrame;
+import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.util.FlxColor;
 import haxe.PosInfos;
 import massive.munit.Assert;
 import openfl.display.BitmapData;
+import openfl.geom.Rectangle;
 
 @:access(flixel.graphics.frames.FlxFrame.new)
 class FlxFrameTest extends FlxTest
@@ -96,7 +100,144 @@ class FlxFrameTest extends FlxTest
 		assertOverlaps(99, 99);
 		Assert.isTrue(true);
 	}
-
+	
+	@Test
+	function testGetPixelAt()
+	{
+		final p = 3;
+		final bitmap = new BitmapData(p * 2, p * 2, false);
+		bitmap.fillRect(new Rectangle(0, 0, p, p), FlxColor.RED);
+		bitmap.fillRect(new Rectangle(p, 0, p, p), FlxColor.GREEN);
+		bitmap.fillRect(new Rectangle(0, p, p, p), FlxColor.BLUE);
+		bitmap.fillRect(new Rectangle(p, p, p, p), FlxColor.WHITE);
+		
+		final frame = new FlxSprite(0, 0, bitmap).frame;
+		
+		function getColorName(color)
+		{
+			return switch color
+			{
+				case FlxColor.RED: "RED";
+				case FlxColor.GREEN: "GREEN";
+				case FlxColor.BLUE: "BLUE";
+				case FlxColor.WHITE: "WHITE";
+				default: color.toHexString();
+			}
+		}
+		
+		function assertPixelAt(x:Int, y:Int, expected:FlxColor, ?pos:PosInfos)
+		{
+			final actual = frame.getPixelAt((x + 0.5) * p, (y + 0.5) * p);
+			final msg = 'Pixel($x,$y) was [${getColorName(actual)}], expected [${getColorName(expected)}]';
+			Assert.areEqual(expected, actual, msg, pos);
+			
+			// test overloads
+			final actual = frame.getPixelAt(FlxPoint.weak((x + 0.5) * p, (y + 0.5) * p));
+			final msg = 'Pixel(P($x,$y)) was [${getColorName(actual)}], expected [${getColorName(expected)}]';
+			Assert.areEqual(expected, actual, msg, pos);
+		}
+		
+		
+		assertPixelAt(0, 0, FlxColor.RED);
+		assertPixelAt(1, 0, FlxColor.GREEN);
+		assertPixelAt(0, 1, FlxColor.BLUE);
+		assertPixelAt(1, 1, FlxColor.WHITE);
+		
+		// flipXY shouldn't affect this
+		frame.flipX = true;
+		assertPixelAt(0, 0, FlxColor.RED);
+		assertPixelAt(1, 0, FlxColor.GREEN);
+		assertPixelAt(0, 1, FlxColor.BLUE);
+		assertPixelAt(1, 1, FlxColor.WHITE);
+		
+		frame.angle = ANGLE_90;
+		assertPixelAt(0, 0, FlxColor.BLUE);
+		assertPixelAt(1, 0, FlxColor.RED);
+		assertPixelAt(0, 1, FlxColor.WHITE);
+		assertPixelAt(1, 1, FlxColor.GREEN);
+		
+		frame.angle = ANGLE_NEG_90;
+		assertPixelAt(0, 0, FlxColor.GREEN);
+		assertPixelAt(1, 0, FlxColor.WHITE);
+		assertPixelAt(0, 1, FlxColor.RED);
+		assertPixelAt(1, 1, FlxColor.BLUE);
+		
+		frame.angle = ANGLE_270;
+		assertPixelAt(0, 0, FlxColor.GREEN);
+		assertPixelAt(1, 0, FlxColor.WHITE);
+		assertPixelAt(0, 1, FlxColor.RED);
+		assertPixelAt(1, 1, FlxColor.BLUE);
+	}
+	
+	@Test
+	function testToSourcePos()
+	{
+		final frame = createFrames("toSourcePos", 10, 10, 4, 4, 2).pop();
+		
+		function assertSourcePosOf(x:Float, y:Float, expectedX:Float, expectedY:Float, margin = 0.001, ?pos:PosInfos)
+		{
+			final actual = frame.toSourcePosition(FlxPoint.weak(x, y));
+			FlxAssert.areNear(expectedX, actual.x, margin, 'X Value [${actual.x}] is not within [$margin] of [$expectedX]', pos);
+			FlxAssert.areNear(expectedY, actual.y, margin, 'Y Value [${actual.y}] is not within [$margin] of [$expectedY]', pos);
+		}
+		
+		assertSourcePosOf(0, 0, 32, 32);
+		assertSourcePosOf(3, 0, 35, 32);
+		assertSourcePosOf(0, 3, 32, 35);
+		assertSourcePosOf(3, 3, 35, 35);
+		
+		// flipXY shouldn't affect this
+		frame.flipX = true;
+		assertSourcePosOf(0, 0, 32, 32);
+		assertSourcePosOf(3, 0, 35, 32);
+		assertSourcePosOf(0, 3, 32, 35);
+		assertSourcePosOf(3, 3, 35, 35);
+		frame.flipX = false;
+		
+		frame.angle = ANGLE_90;
+		assertSourcePosOf(0, 0, 32, 38);
+		assertSourcePosOf(3, 0, 32, 35);
+		assertSourcePosOf(0, 3, 35, 38);
+		assertSourcePosOf(3, 3, 35, 35);
+		
+		frame.angle = ANGLE_NEG_90;
+		assertSourcePosOf(0, 0, 38, 32);
+		assertSourcePosOf(3, 0, 38, 35);
+		assertSourcePosOf(0, 3, 35, 32);
+		assertSourcePosOf(3, 3, 35, 35);
+		
+		frame.angle = ANGLE_270;
+		assertSourcePosOf(0, 0, 38, 32);
+		assertSourcePosOf(3, 0, 38, 35);
+		assertSourcePosOf(0, 3, 35, 32);
+		assertSourcePosOf(3, 3, 35, 35);
+	}
+	
+	function testUVRect()
+	{
+		final rect = FlxRect.get();
+		rect.x = 10;
+		rect.y = 20;
+		rect.width = 90;
+		rect.height = 100;
+		
+		final uvRect:FlxUVRect = rect;
+		FlxAssert.areNear(uvRect.left, rect.x);
+		FlxAssert.areNear(uvRect.top, rect.y);
+		FlxAssert.areNear(uvRect.right, rect.width);
+		FlxAssert.areNear(uvRect.bottom, rect.height);
+	}
+	
+	@Test
+	function testClipFrame()
+	{
+		final frame = createFrames("clip", 100, 100, 1, 1)[0];
+		FlxAssert.rectsNear(cast frame.uv, FlxRect.get(0, 0, 1, 1));
+		
+		frame.clip(FlxRect.get(10, 10, 80, 80));
+		FlxAssert.rectsNear(cast frame.uv, FlxRect.get(0.1, 0.1, 0.1 + 0.8, 0.1 + 0.8));
+	}
+	
 	function createFrames(name:String, width = 100, height = 100, cols = 10, rows = 10, buffer = 0):Array<FlxFrame>
 	{
 		final sprite = new FlxSprite(0, 0);
@@ -115,6 +256,7 @@ class FlxFrameTest extends FlxTest
 		
 		return sprite.frames.frames;
 	}
+	
 	function createFrame(name:String):FlxFrame
 	{
 		var frame = new FlxFrame(null);
