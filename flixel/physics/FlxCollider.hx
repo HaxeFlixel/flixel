@@ -494,10 +494,7 @@ class FlxColliderUtil
 		final allowX = checkCollisionEdgesX(a, b);
 		final allowY = checkCollisionEdgesY(a, b);
 		if (!allowX && !allowY)
-		{
-			FlxG.watch.addQuick("result", '( x: 0 | y: 0 )');
 			return result.set(0, 0);
-		}
 		
 		function abs(n:Float) return n < 0 ? -n : n;
 		
@@ -507,8 +504,6 @@ class FlxColliderUtil
 			final overlap = computeOverlapXAabb(a, b);
 			// if (abs(overlap) > maxOverlap)
 				// return result;
-			
-			FlxG.watch.addQuick("result", '( x: $overlap | y: 0 )');
 			
 			return result.set(overlap, 0);
 		}
@@ -520,13 +515,10 @@ class FlxColliderUtil
 			// if (abs(overlap) > maxOverlap)
 				// return result;
 			
-			FlxG.watch.addQuick("result", '( x: 0 | y: $overlap)');
-			
 			return result.set(0, overlap);
 		}
 		
 		result.set(computeOverlapXAabb(a, b), computeOverlapYAabb(a, b));
-		FlxG.watch.addQuick("result", result);
 		
 		final absX = abs(result.x);
 		final absY = abs(result.y);
