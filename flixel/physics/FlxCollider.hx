@@ -478,16 +478,6 @@ class FlxColliderUtil
 		if (result == null)
 			result = FlxPoint.get();
 		
-		// if (!checkForPenetration(a, b))
-		// {
-		// 	if (!a.overlapsDelta(b))
-		// 	{
-		// 		FlxG.watch.addQuick("result", '( x: 0 | y: 0 )');
-		// 		// How did we get here? Should we always assume the deltas overlap if this is called?
-		// 		return result.set(0, 0);
-		// 	}
-		// }
-		
 		if (a.bounds.overlaps(b.bounds) == false)
 			return result.set(0, 0);
 		
@@ -499,21 +489,17 @@ class FlxColliderUtil
 		function abs(n:Float) return n < 0 ? -n : n;
 		
 		// only X
-		if ((allowX && !allowY))// || penetratedOnX(a, b))
+		if (allowX && !allowY)
 		{
 			final overlap = computeOverlapXAabb(a, b);
-			// if (abs(overlap) > maxOverlap)
-				// return result;
 			
 			return result.set(overlap, 0);
 		}
 		
 		// only Y
-		if ((!allowX && allowY))// || penetratedOnY(a, b))
+		if (!allowX && allowY)
 		{
 			final overlap = computeOverlapYAabb(a, b);
-			// if (abs(overlap) > maxOverlap)
-				// return result;
 			
 			return result.set(0, overlap);
 		}
@@ -525,72 +511,64 @@ class FlxColliderUtil
 		
 		// separate on the smaller axis
 		if (absX > absY)
-		{
 			result.x = 0;
-			// if (absY > maxOverlap)
-			// 	result.y = 0;
-		}
 		else
-		{
 			result.y = 0;
-			// if (absX > maxOverlap)
-			// 	result.x = 0;
-		}
 		
 		return result;
 	}
 	
-	public static function penetratedOnX(a:FlxCollider, b:FlxCollider)
-	{
-		return (lastOverlappedY(a, b) && a.bounds.overlapsY(b.bounds))
-			|| (checkForFullPenetrationX(a, b) && a.bounds.overlapsX(b.bounds) && lastOverlappedX(a, b));
-	}
+	// public static function penetratedOnX(a:FlxCollider, b:FlxCollider)
+	// {
+	// 	return (lastOverlappedY(a, b) && a.bounds.overlapsY(b.bounds))
+	// 		|| (checkForFullPenetrationX(a, b) && a.bounds.overlapsX(b.bounds) && lastOverlappedX(a, b));
+	// }
 	
-	public static function penetratedOnY(a:FlxCollider, b:FlxCollider)
-	{
-		return (lastOverlappedX(a, b) && a.bounds.overlapsX(b.bounds))
-			|| (checkForFullPenetrationY(a, b) && a.bounds.overlapsY(b.bounds) && lastOverlappedY(a, b));
-	}
+	// public static function penetratedOnY(a:FlxCollider, b:FlxCollider)
+	// {
+	// 	return (lastOverlappedX(a, b) && a.bounds.overlapsX(b.bounds))
+	// 		|| (checkForFullPenetrationY(a, b) && a.bounds.overlapsY(b.bounds) && lastOverlappedY(a, b));
+	// }
 	
-	public static function lastOverlappedX(a:FlxCollider, b:FlxCollider)
-	{
-		return a.last.x < b.last.x + b.width && a.last.x + a.width > b.last.x;
-	}
+	// public static function lastOverlappedX(a:FlxCollider, b:FlxCollider)
+	// {
+	// 	return a.last.x < b.last.x + b.width && a.last.x + a.width > b.last.x;
+	// }
 	
-	public static function lastOverlappedY(a:FlxCollider, b:FlxCollider)
-	{
-		return a.last.y < b.last.y + b.height && a.last.y + a.height > b.last.y;
-	}
+	// public static function lastOverlappedY(a:FlxCollider, b:FlxCollider)
+	// {
+	// 	return a.last.y < b.last.y + b.height && a.last.y + a.height > b.last.y;
+	// }
 	
-	/**
-	 * Checks whether the colliders overlap, or if they did overlap this frame
-	 */
-	public static function checkForPenetration(a:FlxCollider, b:FlxCollider)
-	{
-		return a.bounds.overlaps(b.bounds)
-			|| (checkForFullPenetrationX(a, b) && (a.bounds.overlapsY(b.bounds) || lastOverlappedY(a, b)))
-			|| (checkForFullPenetrationY(a, b) && (a.bounds.overlapsX(b.bounds) || lastOverlappedX(a, b)));
-	}
+	// /**
+	//  * Checks whether the colliders overlap, or if they did overlap this frame
+	//  */
+	// public static function checkForPenetration(a:FlxCollider, b:FlxCollider)
+	// {
+	// 	return a.bounds.overlaps(b.bounds)
+	// 		|| (checkForFullPenetrationX(a, b) && (a.bounds.overlapsY(b.bounds) || lastOverlappedY(a, b)))
+	// 		|| (checkForFullPenetrationY(a, b) && (a.bounds.overlapsX(b.bounds) || lastOverlappedX(a, b)));
+	// }
 	
-	/**
-	 * Checks whether one collider fully passed the other, this frame, in the X axis
-	 */
-	public static function checkForFullPenetrationX(a:FlxCollider, b:FlxCollider)
-	{
-		return (a.deltaX > b.deltaX
-			? a.left > b.right && a.last.x + a.width < b.last.x
-			: a.right < b.left && a.last.x > b.last.x + b.width);
-	}
+	// /**
+	//  * Checks whether one collider fully passed the other, this frame, in the X axis
+	//  */
+	// public static function checkForFullPenetrationX(a:FlxCollider, b:FlxCollider)
+	// {
+	// 	return (a.deltaX > b.deltaX
+	// 		? a.left > b.right && a.last.x + a.width < b.last.x
+	// 		: a.right < b.left && a.last.x > b.last.x + b.width);
+	// }
 	
-	/**
-	 * Checks whether one collider fully passed the other, this frame, in the Y axis
-	 */
-	public static function checkForFullPenetrationY(a:FlxCollider, b:FlxCollider)
-	{
-		return (a.deltaY > b.deltaY
-			? a.top > b.bottom && a.last.y + a.height < b.last.y
-			: a.bottom < b.top && a.last.y > b.last.y + b.height);
-	}
+	// /**
+	//  * Checks whether one collider fully passed the other, this frame, in the Y axis
+	//  */
+	// public static function checkForFullPenetrationY(a:FlxCollider, b:FlxCollider)
+	// {
+	// 	return (a.deltaY > b.deltaY
+	// 		? a.top > b.bottom && a.last.y + a.height < b.last.y
+	// 		: a.bottom < b.top && a.last.y > b.last.y + b.height);
+	// }
 	
 	/**
 	 * Helper to compute the X overlap of two objects, this is used when
