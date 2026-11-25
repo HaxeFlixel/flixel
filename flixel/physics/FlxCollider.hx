@@ -376,7 +376,8 @@ class FlxColliderUtil
 		final colliderA = a.getCollider();
 		final colliderB = b.getCollider();
 		// Note: was &&, caused double func calls on two shapes, is there a case where we still wanna process subs there?
-		return func(a, b) || processSub(a, b, colliderA, colliderB, func);
+		// return func(a, b) || processSub(a, b, colliderA, colliderB, func);
+		return processSub(a, b, colliderA, colliderB, func);
 	}
 	
 	static function processSub(a:IFlxCollider, b:IFlxCollider, colliderA:FlxCollider, colliderB:FlxCollider, func:(IFlxCollider, IFlxCollider)->Bool):Bool
@@ -426,10 +427,8 @@ class FlxColliderUtil
 				throw "Cannot compute overlap between two TILEMAP colliders";
 			case [TILEMAP, _]:
 				throw "Cannot compute overlap against TILEMAP colliders";
-				// return computeOverlapTilemap(cast colliderA, b, result);
 			case [_, TILEMAP]:
 				throw "Cannot compute overlap against TILEMAP colliders";
-				// return computeOverlapTilemap(cast colliderB, A, result);
 			default:
 				throw "Cannot compute overlap with a MULTI or TILEMAP collider";
 		}
@@ -479,8 +478,6 @@ class FlxColliderUtil
 		if (result == null)
 			result = FlxPoint.get();
 		
-		FlxG.watch.addQuick("result", "-");
-		
 		// if (!checkForPenetration(a, b))
 		// {
 		// 	if (!a.overlapsDelta(b))
@@ -505,7 +502,7 @@ class FlxColliderUtil
 		function abs(n:Float) return n < 0 ? -n : n;
 		
 		// only X
-		if ((allowX && !allowY) || penetratedOnX(a, b))
+		if ((allowX && !allowY))// || penetratedOnX(a, b))
 		{
 			final overlap = computeOverlapXAabb(a, b);
 			// if (abs(overlap) > maxOverlap)
@@ -517,7 +514,7 @@ class FlxColliderUtil
 		}
 		
 		// only Y
-		if ((!allowX && allowY) || penetratedOnY(a, b))
+		if ((!allowX && allowY))// || penetratedOnY(a, b))
 		{
 			final overlap = computeOverlapYAabb(a, b);
 			// if (abs(overlap) > maxOverlap)
