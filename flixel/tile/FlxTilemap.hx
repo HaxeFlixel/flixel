@@ -790,7 +790,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return result;
 	}
 	
-	override function forEachCollidingTile(object:IFlxCollider, func:(tile:Tile)->Bool, stopAtFirst = false):Bool
+	override function forEachTileOverlappingCollider(object:IFlxCollider, func:(tile:Tile)->Bool, stopAtFirst = false):Bool
 	{
 		final collider = object.getCollider();
 		if (object is FlxObject)
@@ -804,8 +804,8 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				
 				final result = tile.canCollide(object) && (func == null || func(tile));
 				
-				if (result)
-					tile.onCollide.dispatch(tile, obj);
+				// if (result)
+				// 	tile.onCollide.dispatch(tile, obj);
 				
 				return result;
 			}

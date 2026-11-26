@@ -780,9 +780,9 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @see FlxCollision.getDeltaRect
 	 * @since 6.2.0
 	 */
-	public function forEachCollidingTile(collider:IFlxCollider, func:(tile:Tile)->Bool, stopAtFirst = false):Bool
+	public function forEachTileOverlappingCollider(collider:IFlxCollider, func:(tile:Tile)->Bool, stopAtFirst = false):Bool
 	{
-		throw "forEachCollidingTile must be implemented";
+		throw "forEachTileOverlappingCollider must be implemented";
 	}
 	
 	@:deprecated("overlapsWithCallback is deprecated, use objectOverlapsTiles(object, callback, pos), instead") // 5.9.0

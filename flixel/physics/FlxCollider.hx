@@ -386,7 +386,7 @@ class FlxColliderUtil
 		{
 			case TILEMAP:
 				final tilemap:FlxBaseTilemap<FlxObject> = cast a;
-				return tilemap.forEachCollidingTile(b, (tile)->processSub(tile, b, tile.getCollider(), colliderB, func), false);
+				return tilemap.forEachTileOverlappingCollider(b, (tile)->processSub(tile, b, tile.getCollider(), colliderB, func), false);
 			case MULTI(processer):
 				return processer(b, (childA)->processSub(childA, b, childA.getCollider(), colliderB, func));
 			case SHAPE(shape):
@@ -394,7 +394,7 @@ class FlxColliderUtil
 				{
 					case TILEMAP:
 						final tilemap:FlxBaseTilemap<FlxObject> = cast b;
-						return tilemap.forEachCollidingTile(a, (tile)->processSub(a, tile, colliderA, tile.getCollider(), func), false);
+						return tilemap.forEachTileOverlappingCollider(a, (tile)->processSub(a, tile, colliderA, tile.getCollider(), func), false);
 					case MULTI(processer):
 						return processer(a, (childB)->processSub(a, childB, colliderA, childB.getCollider(), func));
 					case SHAPE(shape):
