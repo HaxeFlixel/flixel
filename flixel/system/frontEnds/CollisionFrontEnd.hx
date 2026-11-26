@@ -2,6 +2,7 @@ package flixel.system.frontEnds;
 
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.physics.FlxCollider;
@@ -12,6 +13,7 @@ import flixel.util.FlxDirectionFlags;
 using flixel.physics.FlxCollider.FlxColliderUtil;
 using flixel.util.FlxCollision;
 
+@:nullSafety(Strict)
 @:access(flixel.FlxObject)
 class CollisionFrontEnd
 {
@@ -30,7 +32,7 @@ class CollisionFrontEnd
 	public function new () {}
 	
 	/**
-	 * Call this function to see if one `FlxObject` overlaps another within `FlxG.worldBounds`.
+	 * Checks whether any `FlxObject` overlaps another within `FlxG.worldBounds`.
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a `FlxGroup` (or even bundling groups together!).
@@ -46,16 +48,31 @@ class CollisionFrontEnd
 	 * @param   process  Called on every object that overlaps another, determines whether to call the `notify`.
 	 * @return  Whether any overlaps were detected.
 	 */
-	overload public inline extern function overlap<TA:FlxObject, TB:FlxObject>(a, ?b, ?notify:(TA, TB)->Void, ?process:(TA, TB)->Bool)
+	overload public inline extern function overlap<TA:FlxObject, TB:FlxObject>(a, b, ?notify:(TA, TB)->Void, ?process:(TA, TB)->Bool)
 	{
-		return overlapHelper(a, b, notify, process);
+		return deltasOverlap(a, b, notify, overlapProcessHelper(process));
 	}
 	
 	/**
-	 * Call this function to see if any `FlxObject` in the current FlxState overlaps
-	 * another within `FlxG.worldBounds`.
+	 * Checks whether any `FlxObject` overlaps another within `FlxG.worldBounds`.
 	 *
 	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
+	 *
+	 * @param   group    Group of potentially overlapping objects
+	 * @param   notify   Called on every object that overlaps another.
+	 * @param   process  Called on every object that overlaps another, determines whether to call the `notify`.
+	 * @return  Whether any overlaps were detected.
+	 */
+	overload public inline extern function overlap<TA:FlxObject, TB:FlxObject>(group:FlxGroup, ?notify:(TA, TB)->Void, ?process:(TA, TB)->Bool)
+	{
+		return deltasOverlap(group, null, notify, overlapProcessHelper(process));
+	}
+	
+	/**
+	 * Checks whether any `FlxObject` in the current FlxState overlaps
+	 * another within `FlxG.worldBounds`.
+	 *
+	 * NOTE: does NOT take sprites' `scrollFactor` into account, all overlaps are checked in world space.
 	 *
 	 * NOTE: this takes the entire area of `FlxTilemap`s into account (including "empty" tiles).
 	 * Use `FlxTilemap#overlaps()` if you don't want that.
@@ -66,20 +83,18 @@ class CollisionFrontEnd
 	 */
 	overload public inline extern function overlap<TA:FlxObject, TB:FlxObject>(?notify:(TA, TB)->Void, ?process:(TA, TB)->Bool)
 	{
-		return overlapHelper(FlxG.state, null, notify, process);
+		return deltasOverlap(FlxG.state, null, notify, overlapProcessHelper(process));
 	}
 	
-	function overlapHelper<TA:FlxObject, TB:FlxObject>(a:FlxBasic, b:Null<FlxBasic>, notify:Null<(TA, TB)->Void>, process:Null<(TA, TB)->Bool>)
+	function overlapProcessHelper<TA:FlxObject, TB:FlxObject>(process:Null<(TA, TB)->Bool>)
 	{
-		final processFunc = process == null
-			? (a:TA, b:TB)->a.collider.bounds.overlaps(b.collider.bounds)
-			: (a:TA, b:TB)->a.collider.bounds.overlaps(b.collider.bounds) && process(a, b);
-		// TODO: 
-		return FlxCollisionQuadTree.executeOnce(FlxG.worldBounds, FlxG.worldDivisions, 10, a, b, cast notify, cast processFunc);
+		return process != null
+			? (a:TA, b:TB)->a.collider.bounds.overlaps(b.collider.bounds) && (cast process:(TA, TB)->Bool)(a, b)
+			: (a:TA, b:TB)->a.collider.bounds.overlaps(b.collider.bounds);
 	}
 	
 	/**
-	 * Call this function to see if one `FlxObject` crossed paths with another within `FlxG.worldBounds`.
+	 * Checks whether any `FlxObject` crossed paths with another within `FlxG.worldBounds`.
 	 * Unlike `overlaps` this will return true even if the objects are not currently overlapping.
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
@@ -96,15 +111,14 @@ class CollisionFrontEnd
 	 * @param   process  Called on every object that overlaps another, determines whether to call the `notify`.
 	 * @return  Whether any overlaps were detected.
 	 */
-	overload public inline extern function deltasOverlap<TA:FlxObject, TB:FlxObject>(a, ?b, ?notify:(TA, TB)->Void, ?process:(TA, TB)->Bool)
+	overload public inline extern function deltasOverlap<TA:FlxObject, TB:FlxObject>(a, b, ?notify:(TA, TB)->Void, ?process:(TA, TB)->Bool)
 	{
 		return deltasOverlapHelper(a, b, notify, process);
 	}
 	
 	/**
-	 * Call this function to see if any `FlxObject` in the current FlxState crossed
-	 * paths with another within `FlxG.worldBounds`. Unlike `overlaps` this will return 
-	 * true even if the objects are not currently overlapping
+	 * Checks whether any `FlxObject` crossed paths with another within `FlxG.worldBounds`.
+	 * Unlike `overlaps` this will return  true even if the objects are not currently overlapping.
 	 *
 	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
 	 *
@@ -117,7 +131,25 @@ class CollisionFrontEnd
 	 */
 	overload public inline extern function deltasOverlap<TA:FlxObject, TB:FlxObject>(?notify:(TA, TB)->Void, ?process:(TA, TB)->Bool)
 	{
-		return deltasOverlapHelper(FlxG.state, null, notify, process);
+		return deltasOverlap(FlxG.state, notify, process);
+	}
+	
+	/**
+	 * Checks whether any `FlxObject` crossed paths with another within `FlxG.worldBounds`.
+	 *
+	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
+	 *
+	 * NOTE: this takes the entire area of `FlxTilemap`s into account (including "empty" tiles).
+	 * Use `FlxTilemap#overlaps()` if you don't want that.
+	 *
+	 * @param   group    Group of potentially overlapping objects
+	 * @param   notify   Called on every object that overlaps another
+	 * @param   process  Called on every object that overlaps another, determines whether to call the `notify`
+	 * @return  Whether any overlaps were detected
+	 */
+	overload public inline extern function deltasOverlap<TA:FlxObject, TB:FlxObject>(group:FlxGroup, ?notify:(TA, TB)->Void, ?process:(TA, TB)->Bool)
+	{
+		return deltasOverlapHelper(group, null, notify, process);
 	}
 	
 	function deltasOverlapHelper<TA:FlxObject, TB:FlxObject>(a:FlxBasic, b:Null<FlxBasic>, notify:Null<(TA, TB)->Void>, process:Null<(TA, TB)->Bool>)
@@ -135,15 +167,48 @@ class CollisionFrontEnd
 	 * To create your own collision logic, write your own `processer` and use `overlap` to set it up.
 	 * **NOTE:** does NOT take sprites' `scrollFactor` into account, all overlaps are checked in world space.
 	 *
-	 * @param   a        The first object or group you want to check.
-	 * @param   b        The second object or group you want to check. Can be the same group as the first.
-	 * @param   notify   Called with every overlapping object pair.
+	 * @param   a       The first object or group you want to check
+	 * @param   b       The second object or group you want to check. Can be the same group as the first
+	 * @param   notify  Called with every overlapping object pair
 	 * 
 	 * @return  Whether any objects were successfully collided/separated.
 	 */
-	public inline function separateAll<TA:FlxObject, TB:FlxObject>(?a:FlxBasic, ?b:FlxBasic, ?notify:(TA, TB)->Void)
+	overload public inline extern function separateAll<TA:FlxObject, TB:FlxObject>(a:FlxBasic, b:FlxBasic, ?notify:(TA, TB)->Void)
 	{
 		return overlap(a, b, notify, separate);
+	}
+	
+	/**
+	 * Separates and notifies of all the current state's overlapping objects within `FlxG.worldBounds`.
+	 *
+	 * This function just calls `overlap` and presets the `processer` parameter to `separate`.
+	 * To create your own collision logic, write your own `processer` and use `overlap` to set it up.
+	 * **NOTE:** does NOT take sprites' `scrollFactor` into account, all overlaps are checked in world space.
+	 *
+	 * @param   group   Group of potentially overlapping objects
+	 * @param   notify  Called with every overlapping object pair
+	 * 
+	 * @return  Whether any objects were successfully collided/separated.
+	 */
+	overload public inline extern function separateAll<TA:FlxObject, TB:FlxObject>(group:FlxGroup, ?notify:(TA, TB)->Void)
+	{
+		return overlap(group, null, notify, separate);
+	}
+	
+	/**
+	 * Separates and notifies of all the current state's overlapping objects within `FlxG.worldBounds`.
+	 *
+	 * This function just calls `overlap` and presets the `processer` parameter to `separate`.
+	 * To create your own collision logic, write your own `processer` and use `overlap` to set it up.
+	 * **NOTE:** does NOT take sprites' `scrollFactor` into account, all overlaps are checked in world space.
+	 *
+	 * @param   notify  Called with every overlapping object pair
+	 * 
+	 * @return  Whether any objects were successfully collided/separated.
+	 */
+	overload public inline extern function separateAll<TA:FlxObject, TB:FlxObject>(?notify:(TA, TB)->Void)
+	{
+		return separateAll(FlxG.state, notify);
 	}
 	
 	/**
