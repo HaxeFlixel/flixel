@@ -90,6 +90,10 @@ class BaseScaleMode
 
 		FlxG.game.x = offset.x;
 		FlxG.game.y = offset.y;
+
+		final rect = FlxG.game.filteredContainer.scrollRect;
+		rect.setTo(0, 0, gameSize.x, gameSize.y);
+		FlxG.game.filteredContainer.scrollRect = rect;
 	}
 
 	function set_horizontalAlign(value:FlxHorizontalAlign):FlxHorizontalAlign

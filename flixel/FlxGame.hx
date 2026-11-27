@@ -11,6 +11,7 @@ import openfl.display.StageAlign;
 import openfl.display.StageScaleMode;
 import openfl.events.Event;
 import openfl.filters.BitmapFilter;
+import openfl.geom.Rectangle;
 #if desktop
 import openfl.events.FocusEvent;
 #end
@@ -154,9 +155,24 @@ class FlxGame extends Sprite
 	/**
 	 * Mouse cursor.
 	 */
-	@:allow(flixel.FlxG)
-	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	var _inputContainer:Sprite;
+	@:deprecated("_inputContainer is deprecated, use inputContainer")
+	final _inputContainer:Sprite;
+	
+	/**
+	 * Container for the `FlxMouse` cursor, reads mouse input
+	 */
+	public final inputContainer = new Sprite();
+	
+	/**
+	 * Container for all sprites that will be affected by game filters. By default, includes
+	 * `cameraContainer`, the mouse and the sound tray
+	 */
+	public final filteredContainer = new Sprite();
+	
+	/**
+	 * The container that all cameras are added to, when passed into `FlxG.cameras.add`
+	 */
+	public final cameraContainer = new Sprite();
 
 	#if FLX_SOUND_TRAY
 	/**
@@ -238,6 +254,7 @@ class FlxGame extends Sprite
 	 *
 	 * @see [scale modes](https://api.haxeflixel.com/flixel/system/scaleModes/index.html)
 	 */
+	@:haxe.warning("-WDeprecated")
 	public function new(gameWidth = 0, gameHeight = 0, ?initialState:InitialState, updateFramerate = 60, drawFramerate = 60, skipSplash = false,
 			startFullscreen = false)
 	{
@@ -247,8 +264,7 @@ class FlxGame extends Sprite
 		_startFullscreen = startFullscreen;
 		#end
 
-		// Super high priority init stuff
-		_inputContainer = new Sprite();
+		_inputContainer = inputContainer;
 
 		if (gameWidth == 0)
 			gameWidth = FlxG.stage.stageWidth;
@@ -256,6 +272,7 @@ class FlxGame extends Sprite
 			gameHeight = FlxG.stage.stageHeight;
 
 		// Basic display and update setup stuff
+		filteredContainer.scrollRect = new Rectangle(0, 0, FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		FlxG.init(this, gameWidth, gameHeight);
 
 		FlxG.updateFramerate = updateFramerate;
@@ -303,7 +320,8 @@ class FlxGame extends Sprite
 		stage.align = StageAlign.TOP_LEFT;
 		stage.frameRate = FlxG.drawFramerate;
 
-		addChild(_inputContainer);
+		addChild(filteredContainer);
+		filteredContainer.addChild(cameraContainer);
 
 		// Creating the debugger overlay
 		#if FLX_DEBUG
@@ -316,12 +334,14 @@ class FlxGame extends Sprite
 		// Volume display tab
 		#if FLX_SOUND_TRAY
 		soundTray = Type.createInstance(_customSoundTray, []);
-		addChild(soundTray);
+		filteredContainer.addChild(soundTray);
 		#end
+		
+		filteredContainer.addChild(inputContainer);
 
 		#if FLX_FOCUS_LOST_SCREEN
 		_focusLostScreen = Type.createInstance(_customFocusLostScreen, []);
-		addChild(_focusLostScreen);
+		filteredContainer.addChild(_focusLostScreen);
 		#end
 		#end
 
@@ -706,7 +726,7 @@ class FlxGame extends Sprite
 		}
 		#end
 
-		filters = filtersEnabled ? _filters : null;
+		filteredContainer.filters = filtersEnabled ? _filters : null;
 	}
 
 	function updateElapsed():Void
