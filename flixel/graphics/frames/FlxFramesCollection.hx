@@ -10,15 +10,31 @@ import flixel.math.FlxRect;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
+class FlxFramesCollection extends FlxTypedFramesCollection<FlxFrame>
+{
+	public function new(parent, ?type, ?border)
+	{
+		super(parent, type, border);
+		
+		if (parent != null)
+			parent.addFrameCollection(this);
+	}
+	
+	function createFrame():FlxFrame
+	{
+		return new FlxFrame(parent);
+	}
+}
+
 /**
  * Base class for all frame collections.
  */
-class FlxFramesCollection implements IFlxDestroyable
+private abstract class FlxTypedFramesCollection<TFrame:FlxFrame> implements IFlxDestroyable
 {
 	/**
 	 * Array with all frames of this collection.
 	 */
-	public var frames:Array<FlxFrame>;
+	public var frames:Array<TFrame>;
 
 	/**
 	 * Number of frames in this collection.
@@ -32,12 +48,12 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * (give names to your frames).
 	 */
 	@:deprecated("`framesHash` is deprecated, use `getByName()` or `exists()`")
-	public var framesHash(get, set):Map<String, FlxFrame>;
+	public var framesHash(get, set):Map<String, TFrame>;
 	
 	/**
 	 * Hash of frames, by name, for this frame collection.
 	 */
-	var framesByName(default, null):Map<String, FlxFrame>;
+	var framesByName(default, null):Map<String, TFrame>;
 
 	/**
 	 * Graphic object this frames belongs to.
@@ -62,11 +78,10 @@ class FlxFramesCollection implements IFlxDestroyable
 		this.type = type;
 		this.border = (border == null) ? FlxPoint.get() : border;
 		frames = [];
-		framesByName = new Map<String, FlxFrame>();
-
-		if (parent != null)
-			parent.addFrameCollection(this);
+		framesByName = new Map<String, TFrame>();
 	}
+
+	abstract function createFrame():TFrame;
 
 	/**
 	 * Finds a frame in the collection by its name.
@@ -74,7 +89,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param   name   The name of the frame to find.
 	 * @return  Frame with specified name (if there is one).
 	 */
-	public inline function getByName(name:String):FlxFrame
+	public inline function getByName(name:String):TFrame
 	{
 		return framesByName.get(name);
 	}
@@ -96,7 +111,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param   index   Index of the frame in the frames array.
 	 * @return  Frame with specified index in this frames collection (if there is one).
 	 */
-	public inline function getByIndex(index:Int):FlxFrame
+	public inline function getByIndex(index:Int):TFrame
 	{
 		return frames[index];
 	}
@@ -124,7 +139,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param   frame   Frame to find.
 	 * @return  Index of the specified frame.
 	 */
-	public inline function getFrameIndex(frame:FlxFrame):Int
+	public inline function getFrameIndex(frame:TFrame):Int
 	{
 		return frames.indexOf(frame);
 	}
@@ -145,9 +160,9 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param   size   Dimensions of the frame to add.
 	 * @return  Newly added empty frame.
 	 */
-	public function addEmptyFrame(size:FlxRect):FlxFrame
+	public function addEmptyFrame(size:FlxRect):TFrame
 	{
-		var frame = new FlxFrame(parent);
+		var frame = createFrame();
 		frame.type = FlxFrameType.EMPTY;
 		frame.frame = FlxRect.get();
 		frame.sourceSize.set(size.width, size.height);
@@ -156,16 +171,16 @@ class FlxFramesCollection implements IFlxDestroyable
 	}
 
 	/**
-	 * Adds new regular (not rotated) `FlxFrame` to this frame collection.
+	 * Adds new regular (not rotated) frame to this frame collection.
 	 *
 	 * @param   region   Region of image which new frame will display.
-	 * @return  Newly created `FlxFrame` object for specified region of image.
+	 * @return  Newly created frame for specified region of image.
 	 */
-	public function addSpriteSheetFrame(region:FlxRect):FlxFrame
+	public function addSpriteSheetFrame(region:FlxRect):TFrame
 	{
 		// Ensure region not a weak rect
 		region = FlxRect.get().copyFrom(region);
-		final frame = new FlxFrame(parent);
+		final frame = createFrame();
 		frame.frame = checkFrame(region);
 		frame.sourceSize.set(region.width, region.height);
 		frame.offset.set(0, 0);
@@ -189,19 +204,27 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @return  Newly created and added frame object.
 	 */
 	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, ?name:String, angle:FlxFrameAngle = 0, flipX = false, flipY = false,
-			duration = 0.0):FlxFrame
+			duration = 0.0):TFrame
 	{
 		if (name != null && exists(name))
+		{
+			sourceSize.put();
+			offset.put();
 			return getByName(name);
+		}
 
-		var texFrame:FlxFrame = new FlxFrame(parent, angle, flipX, flipY, duration);
+		final texFrame = createFrame();
 		texFrame.name = name;
-		texFrame.sourceSize.set(sourceSize.x, sourceSize.y);
-		texFrame.offset.set(offset.x, offset.y);
+		texFrame.angle = angle;
+		texFrame.flipX = flipX;
+		texFrame.flipY = flipY;
+		texFrame.duration = duration;
+		texFrame.sourceSize.copyFrom(sourceSize);
+		texFrame.offset.copyFrom(offset);
 		texFrame.frame = checkFrame(frame, name);
 
-		sourceSize = FlxDestroyUtil.put(sourceSize);
-		offset = FlxDestroyUtil.put(offset);
+		sourceSize.put();
+		offset.put();
 
 		return pushFrame(texFrame);
 	}
@@ -214,7 +237,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public function getAllByPrefix(prefix:String)
 	{
-		final list = new Array<FlxFrame>();
+		final list = new Array<TFrame>();
 		forEachByPrefix(prefix, (frame)->list.push(frame), false);
 		return list;
 	}
@@ -229,7 +252,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param   prefix  The name prefix to look for.
 	 * @since 5.3.0
 	 */
-	public inline function forEachByPrefix(prefix:String, func:(FlxFrame)->Void, warnIfEmpty = true, ?warningMsg:String)
+	public inline function forEachByPrefix(prefix:String, func:(TFrame)->Void, warnIfEmpty = true, ?warningMsg:String)
 	{
 		var warn = warnIfEmpty;
 		for (name => frame in framesByName)
@@ -363,7 +386,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param   overwriteHash  If true, any new frames with matching names will replace old ones.
 	 * @return  Added frame.
 	 */
-	public function pushFrame(frameObj:FlxFrame, overwriteHash = false):FlxFrame
+	public function pushFrame(frameObj:TFrame, overwriteHash = false):TFrame
 	{
 		final name:String = frameObj.name;
 		if (name != null && exists(name) && !overwriteHash)
