@@ -1,11 +1,11 @@
 package flixel.system.debug.watch;
 
-import flixel.util.FlxSignal;
 import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSignal;
 import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
@@ -64,6 +64,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 			case FIELD(_, _): 0xFFFFFF;
 			case QUICK(_): 0xA5F1ED;
 			case EXPRESSION(_, _): 0xC4FE83;
+			case EXPR(_, _): 0xC4FE83;
 			case FUNCTION(_): 0xF1A5A5;
 		}
 	}
@@ -98,6 +99,8 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 					displayName = object.getClassName(true) + "." + field;
 				case EXPRESSION(expression, _):
 					displayName = expression;
+				case EXPR(expression, _):
+					displayName = expression;
 				case QUICK(_):
 				case FUNCTION(_):
 			}
@@ -120,11 +123,9 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 			case FIELD(object, field):
 				Reflect.getProperty(object, field);
 			case EXPRESSION(_, parsedExpr):
-				#if hscript
-				ConsoleUtil.runExpr(parsedExpr);
-				#else
-				"hscript is not installed";
-				#end
+				throw "Unexpected deprecated entry type EXPRESSION";
+			case EXPR(_, func):
+				func();
 			case QUICK(value):
 				value;
 			case FUNCTION(func):

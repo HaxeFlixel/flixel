@@ -83,14 +83,28 @@ class WatchFrontEnd
 	public function addExpression(expression:String, ?displayName:String):Void
 	{
 		#if FLX_DEBUG
-		var parsedExpr = null;
-		#if hscript
-		parsedExpr = ConsoleUtil.parseCommand(expression);
-		#end
-		window.add(displayName == null ? expression : displayName, EXPRESSION(expression, parsedExpr));
+		final evaluator = createEvaluator(expression);
+		window.add(displayName == null ? expression : displayName, EXPR(expression, evaluator));
 		#end
 	}
-
+	
+	#if FLX_DEBUG
+	function createEvaluator(expression:String)
+	{
+		return function()
+		{
+			try
+			{
+				return FlxG.console.handler.evaluate(expression);
+			}
+			catch(e)
+			{
+				return 'Error evaluating: "$expression"';
+			}
+		}
+	}
+	#end
+	
 	/**
 	 * Remove an expression from the watch list in the debugger.
 	 *

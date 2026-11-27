@@ -1,9 +1,5 @@
 package flixel.system.debug.watch;
 
-#if hscript
-import hscript.Expr;
-#end
-
 enum WatchEntryData
 {
 	/**
@@ -19,7 +15,12 @@ enum WatchEntryData
 	/**
 	 * Haxe expression evaluated with hscript.
 	 */
-	EXPRESSION(expression:String, parsedExpr:#if hscript Expr #else String #end);
+	EXPRESSION(expression:String, parsedExpr:#if hscript hscript.Expr #else String #end);
+	
+	/**
+	 * An expression evaluated `by FlxG.console`
+	 */
+	EXPR(expression:String, func:()->Any);
 	
 	/**
 	 * A function that returns the value to display.
