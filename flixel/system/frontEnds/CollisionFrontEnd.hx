@@ -212,8 +212,8 @@ class CollisionFrontEnd
 	}
 	
 	/**
-	 * Separates 2 overlapping objects. If an object is a tilemap,
-	 * it will separate it from any tiles that overlap it.
+	 * Separates 2 overlapping objects, adjusting their velocities and touching flags, accordingly.
+	 * If an object is a tilemap, it will separate it from any tiles that overlap it.
 	 * 
 	 * @return  Whether the objects were overlapping and were separated
 	 */
