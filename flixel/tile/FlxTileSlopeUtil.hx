@@ -121,10 +121,10 @@ class FlxTileSlopeUtil
 	 * @param downV   How much downward velocity should be used to kep the object on the ground
 	 * @param result  Optional result vector, if `null` a new one is created
 	 */
-	static public function computeOverlap(tile:FlxCollider, object:FlxCollider, edges:FlxSlopeEdges, grade:FlxSlopeGrade, maxOverlap:Float, ?result:FlxPoint)
+	static public function computeOverlap(tile:FlxCollider, object:FlxCollider, edges:FlxSlopeEdges, grade:FlxSlopeGrade, ?result:FlxPoint)
 	{
 		if (grade == NONE)
-			return FlxColliderUtil.computeBoundsOverlap(tile, object, maxOverlap, result);
+			return FlxColliderUtil.computeBoundsOverlap(tile, object, result);
 		
 		if (result == null)
 			result = FlxPoint.get();
