@@ -576,11 +576,13 @@ class FlxColliderUtil
 		
 		result.set(computeBoundsOverlapX(a, b), computeBoundsOverlapY(a, b));
 		
-		final absX = abs(result.x);
-		final absY = abs(result.y);
+		final diff = FlxPoint.get();
+		// Separate to the axis that has the least "deviation" from the original path
+		final lengthX = diff.set(a.deltaX - result.x, a.deltaY).length + abs(result.x);
+		final lengthY = diff.set(a.deltaX, a.deltaY - result.y).length + abs(result.y);
+		diff.put();
 		
-		// separate on the smaller axis
-		if (absX > absY)
+		if (lengthX >= lengthY)
 			result.x = 0;
 		else
 			result.y = 0;
