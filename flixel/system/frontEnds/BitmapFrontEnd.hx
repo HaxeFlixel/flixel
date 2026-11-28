@@ -6,14 +6,15 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
-import openfl.Assets;
 import openfl.display.BitmapData;
+import openfl.utils.Assets;
 
 /**
  * Internal storage system to prevent graphics from being used repeatedly in memory.
  * 
  * Accessed via `FlxG.bitmap`.
  */
+@:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("onAssetsReload", "onAssetsReload is deprecated, use onAssetsChange, instead"))
 class BitmapFrontEnd
 {
 	/**
@@ -44,15 +45,18 @@ class BitmapFrontEnd
 		reset();
 	}
 
+	@:deprecated("onAssetsReload is deprecated, use onAssetsChange, instead")
 	public function onAssetsReload(_):Void
 	{
-		for (key in _cache.keys())
+		onAssetsChange();
+	}
+	
+	public function onAssetsChange():Void
+	{
+		for (key => obj in _cache)
 		{
-			var obj = _cache.get(key);
 			if (obj != null && obj.canBeRefreshed)
-			{
 				obj.onAssetsReload();
-			}
 		}
 	}
 
@@ -122,7 +126,7 @@ class BitmapFrontEnd
 	 * @param   key  The FlxGraphics key (or name).
 	 * @return  The FlxGraphic with the specified key, or null if the object doesn't exist.
 	 */
-	public inline function get(key:String):FlxGraphic
+	public inline function get(key:String):Null<FlxGraphic>
 	{
 		return _cache.get(key);
 	}
@@ -133,11 +137,10 @@ class BitmapFrontEnd
 	 * @param   bmd  BitmapData to find in the cache.
 	 * @return  The BitmapData's key or null if there isn't such BitmapData in cache.
 	 */
-	public function findKeyForBitmap(bmd:BitmapData):String
+	public function findKeyForBitmap(bmd:BitmapData):Null<String>
 	{
-		for (key in _cache.keys())
+		for (key => obj in _cache)
 		{
-			var obj = _cache.get(key);
 			if (obj != null && obj.bitmap == bmd)
 				return key;
 		}
@@ -163,7 +166,7 @@ class BitmapFrontEnd
 	 * @param   unique     Whether generated key should be unique or not.
 	 * @return  Created key.
 	 */
-	public function generateKey(systemKey:String, userKey:String, unique = false):String
+	public function generateKey(systemKey:Null<String>, userKey:Null<String>, unique = false):String
 	{
 		var key:String = userKey;
 		if (key == null)
@@ -183,9 +186,11 @@ class BitmapFrontEnd
 	 */
 	public function getUniqueKey(?baseKey:String):String
 	{
-		if (baseKey == null)
-			baseKey = "pixels";
-
+		return getUniqueKeyHelper(baseKey != null ? baseKey : "pixels");
+	}
+	
+	function getUniqueKeyHelper(baseKey = "pixels"):String
+	{
 		if (!checkCache(baseKey))
 			return baseKey;
 
@@ -279,10 +284,9 @@ class BitmapFrontEnd
 			_cache = new Map();
 			return;
 		}
-
-		for (key in _cache.keys())
+		
+		for (key => obj in _cache)
 		{
-			var obj = get(key);
 			if (obj != null && !obj.persist && obj.useCount <= 0)
 			{
 				removeKey(key);
@@ -310,10 +314,9 @@ class BitmapFrontEnd
 			_cache = new Map();
 			return;
 		}
-
-		for (key in _cache.keys())
+		
+		for (key => obj in _cache)
 		{
-			var obj = get(key);
 			removeKey(key);
 
 			if (obj != null)
@@ -327,9 +330,8 @@ class BitmapFrontEnd
 	 */
 	public function clearUnused():Void
 	{
-		for (key in _cache.keys())
+		for (key => obj in _cache)
 		{
-			var obj = _cache.get(key);
 			if (obj != null && obj.useCount <= 0 && !obj.persist && obj.destroyOnNoUse)
 			{
 				removeByKey(key);
@@ -347,7 +349,7 @@ class BitmapFrontEnd
 		if (_whitePixel == null)
 		{
 			var bd = new BitmapData(10, 10, true, FlxColor.WHITE);
-			var graphic:FlxGraphic = FlxG.bitmap.add(bd, true, "whitePixels");
+			var graphic:FlxGraphic = add(bd, true, "whitePixels");
 			graphic.persist = true;
 			_whitePixel = graphic.imageFrame.frame;
 		}

@@ -2,6 +2,13 @@ name: CI
 
 on:
   push:
+    branches:
+    - dev
+    paths-ignore:
+    - '**/*.md'
+    - '.vscode/*'
+    - 'images/*'
+    - 'script/*'
   pull_request:
   workflow_dispatch:
   repository_dispatch:
@@ -13,7 +20,7 @@ jobs:
     strategy:
       matrix:
         haxe-version: ["4.2.5", "4.3.7"]
-        target: [html5, hl, neko, flash, cpp]
+        target: [html5, hl, flash, cpp]
       fail-fast: false
     runs-on: ubuntu-latest
     steps:

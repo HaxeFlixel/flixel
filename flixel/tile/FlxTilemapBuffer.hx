@@ -177,8 +177,8 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	{
 		if (isPixelPerfectRender(camera))
 		{
-			flashPoint.x = Math.floor(flashPoint.x);
-			flashPoint.y = Math.floor(flashPoint.y);
+			flashPoint.x = Math.round(flashPoint.x);
+			flashPoint.y = Math.round(flashPoint.y);
 		}
 
 		if (isPixelPerfectRender(camera) && (scaleX == 1.0 && scaleY == 1.0) && blend == null)

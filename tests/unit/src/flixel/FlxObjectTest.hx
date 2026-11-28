@@ -557,6 +557,23 @@ class FlxObjectTest extends FlxTest
 		object.scrollFactor.set(0.5, 0);
 		FlxAssert.pointNearXY(400 + 80 - 100 / 2, 200 - 40, getViewPos());
 	}
+	
+	@Test
+	function testBasicsOverlap()
+	{
+		final a = new FlxBasic();
+		final b = new FlxObject(0, 0, 50, 50);
+		final group = new flixel.group.FlxGroup();
+		group.add(new FlxObject(0, 0, 50, 50));
+		
+		Assert.isFalse(FlxG.overlap(a, b)); // false
+		Assert.isFalse(FlxG.overlap(a, group)); // false
+		Assert.isTrue(FlxG.overlap(b, group)); // true
+		
+		group.add(new FlxBasic());
+		Assert.isFalse(FlxG.overlap(a, group)); // false
+		Assert.isTrue(FlxG.overlap(b, group)); // true
+	}
 }
 
 class CollisionState extends FlxState

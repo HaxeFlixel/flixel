@@ -522,7 +522,7 @@ class FlxSprite extends FlxObject
 			FlxG.log.warn('frameHeight:$frameHeight is larger than the graphic\'s height:${graph.height}');
 
 		if (animated)
-			frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(frameWidth, frameHeight));
+			frames = FlxTileFrames.fromGraphic(graph, frameWidth, frameHeight);
 		else
 			frames = graph.imageFrame;
 
@@ -586,7 +586,7 @@ class FlxSprite extends FlxObject
 		var max:Int = (brush.height > brush.width) ? brush.height : brush.width;
 		max = AutoBuffer ? Std.int(max * 1.5) : max;
 
-		frames = FlxTileFrames.fromGraphic(tempGraph, FlxPoint.get(max, max));
+		frames = FlxTileFrames.fromGraphic(tempGraph, max, max);
 
 		if (AutoBuffer)
 		{
@@ -1006,7 +1006,7 @@ class FlxSprite extends FlxObject
 	{
 		getScreenPosition(_point, camera).subtract(offset);
 		if (isPixelPerfectRender(camera))
-			_point.floor();
+			_point.round();
 
 		_point.copyTo(_flashPoint);
 		if (framePixels != null && useFramePixels)
@@ -1055,8 +1055,8 @@ class FlxSprite extends FlxObject
 		
 		if (isPixelPerfectRender(camera))
 		{
-			matrix.tx = Math.floor(matrix.tx);
-			matrix.ty = Math.floor(matrix.ty);
+			matrix.tx = Math.round(matrix.tx);
+			matrix.ty = Math.round(matrix.ty);
 		}
 	}
 
@@ -1738,12 +1738,12 @@ class FlxSprite extends FlxObject
 		
 		newRect.setPosition(x, y);
 		if (pixelPerfectPosition)
-			newRect.floor();
+			newRect.round();
 		_scaledOrigin.set(origin.x * scale.x, origin.y * scale.y);
 		newRect.x += -Std.int(camera.scroll.x * scrollFactor.x) - offset.x + origin.x - _scaledOrigin.x;
 		newRect.y += -Std.int(camera.scroll.y * scrollFactor.y) - offset.y + origin.y - _scaledOrigin.y;
 		if (isPixelPerfectRender(camera))
-			newRect.floor();
+			newRect.round();
 		newRect.setSize(frameWidth * Math.abs(scale.x), frameHeight * Math.abs(scale.y));
 		return newRect.getRotatedBounds(angle, _scaledOrigin, newRect);
 	}
@@ -2082,6 +2082,7 @@ class FlxSprite extends FlxObject
 	}
 }
 
+@:deprecated("IFlxSprite is deprecated and never used")
 interface IFlxSprite extends IFlxBasic
 {
 	var x(default, set):Float;

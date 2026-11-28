@@ -318,7 +318,7 @@ class FlxAssets
 	 * Takes Dynamic object as a input and tries to convert it to BitmapData:
 	 * 1) if the input is BitmapData, then it will return this BitmapData;
 	 * 2) if the input is Class<BitmapData>, then it will create BitmapData from this class;
-	 * 3) if the input is String, then it will get BitmapData from openfl.Assets;
+	 * 3) if the input is String, then it will get BitmapData from FlxG.assets;
 	 * 4) it will return null in any other case.
 	 *
 	 * @param   graphic  input data to get BitmapData object for.

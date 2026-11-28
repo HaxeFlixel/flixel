@@ -1051,7 +1051,7 @@ class FlxObject extends FlxBasic
 
 		result.set(x, y);
 		if (pixelPerfectPosition)
-			result.floor();
+			result.round();
 
 		return result.subtract(camera.scroll.x * scrollFactor.x, camera.scroll.y * scrollFactor.y);
 	}
@@ -1092,7 +1092,7 @@ class FlxObject extends FlxBasic
 	
 	inline function getViewXHelper(camera:FlxCamera)
 	{
-		final x = pixelPerfectPosition ? Math.floor(this.x) : this.x;
+		final x = pixelPerfectPosition ? Math.round(this.x) : this.x;
 		return (x - (camera.scroll.x * scrollFactor.x) - camera.viewMarginX) * camera.zoom;
 	}
 	
@@ -1113,7 +1113,7 @@ class FlxObject extends FlxBasic
 	
 	inline function getViewYHelper(camera:FlxCamera)
 	{
-		final y = pixelPerfectPosition ? Math.floor(this.y) : this.y;
+		final y = pixelPerfectPosition ? Math.round(this.y) : this.y;
 		return (y - (camera.scroll.y * scrollFactor.y) - camera.viewMarginY) * camera.zoom;
 	}
 	
@@ -1396,7 +1396,7 @@ class FlxObject extends FlxBasic
 
 		if (isPixelPerfectRender(camera))
 		{
-			_rect.floor();
+			_rect.round();
 		}
 
 		return _rect;
