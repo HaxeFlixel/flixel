@@ -207,8 +207,8 @@ class FlxQuadView extends FlxCameraView
 	{
 		// super.drawFrame(frame, matrix, transform, blend, smoothing, shader);
 		
-		var isColored = (transform != null #if !html5 && transform.hasRGBMultipliers() #end);
-		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+		final isColored = transform != null && transform.hasRGBMultipliers();
+		final hasColorOffsets = transform != null && transform.hasRGBAOffsets();
 		
 		#if FLX_RENDER_TRIANGLE
 		final drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, (antialiasing || smoothing), isColored, blend, hasColorOffsets, shader);
@@ -227,8 +227,8 @@ class FlxQuadView extends FlxCameraView
 		_helperMatrix.identity();
 		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
 		
-		var isColored = (transform != null && transform.hasRGBMultipliers());
-		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+		final isColored = (transform != null && transform.hasRGBMultipliers());
+		final hasColorOffsets = (transform != null && transform.hasRGBAOffsets());
 		
 		#if FLX_RENDER_TRIANGLE
 		final drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, (antialiasing || smoothing), isColored, blend, hasColorOffsets, shader);
@@ -391,19 +391,23 @@ class FlxQuadView extends FlxCameraView
 		return startTrianglesBatch(graphic, smooth, colored, blend);
 		#else
 		var itemToReturn = null;
-		
+
 		if (_currentDrawItem != null
 			&& _currentDrawItem.type == FlxDrawItemType.TILES
 			&& _headTiles.graphics == graphic
-			&& _headTiles.colored == colored
-			&& _headTiles.hasColorOffsets == hasColorOffsets
 			&& _headTiles.blend == blend
 			&& _headTiles.antialiasing == smooth
 			&& _headTiles.shader == shader)
 		{
+			if (colored && _headTiles.colored == false)
+				_headTiles.colored = true;
+			
+			if (hasColorOffsets && _headTiles.hasColorOffsets == false)
+				_headTiles.hasColorOffsets = true;
+			
 			return _headTiles;
 		}
-		
+
 		if (_storageTilesHead != null)
 		{
 			itemToReturn = _storageTilesHead;
@@ -419,29 +423,29 @@ class FlxQuadView extends FlxCameraView
 		// TODO: catch this error when the dev actually messes up, not in the draw phase
 		if (graphic.isDestroyed)
 			throw 'Cannot queue ${graphic.key}. This sprite was destroyed.';
-			
+
 		itemToReturn.graphics = graphic;
 		itemToReturn.antialiasing = smooth;
 		itemToReturn.colored = colored;
 		itemToReturn.hasColorOffsets = hasColorOffsets;
 		itemToReturn.blend = blend;
 		itemToReturn.shader = shader;
-		
+
 		itemToReturn.nextTyped = _headTiles;
 		_headTiles = itemToReturn;
-		
+
 		if (_headOfDrawStack == null)
 		{
 			_headOfDrawStack = itemToReturn;
 		}
-		
+
 		if (_currentDrawItem != null)
 		{
 			_currentDrawItem.next = itemToReturn;
 		}
-		
+
 		_currentDrawItem = itemToReturn;
-		
+
 		return itemToReturn;
 		#end
 	}
@@ -453,14 +457,19 @@ class FlxQuadView extends FlxCameraView
 			&& _currentDrawItem.type == FlxDrawItemType.TRIANGLES
 			&& _headTriangles.graphics == graphic
 			&& _headTriangles.antialiasing == smoothing
-			&& _headTriangles.colored == isColored
 			&& _headTriangles.blend == blend
-			&& _headTriangles.hasColorOffsets == hasColorOffsets
-			&& _headTriangles.shader == shader)
+			&& _headTriangles.shader == shader
+			)
 		{
+			if (isColored && _headTriangles.colored == false)
+				_headTriangles.colored = true;
+			
+			if (hasColorOffsets && _headTriangles.hasColorOffsets == false)
+				_headTriangles.hasColorOffsets = true;
+			
 			return _headTriangles;
 		}
-		
+
 		return getNewDrawTrianglesItem(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
 	}
 	
@@ -468,7 +477,7 @@ class FlxQuadView extends FlxCameraView
 			?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
-		
+
 		if (_storageTrianglesHead != null)
 		{
 			itemToReturn = _storageTrianglesHead;
@@ -480,29 +489,29 @@ class FlxQuadView extends FlxCameraView
 		{
 			itemToReturn = new FlxDrawTrianglesItem();
 		}
-		
+
 		itemToReturn.graphics = graphic;
 		itemToReturn.antialiasing = smoothing;
 		itemToReturn.colored = isColored;
 		itemToReturn.blend = blend;
 		itemToReturn.hasColorOffsets = hasColorOffsets;
 		itemToReturn.shader = shader;
-		
+
 		itemToReturn.nextTyped = _headTriangles;
 		_headTriangles = itemToReturn;
-		
+
 		if (_headOfDrawStack == null)
 		{
 			_headOfDrawStack = itemToReturn;
 		}
-		
+
 		if (_currentDrawItem != null)
 		{
 			_currentDrawItem.next = itemToReturn;
 		}
-		
+
 		_currentDrawItem = itemToReturn;
-		
+
 		return itemToReturn;
 	}
 	
