@@ -12,6 +12,8 @@ import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
+// TODO: This all assumes a single window, currently
+
 /**
  * `FlxRenderer` is a global, base class that handles rendering.
  * It does not contain any rendering logic by itself, rather it is extended by the various renderer implementations.
@@ -33,7 +35,7 @@ abstract class FlxTypedRenderer<TView:FlxCameraView> implements IFlxDestroyable
 	 */
 	public static dynamic function create():FlxRenderer 
 	{
-		if (!FlxG.renderer.isHardware)
+		if (!FlxG.stage.window.context.attributes.hardware)
 		{
 			return cast new flixel.system.render.blit.FlxBlitRenderer();
 		}
