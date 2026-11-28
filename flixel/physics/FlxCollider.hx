@@ -341,7 +341,7 @@ class FlxColliderUtil
 	/**
 	 * Checks whether the two objects' delta rects overlap
 	 * @see FlxCollision.getDeltaRect
-	 * @since 6.2.0
+	 * @since 6.3.0
 	 */
 	overload public static inline extern function overlapsDelta(a:IFlxCollider, b:IFlxCollider)
 	{
@@ -352,7 +352,7 @@ class FlxColliderUtil
 	 * Checks whether the two colliders' delta rects overlap
 	 * 
 	 * @see FlxCollider.getDeltaRect
-	 * @since 6.2.0
+	 * @since 6.3.0
 	 */
 	overload public static inline extern function overlapsDelta(a:FlxCollider, b:FlxCollider)
 	{
