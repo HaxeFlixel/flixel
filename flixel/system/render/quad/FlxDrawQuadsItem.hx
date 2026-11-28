@@ -89,9 +89,12 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		if (shader == null && graphics.isDestroyed)
 			throw 'Attempted to render an invalid FlxDrawItem, did you destroy a cached sprite?';
 		
+		@:privateAccess
+		final view = camera.viewQuad;
+
 		final shader = shader != null ? shader : graphics.shader;
 		shader.bitmap.input = graphics.bitmap;
-		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
+		shader.bitmap.filter = (view.antialiasing || antialiasing) ? LINEAR : NEAREST;
 		shader.alpha.value = alphas.toShaderValue();
 		
 		shader.colorMultiplier.value = colored ? colorMultipliers.toShaderValue() : cast null;
@@ -105,10 +108,10 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		setParameterValue(shader.hasTransform, true);
 		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
 		
-		camera.canvas.graphics.overrideBlendMode(blend);
-		camera.canvas.graphics.beginShaderFill(shader);
-		camera.canvas.graphics.drawQuads(rects.toShaderValue(), null, transforms.toShaderValue());
-		camera.canvas.graphics.endFill();
+		view.canvas.graphics.overrideBlendMode(blend);
+		view.canvas.graphics.beginShaderFill(shader);
+		view.canvas.graphics.drawQuads(rects.toShaderValue(), null, transforms.toShaderValue());
+		view.canvas.graphics.endFill();
 		super.render(camera);
 	}
 

@@ -56,10 +56,13 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		if (numTriangles <= 0)
 			return;
 		
+		@:privateAccess
+		final view = camera.viewQuad;
+
 		#if !flash
 		var shader = shader != null ? shader : graphics.shader;
 		shader.bitmap.input = graphics.bitmap;
-		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
+		shader.bitmap.filter = (view.antialiasing || antialiasing) ? LINEAR : NEAREST;
 		shader.bitmap.wrap = REPEAT; // in order to prevent breaking tiling behaviour in classes that use drawTriangles
 		shader.alpha.value = alphas.toShaderValue();
 		shader.colorMultiplier.value = colored ? colorMultipliers.toShaderValue() : null;
@@ -73,20 +76,20 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		setParameterValue(shader.hasTransform, true);
 		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
 		
-		camera.canvas.graphics.overrideBlendMode(blend);
+		view.canvas.graphics.overrideBlendMode(blend);
 		
-		camera.canvas.graphics.beginShaderFill(shader);
+		view.canvas.graphics.beginShaderFill(shader);
 		#else
-		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
+		view.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (view.antialiasing || antialiasing));
 		#end
 		
-		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
-		camera.canvas.graphics.endFill();
+		view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
+		view.canvas.graphics.endFill();
 		
 		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
 		{
-			var gfx:Graphics = camera.debugLayer.graphics;
+			var gfx:Graphics = view.debugLayer.graphics;
 			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
 			gfx.drawTriangles(vertices, indices, uvtData);
 		}
