@@ -61,7 +61,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public var pixelPerfectRender:Null<Bool>;
 
 	/**
-	 * The actual buffer BitmapData. (Only used if FlxG.renderBlit == true)
+	 * The actual buffer BitmapData. (Only used with the blitting renderer)
 	 */
 	public var pixels(default, null):BitmapData;
 
@@ -117,7 +117,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		updateColumns(tileWidth, widthInTiles, scaleX, camera);
 		updateRows(tileHeight, heightInTiles, scaleY, camera);
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.blit)
 		{
 			final newWidth = Std.int(columns * tileWidth);
 			final newHeight = Std.int(rows * tileHeight);
@@ -144,7 +144,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.blit)
 		{
 			pixels = FlxDestroyUtil.dispose(pixels);
 			blend = null;
@@ -161,7 +161,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public function fill(color = FlxColor.TRANSPARENT):Void
 	{
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.blit)
 		{
 			pixels.fillRect(_flashRect, color);
 		}
@@ -180,17 +180,17 @@ class FlxTilemapBuffer implements IFlxDestroyable
 			flashPoint.x = Math.round(flashPoint.x);
 			flashPoint.y = Math.round(flashPoint.y);
 		}
-		
+
 		if (isPixelPerfectRender(camera) && (scaleX == 1.0 && scaleY == 1.0) && blend == null)
 		{
-			camera.copyPixels(pixels, _flashRect, flashPoint, null, null, true);
+			camera.view.copyPixels(pixels, _flashRect, flashPoint, null, null, true);
 		}
 		else
 		{
 			_matrix.identity();
 			_matrix.scale(scaleX, scaleY);
 			_matrix.translate(flashPoint.x, flashPoint.y);
-			camera.drawPixels(pixels, _matrix, null, blend, antialiasing);
+			camera.view.drawPixels(pixels, _matrix, null, blend, antialiasing);
 		}
 	}
 	

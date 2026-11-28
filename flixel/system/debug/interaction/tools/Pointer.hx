@@ -1,14 +1,15 @@
 package flixel.system.debug.interaction.tools;
 
-import openfl.display.BitmapData;
-import openfl.display.Graphics;
-import openfl.ui.Keyboard;
 import flixel.FlxBasic;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.debug.Icon;
 import flixel.system.debug.interaction.Interaction;
+import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
+import openfl.display.BitmapData;
+import openfl.display.Graphics;
+import openfl.ui.Keyboard;
 
 using flixel.util.FlxArrayUtil;
 
@@ -131,11 +132,12 @@ class Pointer extends Tool
 		state = IDLE;
 	}
 	
+	#if FLX_DEBUG
 	override public function draw():Void
 	{
-		var gfx:Graphics = _brain.getDebugGraphics();
-		if (gfx == null)
-			return;
+		final view = FlxG.camera.view;
+		view.beginDrawDebug();
+		final buffer = view.getDebugBuffer();
 		
 		switch state
 		{
@@ -144,15 +146,14 @@ class Pointer extends Tool
 				final rect = FlxRect.get();
 				setAbsRect(rect, startX, startY, _brain.flixelPointer.x, _brain.flixelPointer.y);
 				// Render the selection rectangle
-				gfx.lineStyle(0.9, 0xbb0000);
-				gfx.drawRect(FlxG.camera.scroll.x + rect.x, FlxG.camera.scroll.y + rect.y, rect.width, rect.height);
+				final scroll = view.camera.scroll;
+				buffer.drawRect(rect.x - scroll.x, rect.y - scroll.y, rect.width, rect.height, 0xFFbb0000, 0.9);
 				rect.put();
 		}
 		
-		// Render everything into the camera buffer
-		if (FlxG.renderBlit)
-			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		view.endDrawDebug();
 	}
+	#end
 	
 	static function setAbsRect(rect:FlxRect, x1:Float, y1:Float, x2:Float, y2:Float)
 	{

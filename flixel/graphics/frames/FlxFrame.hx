@@ -159,7 +159,7 @@ class FlxFrame implements IFlxDestroyable
 		offset = FlxPoint.get();
 
 		blitMatrix = new MatrixVector();
-		if (FlxG.renderTile)
+		if (FlxG.renderer.tile)
 			tileMatrix = new MatrixVector();
 	}
 
@@ -169,7 +169,7 @@ class FlxFrame implements IFlxDestroyable
 	{
 		blitMatrix.copyFrom(this, true);
 
-		if (FlxG.renderTile)
+		if (FlxG.renderer.tile)
 			tileMatrix.copyFrom(this, false);
 	}
 	
@@ -279,7 +279,7 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public function prepareMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false):FlxMatrix
 	{
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.blit)
 		{
 			mat.identity();
 			return mat;

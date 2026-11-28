@@ -248,6 +248,7 @@ class BitmapLog extends Window
 	public function clear():Void
 	{
 		entries.resize(0);
+		index = -1;
 		drawCanvas();
 	}
 	

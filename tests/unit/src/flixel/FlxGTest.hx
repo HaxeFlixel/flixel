@@ -23,6 +23,9 @@ class FlxGTest extends FlxTest
 	@Test function testSaveNull():Void
 		Assert.isNotNull(FlxG.save);
 
+	@Test function testRendererNull():Void
+		Assert.isNotNull(FlxG.renderer);
+
 	#if FLX_MOUSE
 	@Test function testMouseNull():Void
 		Assert.isNotNull(FlxG.mouse);

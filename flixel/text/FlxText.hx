@@ -244,7 +244,7 @@ class FlxText extends FlxSprite
 		allowCollisions = NONE;
 		moves = false;
 
-		drawFrame();
+		drawFrame(); // TODO: drawFrame(FlxG.renderer.blit);
 	}
 
 	/**
@@ -1070,7 +1070,7 @@ class FlxText extends FlxSprite
 		if (textField == null)
 			return;
 
-		if (FlxG.renderTile && !RunOnCpp)
+		if (!FlxG.renderer.blit && !RunOnCpp)
 			return;
 
 		regenGraphic();
