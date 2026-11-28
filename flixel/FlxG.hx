@@ -429,9 +429,15 @@ class FlxG
 	 *                           will only be called if `processer` returns true for those objects!
 	 * @return  Whether any overlaps were detected.
 	 */
-	overload public static inline extern function overlap(objectOrGroup1:FlxBasic, objectOrGroup2:FlxBasic, ?notifier, ?processser):Bool
+	overload public static inline extern function overlap
+	(
+		objectOrGroup1:FlxBasic,
+		objectOrGroup2:FlxBasic,
+		?notifier:(Dynamic, Dynamic)->Void,
+		?processser:(Dynamic, Dynamic)->Bool
+	):Bool
 	{
-		return overlapHelper(objectOrGroup1, objectOrGroup2, notifier, processser);
+		return overlapHelper(objectOrGroup1, objectOrGroup2, cast notifier, cast processser);
 	}
 	
 	/**
@@ -453,9 +459,14 @@ class FlxG
 	 *                     will only be called if `processer` returns true for those objects!
 	 * @return  Whether any overlaps were detected.
 	 */
-	overload public static inline extern function overlap(group:FlxGroup, ?notifier, ?processser):Bool
+	overload public static inline extern function overlap
+	(
+		group:FlxGroup,
+		?notifier:(Dynamic, Dynamic)->Void,
+		?processser:(Dynamic, Dynamic)->Bool
+	):Bool
 	{
-		return overlapHelper(group, null, notifier, processser);
+		return overlap(group, null, notifier, processser);
 	}
 	
 	/**
@@ -476,13 +487,18 @@ class FlxG
 	 *                     will only be called if `processer` returns true for those objects!
 	 * @return  Whether any overlaps were detected.
 	 */
-	overload public static inline extern function overlap(?notifier, ?processser):Bool
+	overload public static inline extern function overlap(?notifier:(Dynamic, Dynamic)->Void, ?processser:(Dynamic, Dynamic)->Bool):Bool
 	{
 		return overlapHelper(state, null, notifier, processser);
 	}
 	
-	static function overlapHelper(objectOrGroup1:FlxBasic, ?objectOrGroup2:FlxBasic, ?notifier:Dynamic->Dynamic->Void,
-			?processser:Dynamic->Dynamic->Bool):Bool
+	static function overlapHelper<TA:FlxObject, TB:FlxObject>
+	(
+		objectOrGroup1:FlxBasic,
+		objectOrGroup2:Null<FlxBasic>,
+		notifier:Null<(TA, TB)->Void>,
+		processser:Null<(TA, TB)->Bool>
+	):Bool
 	{
 		if (objectOrGroup1 == null)
 			objectOrGroup1 = state;
@@ -491,7 +507,7 @@ class FlxG
 
 		FlxQuadTree.divisions = worldDivisions;
 		final quadTree = FlxQuadTree.recycle(worldBounds.x, worldBounds.y, worldBounds.width, worldBounds.height);
-		quadTree.load(objectOrGroup1, objectOrGroup2, notifier, processser);
+		quadTree.load(objectOrGroup1, objectOrGroup2, cast notifier, cast processser);
 		final result:Bool = quadTree.execute();
 		quadTree.destroy();
 		return result;
@@ -554,9 +570,9 @@ class FlxG
 	 *                          that is called if those two objects overlap.
 	 * @return  Whether any objects were successfully collided/separated.
 	 */
-	overload public static inline extern function collide<T:FlxBasic>(group:FlxTypedGroup<T>, ?notifier):Bool
+	overload public static inline extern function collide<T:FlxBasic>(group:FlxTypedGroup<T>, ?notifier:Dynamic->Dynamic->Void):Bool
 	{
-		return overlap(group, notifier, FlxObject.separate);
+		return overlap(group, null, notifier, FlxObject.separate);
 	}
 
 	/**

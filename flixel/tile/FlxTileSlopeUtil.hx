@@ -124,7 +124,7 @@ class FlxTileSlopeUtil
 	static public function computeOverlap(tile:FlxCollider, object:FlxCollider, edges:FlxSlopeEdges, grade:FlxSlopeGrade, maxOverlap:Float, ?result:FlxPoint)
 	{
 		if (grade == NONE)
-			return FlxColliderUtil.computeOverlapAabb(tile, object, maxOverlap, result);
+			return FlxColliderUtil.computeBoundsOverlap(tile, object, maxOverlap, result);
 		
 		if (result == null)
 			result = FlxPoint.get();
@@ -189,7 +189,7 @@ class FlxTileSlopeUtil
 		final overlapY = computeSlopeOverlapY(tile, object, edges, grade);
 		// check if they're hitting the solid edges
 		if (overlapY != 0 && checkHitSolidWallX(tile, object, edges) && tile.bounds.overlaps(object.bounds))
-			return FlxColliderUtil.computeOverlapXAabb(tile, object);
+			return FlxColliderUtil.computeBoundsOverlapX(tile, object);
 		
 		// let y separate
 		return Math.POSITIVE_INFINITY;
@@ -198,7 +198,7 @@ class FlxTileSlopeUtil
 	static public function computeOverlapY(tile:FlxCollider, object:FlxCollider, edges:FlxSlopeEdges, grade:FlxSlopeGrade)
 	{
 		if (checkHitSolidWallY(tile, object, edges) && tile.bounds.overlaps(object.bounds))
-			return FlxColliderUtil.computeOverlapYAabb(tile, object);
+			return FlxColliderUtil.computeBoundsOverlapY(tile, object);
 		
 		return computeSlopeOverlapY(tile, object, edges, grade);
 	}

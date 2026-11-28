@@ -371,32 +371,57 @@ class FlxColliderUtil
 		return result;
 	}
 	
+	/**
+	 * Checks whether the two objects' bounds overlap
+	 * 
+	 * @since 6.3.0
+	 */
+	overload public static inline extern function overlapsBounds(a:IFlxCollider, b:IFlxCollider)
+	{
+		return overlapsBoundsHelper(a.getCollider(), b.getCollider());
+	}
+	
+	/**
+	 * Checks whether the two colliders' bounds overlap
+	 * 
+	 * @since 6.3.0
+	 */
+	overload public static inline extern function overlapsBounds(a:FlxCollider, b:FlxCollider)
+	{
+		return overlapsBoundsHelper(a, b);
+	}
+	
+	static function overlapsBoundsHelper(a:FlxCollider, b:FlxCollider)
+	{
+		return a.bounds.overlaps(b.bounds);
+	}
+	
 	public static function process(a:IFlxCollider, b:IFlxCollider, func:(IFlxCollider, IFlxCollider)->Bool):Bool
 	{
 		final colliderA = a.getCollider();
 		final colliderB = b.getCollider();
 		// Note: was &&, caused double func calls on two shapes, is there a case where we still wanna process subs there?
-		// return func(a, b) || processSub(a, b, colliderA, colliderB, func);
-		return processSub(a, b, colliderA, colliderB, func);
+		// return func(a, b) || processHelper(a, b, colliderA, colliderB, func);
+		return processHelper(a, b, colliderA, colliderB, func);
 	}
 	
-	static function processSub(a:IFlxCollider, b:IFlxCollider, colliderA:FlxCollider, colliderB:FlxCollider, func:(IFlxCollider, IFlxCollider)->Bool):Bool
+	static function processHelper(a:IFlxCollider, b:IFlxCollider, colliderA:FlxCollider, colliderB:FlxCollider, func:(IFlxCollider, IFlxCollider)->Bool):Bool
 	{
 		return switch colliderA.type
 		{
 			case TILEMAP:
 				final tilemap:FlxBaseTilemap<FlxObject> = cast a;
-				return tilemap.forEachTileOverlappingCollider(b, (tile)->processSub(tile, b, tile.getCollider(), colliderB, func), false);
+				return tilemap.forEachTileOverlappingCollider(b, (tile)->processHelper(tile, b, tile.getCollider(), colliderB, func), false);
 			case MULTI(processer):
-				return processer(b, (childA)->processSub(childA, b, childA.getCollider(), colliderB, func));
+				return processer(b, (childA)->processHelper(childA, b, childA.getCollider(), colliderB, func));
 			case SHAPE(shape):
 				return switch colliderB.type
 				{
 					case TILEMAP:
 						final tilemap:FlxBaseTilemap<FlxObject> = cast b;
-						return tilemap.forEachTileOverlappingCollider(a, (tile)->processSub(a, tile, colliderA, tile.getCollider(), func), false);
+						return tilemap.forEachTileOverlappingCollider(a, (tile)->processHelper(a, tile, colliderA, tile.getCollider(), func), false);
 					case MULTI(processer):
-						return processer(a, (childB)->processSub(a, childB, colliderA, childB.getCollider(), func));
+						return processer(a, (childB)->processHelper(a, childB, colliderA, childB.getCollider(), func));
 					case SHAPE(shape):
 						return func(a, b);
 				}
@@ -416,21 +441,51 @@ class FlxColliderUtil
 		return switch [colliderA.type, colliderB.type]
 		{
 			case [SHAPE(shapeA), SHAPE(shapeB)]:
-				switch [shapeA, shapeB]
-				{
-					case [CUSTOM(_, func), _]: func(b, result);
-					case [_, CUSTOM(_, func)]: func(a, result).negate();
-					case [AABB, AABB]: computeOverlapAabb(colliderA, colliderB, result);
-					case [shapeA, shapeB]: throw 'Unexpected types: [$shapeA, $shapeB]';
-				}
-			case [TILEMAP, TILEMAP]:
-				throw "Cannot compute overlap between two TILEMAP colliders";
-			case [TILEMAP, _]:
-				throw "Cannot compute overlap against TILEMAP colliders";
-			case [_, TILEMAP]:
-				throw "Cannot compute overlap against TILEMAP colliders";
+				computeShapeOverlapHelper(a, b, colliderA, colliderB, shapeA, shapeB, result);
+			case [TILEMAP, TILEMAP]| [TILEMAP, _] | [_, TILEMAP]:
+				computeBoundsOverlap(colliderA, colliderB, result);// TODO
 			default:
-				throw "Cannot compute overlap with a MULTI or TILEMAP collider";
+				throw "Cannot compute overlap with a MULTI collider";
+		}
+	}
+	
+	/**
+	 * Calculates the minimum amount of motion needed to separate the two colliders.
+	 * This will Take their latest movement into account when determing which direction(s) to separate
+	 * 
+	 * @param   result  Optional point to use for the result
+	 */
+	public static function computeShapeOverlap(a:IFlxCollider, b:IFlxCollider, shapeA:FlxColliderShape, shapeB:FlxColliderShape, ?result:FlxPoint):FlxPoint
+	{
+		return switch [shapeA, shapeB]
+		{
+			case [CUSTOM(_, func), _]: func(b, result);
+			case [_, CUSTOM(_, func)]: func(a, result).negate();
+			case [AABB, AABB]: computeBoundsOverlap(a.getCollider(), b.getCollider(), result);
+			case [shapeA, shapeB]: throw 'Unexpected types: [$shapeA, $shapeB]';
+		}
+	}
+	
+	/**
+	 * Calculates the minimum amount of motion needed to separate the two colliders.
+	 * This will Take their latest movement into account when determing which direction(s) to separate
+	 * 
+	 * @param   result  Optional point to use for the result
+	 */
+	static function computeShapeOverlapHelper
+	(
+		a:IFlxCollider, b:IFlxCollider
+		, colliderA:FlxCollider, colliderB:FlxCollider
+		, shapeA:FlxColliderShape, shapeB:FlxColliderShape
+		, result:Null<FlxPoint>
+	):FlxPoint
+	{
+		return switch [shapeA, shapeB]
+		{
+			case [CUSTOM(_, func), _]: func(b, result);
+			case [_, CUSTOM(_, func)]: func(a, result).negate();
+			case [AABB, AABB]: computeBoundsOverlap(colliderA, colliderB, result);
+			case [shapeA, shapeB]: throw 'Unexpected types: [$shapeA, $shapeB]';
 		}
 	}
 	
@@ -473,12 +528,26 @@ class FlxColliderUtil
 	 * Helper to compute the overlap of two objects, this is used when
 	 * `a.computeOverlap(b)` is called on two objects
 	 */
-	public static function computeOverlapAabb(a:FlxCollider, b:FlxCollider, ?result:FlxPoint)
+	overload public static inline extern function computeBoundsOverlap(a:FlxCollider, b:FlxCollider, ?result:FlxPoint)
+	{
+		return computeBoundsOverlapHelper(a, b, result);
+	}
+	
+	/**
+	 * Helper to compute the overlap of two objects, this is used when
+	 * `a.computeOverlap(b)` is called on two objects
+	 */
+	overload public static inline extern function computeBoundsOverlap(a:IFlxCollider, b:IFlxCollider, ?result:FlxPoint)
+	{
+		return computeBoundsOverlapHelper(a.getCollider(), b.getCollider(), result);
+	}
+	
+	static function computeBoundsOverlapHelper(a:FlxCollider, b:FlxCollider, result:Null<FlxPoint>)
 	{
 		if (result == null)
 			result = FlxPoint.get();
 		
-		if (a.bounds.overlaps(b.bounds) == false)
+		if (a.overlapsBounds(b) == false)
 			return result.set(0, 0);
 		
 		final allowX = checkCollisionEdgesX(a, b);
@@ -491,7 +560,7 @@ class FlxColliderUtil
 		// only X
 		if (allowX && !allowY)
 		{
-			final overlap = computeOverlapXAabb(a, b);
+			final overlap = computeBoundsOverlapX(a, b);
 			
 			return result.set(overlap, 0);
 		}
@@ -499,12 +568,12 @@ class FlxColliderUtil
 		// only Y
 		if (!allowX && allowY)
 		{
-			final overlap = computeOverlapYAabb(a, b);
+			final overlap = computeBoundsOverlapY(a, b);
 			
 			return result.set(0, overlap);
 		}
 		
-		result.set(computeOverlapXAabb(a, b), computeOverlapYAabb(a, b));
+		result.set(computeBoundsOverlapX(a, b), computeBoundsOverlapY(a, b));
 		
 		final absX = abs(result.x);
 		final absY = abs(result.y);
@@ -571,10 +640,10 @@ class FlxColliderUtil
 	// }
 	
 	/**
-	 * Helper to compute the X overlap of two objects, this is used when
-	 * `a.computeOverlapX(b)` is called on two objects
+	 * Helper to compute the X overlap of two colliders' bounds. Usually called from
+	 * computeOverlap() calls between certain collider types
 	 */
-	public static function computeOverlapXAabb(a:FlxCollider, b:FlxCollider):Float
+	public static function computeBoundsOverlapX(a:FlxCollider, b:FlxCollider):Float
 	{
 		if (a.deltaX > b.deltaX)
 			return a.x + a.width - b.x;
@@ -583,10 +652,10 @@ class FlxColliderUtil
 	}
 	
 	/**
-	 * Helper to compute the Y overlap of two objects, this is used when
-	 * `a.computeOverlapY(b)` is called on two objects
+	 * Helper to compute the Y overlap of two colliders' bounds. Usually called from
+	 * computeOverlap() calls between certain collider types
 	 */
-	public static function computeOverlapYAabb(a:FlxCollider, b:FlxCollider):Float
+	public static function computeBoundsOverlapY(a:FlxCollider, b:FlxCollider):Float
 	{
 		if (a.deltaY > b.deltaY)
 			return a.y + a.height - b.y;
