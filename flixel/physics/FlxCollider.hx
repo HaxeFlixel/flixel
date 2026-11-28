@@ -95,9 +95,9 @@ class FlxCollider
 	/** The amount of momentum conserved after a collision, defaults to `0` meaning, collisions will stop the collider */
 	public var elasticity = 0.0;
 	
-	public var onBoundsCollide = new FlxTypedSignal<(collider:IFlxCollider)->Void>();
-	public var onCollide = new FlxTypedSignal<(collider:IFlxCollider, overlap:FlxPoint)->Void>();
-	public var onSeparate = new FlxTypedSignal<(collider:IFlxCollider, overlap:FlxPoint)->Void>();
+	public var onPreSeparate = new FlxTypedSignal<(collider:IFlxCollider, overlapX:Float, overlapY:Float)->Void>();
+	public var onSeparate = new FlxTypedSignal<(collider:IFlxCollider, overlapX:Float, overlapY:Float)->Void>();
+	public var onCollide = new FlxTypedSignal<(collider:IFlxCollider, overlapX:Float, overlapY:Float)->Void>();
 	
 	/**
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
@@ -163,8 +163,9 @@ class FlxCollider
 		last = FlxDestroyUtil.destroy(last);
 		velocity = FlxDestroyUtil.destroy(velocity);
 		acceleration = FlxDestroyUtil.destroy(acceleration);
-		onCollide.removeAll();
+		onPreSeparate.removeAll();
 		onSeparate.removeAll();
+		onCollide.removeAll();
 	}
 	
 	public function update(elapsed:Float)

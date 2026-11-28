@@ -230,21 +230,13 @@ class CollisionFrontEnd
 		final colliderB = b.getCollider();
 		// if (colliderA.overlapsDelta(colliderB))
 		// {
-			colliderA.onBoundsCollide.dispatch(b);
-			colliderB.onBoundsCollide.dispatch(a);
-			
-			// if (!colliderA.type.match(SHAPE(_)) || !colliderB.type.match(SHAPE(_)))
-			// 	return true;
-			
 			final overlap = a.computeOverlap(b);
+			
+			colliderA.onPreSeparate.dispatch(b, overlap.x, overlap.y);
+			colliderB.onPreSeparate.dispatch(a, -overlap.x, -overlap.y);
 			
 			if (!overlap.isZero())
 			{
-				final negativeOverlap = overlap.copyTo(overlapInverseHelperPoint);
-				
-				colliderA.onCollide.dispatch(b, overlap);
-				colliderB.onCollide.dispatch(a, negativeOverlap);
-				
 				// seprate x
 				if (overlap.x != 0)
 				{
@@ -262,9 +254,8 @@ class CollisionFrontEnd
 				updateObjectFields(a, colliderA);
 				updateObjectFields(b, colliderB);
 				
-				colliderA.onSeparate.dispatch(b, overlap);
-				colliderB.onSeparate.dispatch(a, negativeOverlap);
-				negativeOverlap.put();
+				colliderA.onSeparate.dispatch(b, overlap.x, overlap.y);
+				colliderB.onSeparate.dispatch(a, -overlap.x, -overlap.y);
 			}
 			overlap.put();
 			
